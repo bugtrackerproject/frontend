@@ -1,0 +1,40 @@
+    
+.main {
+    display: flex;
+
+    .mainContainer {
+        flex: 6;
+
+        .split {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            
+            .formContainer {
+
+                display: flex;
+                flex-direction: column;
+                margin: 20px;
+                padding: 20px;
+                -webkit-box-shadow: 2px 5px 10px 1px rgba(0,0,0,0.46); 
+                box-shadow: 2px 5px 10px 1px rgba(0,0,0,0.46);
+                border-radius: 15px;
+
+                .buttons {
+                    padding: 30px;
+                    padding-bottom: 0;
+                    display: flex;
+                    flex-direction: row; 
+                    justify-content: space-evenly; 
+                    
+                }
+            
+            }
+        
+        } 
+        .tableWrapper {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

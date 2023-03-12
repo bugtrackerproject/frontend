@@ -1,0 +1,19 @@
+.widget {
+    
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 2px;
+
+}
+
+.widget span:last-child  {
+    font-size: 4rem;
+    color: var(--main-color);
+}
+
+.widget div:first-child span {
+    color: var(--text-grey);
+    font-size: 1.3rem;
+}

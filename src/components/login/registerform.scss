@@ -1,0 +1,104 @@
+
+/*
+.registerContainer {
+    //padding: 8% 0 0;
+    width: 365px;
+    margin: auto;
+    margin-top: 10%;
+    //padding: 15px;
+    -webkit-box-shadow: 2px 5px 10px 1px rgba(0,0,0,0.46); 
+    box-shadow: 2px 5px 10px 1px rgba(0,0,0,0.46);
+
+
+    .form{
+        position: relative;
+        z-index: 1;
+        max-width: 350px;
+        margin: 0 auto 100px;
+        padding: 45px;
+        background: #FFFFFF;
+      }
+
+    
+    /*
+    width: 382px;
+    margin: auto;
+    margin-top: 20%;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+   // text-align: ;
+    padding: 20px;
+    -webkit-box-shadow: 2px 5px 10px 1px rgba(0,0,0,0.46); 
+    box-shadow: 2px 5px 10px 1px rgba(0,0,0,0.46);
+    border-radius: 15px;
+
+    .email, .password {
+        display:flex;
+        flex-direction: row;
+        text-align: center;
+
+        .field {
+            margin: 20px;
+        }
+
+        .label {
+            margin: 20px;
+        }
+    }
+}
+@mixin input($bkgnd: #F5F5F5){
+    //font-family:;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    outline: 0;
+    font-size: 15px;
+    text-align: center;
+    box-sizing: border-box;
+    background: $bkgnd;
+  }
+
+@mixin btn($fontcolor: #FAFAFA){
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    outline: 0;
+    border: 0;
+    width: 100%;
+    padding: 15px;
+    background: #FF5722;
+    color: $fontcolor;
+    text-transform: uppercase;
+}
+
+@mixin message($fontcolor: #90A4AE){
+    color: $fontcolor;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+  }
+  
+.form {
+    input{
+      @include input; 
+      
+      ::placeholder {
+        color: #90A4AE;
+      }
+    }
+    
+    .btn{
+      @include btn;
+    }
+    
+    .message {
+      @include message;
+      a {
+        text-decoration: none;
+        color: #00BFA5;
+      }
+    }
+}
+*/
+
