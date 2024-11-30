@@ -1,14 +1,13 @@
 import React from 'react'
 import "./list.scss"
 
-import Sidebar from '../../components/sidebar/Sidebar'
 import Header from '../../components/header/Header'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import TicketsTable from '../../components/tables/TicketsTable'
 import { Button } from '@mui/material'
 
-const ListTickets = ({ isSidebarActive, toggleSidebar }) => {
+const ListTickets = ({ toggleSidebar }) => {
     
     const user = useSelector(state => state.user)
   
@@ -24,28 +23,32 @@ const ListTickets = ({ isSidebarActive, toggleSidebar }) => {
 
   return user ? (
     <>
-        <Sidebar isSidebarActive={isSidebarActive}/>
-        
-        <div className="main-content">
-          <Header page={"My Tickets"} user={user} toggleSidebar={toggleSidebar}/>
-
+        <Header page={"My Tickets"} user={user} toggleSidebar={toggleSidebar}/>
 
           <main>
+              <div className="flexWrapper">
+
+
+                  <div className="formWrapper">
+                      <div className="button">
+
+                          <Button sx={{ marginBottom: 4, minWidth: 150, backgroundColor: '##2873ff' }} variant="contained" onClick={handleCreateTicket}>Create New Ticket </Button>
+
+                      </div>
+                  </div>
+
+                  <div className="table-wrapper">
+                      <div className="formHeader">
+                          <h2>Projects</h2>
+                      </div>
+                      <div className="tableContainer">
+                          <TicketsTable filter={"user"} value={user} />
+                      </div>
+
+              </div>
           
-            <div>
-                
-              <Button sx={{ minWidth: 150 }} variant="outlined" onClick={handleCreateTicket} >Create new ticket</Button>
-              
-            </div>
-
-            <div className="tableWrapper">
-              <div className="main-title">TICKETS</div>
-
-              
-              <TicketsTable filter={"user"} value={user} />
-            </div>
-        </main>
-    </div>
+        </div>
+    </main>
     </>
   ) : null
 }

@@ -1,6 +1,5 @@
 import "./single.scss"
 
-import Sidebar from '../../components/sidebar/Sidebar'
 import Header from '../../components/header/Header'
 
 
@@ -8,11 +7,11 @@ import { useSelector } from 'react-redux'
 import { useState } from "react"
 
 import { Button } from "@mui/material"
-import SelectStatus from "../../components/checkbox/SelectStatus"
-import SelectPriority from "../../components/checkbox/SelectPriority"
+import Select from "../../components/checkbox/Select"
 
 
-const SingleTicket= ({ ticket, isSidebarActive, toggleSidebar }) => {
+
+const SingleTicket= ({ ticket, toggleSidebar }) => {
 
     
     const [status, setStatus] = useState("")
@@ -59,51 +58,60 @@ const SingleTicket= ({ ticket, isSidebarActive, toggleSidebar }) => {
 
   return project && assignee && submitter ? (
     <>
-        <Sidebar isSidebarActive={isSidebarActive} />
-        
-        <div className="main-content">
-          <Header page={project.name} user={user} toggleSidebar={toggleSidebar} />
+        <Header page={project.name} user={user} toggleSidebar={toggleSidebar} />
 
 
           <main>
-            <div className="main-title">TICKET TITLE</div>
-            {ticket.name}
+            
+              <div className="flexWrapper">
+                  <div className="formWrapper">
 
-            <div className="main-title">PROJECT DESCRIPTION</div>
-            {ticket.description}
+                      <div className="formHeader">
+                          <h2>TICKET DETAILS</h2>
+                      </div>
+                      <div className="formContainer">
+                          <div>
+                                <div className="mainTitle">TICKET TITLE</div>
+                                {ticket.name}
 
-            <div className="main-title">PRIORITY</div>
-            <SelectPriority defaultValue={ticket.priority} data={priorities} onChange={(event, selectedValue) => setPriority(selectedValue)}/> 
+                              <div className="mainTitle">PROJECT DESCRIPTION</div>
+                                {ticket.description}
 
-            <div className="main-title">TYPE</div>
-            {ticket.type}
+                              <div className="mainTitle">PRIORITY</div>
+                                <Select defaultValue={ticket.priority} data={priorities} onChange={(event, selectedValue) => setPriority(selectedValue)}/> 
 
-            <div className="main-title">STATUS</div>
-            <SelectStatus defaultValue={ticket.status} data={statuses} onChange={(event, selectedValue) => setStatus(selectedValue)}/> 
+                              <div className="mainTitle">TYPE</div>
+                                {ticket.type}
+
+                                <div className="mainTitle">STATUS</div>
+                                <Select defaultValue={ticket.status} data={statuses} onChange={(event, selectedValue) => setStatus(selectedValue)}/> 
 
         
 
-            <div className="main-title">PROJECT</div>
-            {project.name}
+                                <div className="mainTitle">PROJECT</div>
+                                {project.name}
             
             
-            <div className="main-title">ASSIGNED TO</div>
-            {assignee.name}
+                                <div className="mainTitle">ASSIGNED TO</div>
+                                {assignee.name}
 
-            <div className="main-title">SUBMITTED BY</div>
-            {submitter.name}
-            
-            
-            <div className="btnAddProject">
-                <span className="button">
-                    <Button sx={{ minWidth: 150 }} variant="contained" onClick={handleAddTicket}>Update Ticket</Button>
-                </span>
+                                <div className="mainTitle">SUBMITTED BY</div>
+                                {submitter.name}
+                          </div>
+
+                      </div>
+
+               </div>
+            </div>
+                <div className="btnAddProject">
+                    <span className="button">
+                        <Button sx={{ minWidth: 150 }} variant="contained" onClick={handleAddTicket}>Update Ticket</Button>
+                    </span>
         
     
-            </div>
+                </div>
 
-          </main>
-      </div>
+        </main>
     </>
   ) : null
 }

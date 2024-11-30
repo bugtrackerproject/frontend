@@ -11,38 +11,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { useState } from "react";
-
-/* 
-
-        <div className="items">
-          <div className="item">
-            <DarkModeOutlinedIcon className="icon"/>
-          </div>
-          <div className="item">
-            <FullscreenExitOutlinedIcon className="icon"/>
-          </div>
-          <div className="item">
-            <NotificationsNoneOutlinedIcon className="icon"/>
-            <div className="counter">1</div>
-          </div>
-          <div className="item">
-            <ChatBubbleOutlineOutlinedIcon className="icon"/>
-            <div className="counter">2</div>
-          </div>
-        </div>
-
-        <MenuIcon sx={{fontSize:'3rem', paddingRight: "0.5rem" }} />
-
-          <div className="search-wrapper">
-            <Stack direction="row" alignItems="center">
-              <SearchIcon className="icon" />
-              <Typography variant="body1" className="input"><input type="search" placeholder="Search..." /></Typography>
-            </Stack>
-          </div>
-
-        */
-
 const Header = ({ page, user, toggleSidebar }) => {
 
 

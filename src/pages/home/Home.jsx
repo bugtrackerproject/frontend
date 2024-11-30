@@ -1,25 +1,13 @@
 
 import { useSelector } from 'react-redux'
 import Header from '../../components/header/Header'
-import Sidebar from '../../components/sidebar/Sidebar'
 import ProjectsTable from '../../components/tables/ProjectsTable'
 import TicketsTable from '../../components/tables/TicketsTable'
 import Widget from '../../components/widgets/Widget'
 import "./home.scss"
 
 
-/*
-
-<div className="mainTitle">TOTAL</div>
-<div className="widgets">
-  <Widget type="tickets" />
-  <Widget type="projects" />
-  <Widget type="roles" />
-</div>
-
-*/
-
-const Home = ({ isSidebarActive, toggleSidebar }) => {
+const Home = ({ toggleSidebar }) => {
 
   let ticketsSelector = useSelector(state => state.tickets)
   let tickets = ticketsSelector.slice()
@@ -53,18 +41,14 @@ const Home = ({ isSidebarActive, toggleSidebar }) => {
 
   return user ? (
     <>
-  
-        <Sidebar isSidebarActive={isSidebarActive} />
-        
-        <div className="main-content">
-          <Header page={"Dashboard"} user={user} toggleSidebar={toggleSidebar}/>
+        <Header page={"Dashboard"} user={user} toggleSidebar={toggleSidebar}/>
 
-          <main>
+        <main>
 
             <div className="main-title">TOTAL</div>
             <div className="widgets">
-              <Widget type="tickets" count={totals.tickets}/>
-              <Widget type="projects" count={totals.projects}/>
+                <Widget type="tickets" count={totals.tickets}/>
+                <Widget type="projects" count={totals.projects}/>
             </div>
 
             <hr />
@@ -72,24 +56,23 @@ const Home = ({ isSidebarActive, toggleSidebar }) => {
             <div className="main-title">TICKET PROGRESS</div>
             <div className="widgets">
               
-              <Widget type="to do" count={totals.todo}/>
-              <Widget type="in progress" count={totals.inprogress}/>
-              <Widget type="completed" count={totals.completed}/>
+                <Widget type="to do" count={totals.todo}/>
+                <Widget type="in progress" count={totals.inprogress}/>
+                <Widget type="completed" count={totals.completed}/>
             </div>
             <div className="tables">
-              <div className="tableWrapper">
+                <div className="tableWrapper">
                 <div className="main-title">RECENT TICKETS</div>
                 <TicketsTable filter="user" value={user} />
-              </div>
-              <div className='tableWrapper'>
+                </div>
+                <div className='tableWrapper'>
                 <div className="main-title">RECENT PROJECTS</div>
                 <ProjectsTable filter="user" value={user} />
-              </div>
+                </div>
             </div>
           
 
-          </main>
-        </div>
+        </main>
       </>
   ) : null
 }

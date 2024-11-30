@@ -3,7 +3,7 @@ import "./manageusers.scss"
 import BasicTable from '../../../components/tables/Table'
 import Sidebar from '../../../components/sidebar/Sidebar'
 import Header from '../../../components/header/Header'
-import CheckboxesTags from "../../../components/checkbox/SelectUsers"
+//import SelectMultiple from "../../../components/checkbox/SelectUsers"
 
 import Button from '@mui/material/Button';
 
@@ -24,7 +24,7 @@ const ManageUsers = ({ type }) => {
                 <div className="roleContainer">
                     <div className="checkboxWrapper">
                         <div className="mainTitle">SELECT USERS</div>
-                        <CheckboxesTags />
+                        <SelectMultiple />
                     </div>
                     <div className="checkboxWrapper">
                         <div className="mainTitle">SELECT ROLES</div>
@@ -32,7 +32,7 @@ const ManageUsers = ({ type }) => {
                     </div>
                     <div className="checkboxWrapper">
                         <div className="mainTitle">SELECT ROLES</div>
-                        <CheckboxesTags />
+                        <SelectMultiple />
                     </div>
             
                     <div className="buttons">

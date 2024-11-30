@@ -35,6 +35,7 @@ import ListProjects from './pages/list/ListProjects'
 import ListTickets from './pages/list/ListTickets'
 import CreateProject from './pages/create/CreateProject'
 import CreateTicket from './pages/create/CreateTicket'
+import Sidebar from './components/sidebar/Sidebar'
 
 
 const PrivateRoute = (props) => {
@@ -69,24 +70,33 @@ const AdminRoute = (props) => {
 }
 
 const App = () => {
-  const dispatch = useDispatch()
-  const [isSidebarActive, setSidebarActive] = useState(false)
+    const dispatch = useDispatch()
+    const [isSidebarActive, setSidebarActive] = useState(false)
+    const [loading, setLoading] = useState(true);
 
-  const toggleSidebar = () => {
-    setSidebarActive(!isSidebarActive);
-  }
+    const toggleSidebar = () => {
+        setSidebarActive(!isSidebarActive);
+    }
 
-  const projects = useSelector((state) => state.projects)
-  const users = useSelector((state) => state.users)
-  const tickets = useSelector((state) => state.tickets)
+    const projects = useSelector((state) => state.projects)
+    const users = useSelector((state) => state.users)
+    const tickets = useSelector((state) => state.tickets)
 
-  useEffect(() => {
-    
-    dispatch(initializeUsers())
-    dispatch(initializeRoles())
-    dispatch(initializeProjects())
-    dispatch(initializeTickets())
-  }, [dispatch])
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                await dispatch(initializeUsers());
+                await dispatch(initializeRoles());
+                await dispatch(initializeProjects());
+                await dispatch(initializeTickets());
+                setLoading(false);
+            } catch (error) {
+                console.error("Failed to initialize app:", error);
+            }
+        };
+        fetchData();
+    }, [dispatch]);
+
 
   useEffect(() => {
     
@@ -124,48 +134,51 @@ const App = () => {
 
   console.log(store.getState())
   
-
+  if (loading) {
+      return <div>Loading...</div>; // You can replace this with a spinner or loader component
+  }
   
   return (
 
     <div className="App">
-      
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+          <input type="checkbox" id="nav-toggle" />
+          <Sidebar isSidebarActive={isSidebarActive} />
+          <div className="main-content">
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
 
 
-        <Route path="/" element={<PrivateRoute />}>
-          
-          <Route index element={<Home isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar} />} />
-          <Route path="logout" element={<Logout />} />
+                <Route path="/" element={<PrivateRoute />}>
 
-          <Route path="projects">
-            <Route index element={<ListProjects isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar}  />} />
-            <Route path=":id" element={<SingleProject project={project} isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar}  />} />
-            <Route path="new" element={<CreateProject isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar}  />} />
-          </Route>
+                    <Route index element={<Home toggleSidebar={toggleSidebar} />} />
+                    <Route path="logout" element={<Logout />} />
 
-          <Route path="tickets">
-            <Route index element={<ListTickets isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar}  />} />
-            <Route path=":id" element={<SingleTicket ticket={ticket} isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar}  />} />
-            <Route path="new" element={<CreateTicket isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar}  />} />
-          </Route>
+                    <Route path="projects">
+                        <Route index element={<ListProjects toggleSidebar={toggleSidebar} />} />
+                        <Route path=":id" element={<SingleProject project={project} toggleSidebar={toggleSidebar} />} />
+                        <Route path="new" element={<CreateProject toggleSidebar={toggleSidebar} />} />
+                    </Route>
 
-          <Route path="users">
-            
-            <Route path=":id" element={<SingleUser user={user} isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar} />} />
-          </Route>
+                    <Route path="tickets">
+                        <Route index element={<ListTickets toggleSidebar={toggleSidebar} />} />
+                        <Route path=":id" element={<SingleTicket ticket={ticket} toggleSidebar={toggleSidebar} />} />
+                        <Route path="new" element={<CreateTicket toggleSidebar={toggleSidebar} />} />
+                    </Route>
 
-          <Route path="admin/" element={<AdminRoute />}>
-            <Route path="projects" element={<ManageProjects isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar} />} />
-            <Route path="roles" element={<ManageRoles isSidebarActive={isSidebarActive} toggleSidebar={toggleSidebar} />} />
-          </Route>
+                    <Route path="users">
+                          <Route path=":id" element={<SingleUser selectedUser={user} toggleSidebar={toggleSidebar} />} />
+                    </Route>
 
-          <Route path="*" element={<h1>404</h1>} />
-        </Route>
-      </Routes> 
+                    <Route path="admin/" element={<AdminRoute />}>
+                        <Route path="projects" element={<ManageProjects toggleSidebar={toggleSidebar} />} />
+                        <Route path="roles" element={<ManageRoles toggleSidebar={toggleSidebar} />} />
+                    </Route>
 
+                    <Route path="*" element={<h1>404</h1>} />
+                </Route>
+              </Routes> 
+           </div>
     </div>
   )
 }

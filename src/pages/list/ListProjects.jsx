@@ -2,14 +2,13 @@ import React from 'react'
 import "./list.scss"
 
 import ProjectsTable from '../../components/tables/ProjectsTable'
-import Sidebar from '../../components/sidebar/Sidebar'
 import Header from '../../components/header/Header'
 import { useSelector } from 'react-redux'
 import { Button } from '@mui/material'
 
 import { useNavigate } from 'react-router-dom'
 
-const ListProjects = ({ isSidebarActive, toggleSidebar }) => {
+const ListProjects = ({ toggleSidebar }) => {
     const navigate = useNavigate()
     const user = useSelector(state => state.user)
 
@@ -22,26 +21,29 @@ const ListProjects = ({ isSidebarActive, toggleSidebar }) => {
         
 
   return user ? (
-    <>
-        <Sidebar isSidebarActive={isSidebarActive}/>
-        
-        <div className="main-content">
-          <Header page={"My Projects"} user={user} toggleSidebar={toggleSidebar}/>
+    <>  
+        <Header page={"My Projects"} user={user} toggleSidebar={toggleSidebar}/>
 
 
           <main>
-            <div>
-               
-              <Button sx={{ minWidth: 150 }} variant="outlined" onClick={handleCreateProject} >Create new project</Button>
-             
-            </div>
-            <div className="tableWrapper">
-              <div className="main-title">PROJECTS</div>
-            
-              <ProjectsTable filter={"user"} value={user} />
-            </div>
-          </main>
-        </div>
+              <div className="flexWrapper">
+                  <div className="formWrapper">
+                      <div className="button">
+
+                          <Button sx={{ marginBottom: 4, minWidth: 150, backgroundColor: '##2873ff' }} variant="contained" onClick={handleCreateProject}>Create New Project</Button>
+
+                      </div>
+                  </div>
+                  <div className="table-wrapper">
+                      <div className="formHeader">
+                          <h2>Projects</h2>
+                      </div>
+                      <div className="tableContainer">
+                          <ProjectsTable filter={"user"} value={user} /> </div>
+                     </div>
+              </div>
+        </main>
+
     </>
   ) : null
 }

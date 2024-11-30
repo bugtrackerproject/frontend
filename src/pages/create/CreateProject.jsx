@@ -1,5 +1,4 @@
 
-import Sidebar from '../../components/sidebar/Sidebar'
 import Header from '../../components/header/Header'
 
 import { TextField, Button } from '@mui/material'
@@ -7,10 +6,10 @@ import { TextField, Button } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { createProject } from '../../reducers/projectsReducer'
-import SelectUsers from '../../components/checkbox/SelectUsers'
+import SelectMultiple from '../../components/checkbox/SelectMultiple'
 import { useNavigate } from 'react-router-dom'
 
-const CreateProject = () => {
+const CreateProject = ({ toggleSidebar }) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -46,35 +45,34 @@ const CreateProject = () => {
 
   return (
     <>
-        <input type="checkbox" id="nav-toggle" />
-        <Sidebar />
-        
-        <div className="main-content">
+        <Header page={"My Projects"} user={user} toggleSidebar={toggleSidebar} />
+        <main>
+              <div className="formWrapper">
 
-            <Header page={"My Projects"} user={user} />
-            <main>
-                
-                <div className="formContainer">
+                  <div className="formHeader">
+                      <h2>Create New Project</h2>
+                  </div>
 
-                    <div className="mainTitle">PROJECT NAME</div>
-                    <TextField id="filled-basic" label="Name" variant="filled" onChange={(event) => setNewName(event.target.value)}/>
+                  <div className="formContainer">     
 
-                    <div className="mainTitle">PROJECT DESCRIPTION</div>
-                    <TextField id="filled-basic" label="Description" variant="filled" onChange={(event) => setNewDesc(event.target.value)}/>
+                      <div className="mainTitle">PROJECT NAME</div>
+                          <TextField id="filled-basic" label="Name" variant="outlined" onChange={(event) => setNewName(event.target.value)}/>
 
-                    <div className="mainTitle">SELECT USERS</div>
-                    <SelectUsers data={users} onChange={(event, selectedValue) => setUsers(selectedValue)}/>
+                      <div className="mainTitle">PROJECT DESCRIPTION</div>
+                          <TextField id="filled-basic" label="Description" variant="outlined" onChange={(event) => setNewDesc(event.target.value)}/>
 
-                    <div className="btnAddProject">
-                        <span className="button">
-                            <Button sx={{ minWidth: 150 }} variant="contained" onClick={handleAddProject}>Add Project</Button>
-                        </span>
+                      <div className="mainTitle">SELECT USERS</div>
+                      <SelectMultiple data={users} label="Users" onChange={(event, selectedValue) => setUsers(selectedValue)} />
 
-                    </div>
-                </div>
-            </main>
-
-        </div>
+                      <div className="button">
+                          
+                          <Button sx={{ minWidth: 150, backgroundColor: '##2873ff' }} variant="contained" onClick={handleAddProject}>Add</Button>
+                      
+                      </div>
+                  </div>
+              </div>
+              
+        </main>
   </>
   )
 }

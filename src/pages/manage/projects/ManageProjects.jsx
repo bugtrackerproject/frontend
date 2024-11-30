@@ -3,17 +3,16 @@ import "./manageprojects.scss"
 import { useSelector } from "react-redux"
 import { useState } from "react"
 
-import Sidebar from '../../../components/sidebar/Sidebar'
 import Button from '@mui/material/Button';
 import ProjectsTable from "../../../components/tables/ProjectsTable"
-import SelectProjects from "../../../components/checkbox/SelectProjects"
-import SelectUsers from "../../../components/checkbox/SelectUsers"
+import SelectMultiple from "../../../components/checkbox/SelectMultiple"
+import Select from "../../../components/checkbox/Select"
 import { updateProject } from "../../../reducers/projectsReducer"
 import { useDispatch } from "react-redux"
 import Header from "../../../components/header/Header"
 
 
-const ManageProjects = ({ isSidebarActive, toggleSidebar }) => {
+const ManageProjects = ({ toggleSidebar }) => {
 
   const dispatch = useDispatch();
 
@@ -21,7 +20,7 @@ const ManageProjects = ({ isSidebarActive, toggleSidebar }) => {
   const users = useSelector((state) => state.users)
   const user = useSelector(state => state.user)
 
-  const [project, setProject] = useState('');
+  const [project, setProject] = useState([]);
   const [selectedUsers, setUsers] = useState([]);
 
   const handleAddUsers = async (e) => {
@@ -61,38 +60,45 @@ const ManageProjects = ({ isSidebarActive, toggleSidebar }) => {
 
   return user ? (
     <>
-        <Sidebar isSidebarActive={isSidebarActive} />
-        
-        <div className="main-content">
-          <Header page={"Manage Projects"} user={user} toggleSidebar={toggleSidebar} />
-
+        <Header page={"Manage Projects"} user={user} toggleSidebar={toggleSidebar} />
 
         <main>
-          <div className="add-page">
+            <div className="flexWrapper">
+              <div className="formWrapper">
+
+                  <div className="formHeader">
+                      <h2>Add To Project</h2>
+                  </div>
             
+                    <div className="formContainer">
 
-            <div className="select-form">
-              <div className="main-title">PROJECTS</div>
-              <div className="form-container">
-                <div className="sub-title">SELECT PROJECT</div>
-                <SelectProjects data={projects} onChange={(event, selectedValue) => setProject(selectedValue)}/>
-                <div className="sub-title">SELECT USERS</div>
-                <SelectUsers data={users} onChange={(event, selectedValue) => setUsers(selectedValue)}/>
-                <div className="buttons">
+                        <div className="formContent">
 
-                  <Button sx={{ minWidth: 150 }} variant="outlined" onClick={handleAddUsers}>Add Users to project</Button>
+                            <div className="sub-title">SELECT PROJECT</div>
+                            <Select data={projects} label="Projects" onChange={(event, selectedValue) => setProject(selectedValue)} />
+                            <div className="sub-title">SELECT USERS</div>
+                            <SelectMultiple data={users} label="Users" onChange={(event, selectedValue) => setUsers(selectedValue)} />
+                            <div className="button">
 
+                                  <Button sx={{ minWidth: 150, backgroundColor: '#2873ff' }} variant="contained" onClick={handleAddUsers}>Add Users to project</Button>
+
+
+                            </div>
+                        </div>
+                </div>
+            
+                
+              </div>
+              <div className="table-wrapper">
+                    <div className="formHeader">
+                        <h2>Projects</h2>
+                    </div>
+                    <div className="tableContainer">
+                        <ProjectsTable className="mui-table" />
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="table-wrapper">
-                <div className="main-title">ALL PROJECTS</div>
-                <ProjectsTable className="mui-table" />
-            </div>
-          </div>
         </main>
-      </div>
     </>
   ) : null
 }
