@@ -44,14 +44,16 @@ const Home = ({ toggleSidebar }) => {
         <Header page={"Dashboard"} user={user} toggleSidebar={toggleSidebar}/>
 
         <main>
-
-            <div className="main-title">TOTAL</div>
-            <div className="widgets">
-                <Widget type="tickets" count={totals.tickets}/>
-                <Widget type="projects" count={totals.projects}/>
+            
+            
+            <div className="widgets-wrapper">
+                <div className="main-title">TOTAL</div>
+                <div className="widgets">
+                    <Widget type="tickets" count={totals.tickets}/>
+                    <Widget type="projects" count={totals.projects}/>
+                </div>
             </div>
-
-            <hr />
+       
 
             <div className="main-title">TICKET PROGRESS</div>
             <div className="widgets">
@@ -60,17 +62,20 @@ const Home = ({ toggleSidebar }) => {
                 <Widget type="in progress" count={totals.inprogress}/>
                 <Widget type="completed" count={totals.completed}/>
             </div>
-            <div className="tables">
-                <div className="tableWrapper">
-                <div className="main-title">RECENT TICKETS</div>
+
+            <div className="table-wrapper">
+                    <div className="formHeader">
+                        <h2>Recent Tickets</h2>
+                    </div>
                 <TicketsTable filter="user" value={user} />
-                </div>
-                <div className='tableWrapper'>
-                <div className="main-title">RECENT PROJECTS</div>
+            </div>
+            <div className='table-wrapper'>
+                <div className="formHeader">
+                        <h2>Recent Projects</h2>
+                    </div>
                 <ProjectsTable filter="user" value={user} />
                 </div>
-            </div>
-          
+            
 
         </main>
       </>

@@ -12,6 +12,11 @@ const ticketsSlice = createSlice({
     setTickets(state, action) {
       return action.payload
     },
+    update(state, action) {
+      return state.map(ticket =>
+        ticket.id !== action.payload.id ? ticket : action.payload
+      )
+    },
   },
 })
 
@@ -29,5 +34,13 @@ export const createTicket = (ticketObject) => {
   }
 }
 
-export const { appendTicket, setTickets } = ticketsSlice.actions
+
+export const updateTicket = (ticketObject) => {
+  return async (dispatch) => {
+    const updatedTicket = await ticketService.update(ticketObject)
+    dispatch(update(updatedTicket))
+  }
+}
+
+export const { appendTicket, setTickets, update  } = ticketsSlice.actions
 export default ticketsSlice.reducer

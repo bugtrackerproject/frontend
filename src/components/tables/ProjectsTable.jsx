@@ -6,7 +6,7 @@ import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { Box } from '@mui/system';
 import { Stack } from '@mui/material';
 
-import "./table.scss"
+
 
 function QuickSearchToolbar() {
   return (

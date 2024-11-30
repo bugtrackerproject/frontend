@@ -56,5 +56,5 @@ const SingleProject = ({ project, toggleSidebar }) => {
     </>
   ) : null
 }
-//<BasicTable type="Tickets"/>
+
 export default SingleProject

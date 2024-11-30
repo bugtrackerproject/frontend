@@ -73,6 +73,7 @@ const App = () => {
     const dispatch = useDispatch()
     const [isSidebarActive, setSidebarActive] = useState(false)
     const [loading, setLoading] = useState(true);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     const toggleSidebar = () => {
         setSidebarActive(!isSidebarActive);
@@ -113,6 +114,18 @@ const App = () => {
 
   })
 
+    useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Update isMobile state on resize
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
   const matchProject = useMatch('/projects/:id')
 
   const project = matchProject 
@@ -141,9 +154,15 @@ const App = () => {
   return (
 
     <div className="App">
-          <input type="checkbox" id="nav-toggle" />
           <Sidebar isSidebarActive={isSidebarActive} />
-          <div className="main-content">
+          <div
+            className={`main-content ${isMobile && isSidebarActive ? 'sidebar-hidden' : ''}`}
+            onClick={() => {
+              if (isMobile && isSidebarActive) {
+                setSidebarActive(false);  // Close sidebar when clicked on main content on mobile
+              }
+            }}
+          >
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

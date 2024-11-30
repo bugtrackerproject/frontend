@@ -4,18 +4,29 @@ import Header from '../../components/header/Header'
 
 
 import { useSelector } from 'react-redux'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import { Button } from "@mui/material"
 import Select from "../../components/checkbox/Select"
 
-
+import { useDispatch } from 'react-redux';
+import { update } from '../../reducers/ticketsReducer'
 
 const SingleTicket= ({ ticket, toggleSidebar }) => {
 
     
     const [status, setStatus] = useState("")
     const [priority, setPriority] = useState("")
+
+    useEffect(() => {
+    if (ticket) {
+      setStatus(ticket.status) 
+      setPriority(ticket.priority)
+    }
+  }, [ticket])
+
+    const dispatch = useDispatch();
+
     const projects = useSelector(state => state.projects)
     const users = useSelector(state => state.users)
     const user = useSelector(state => state.user)
@@ -29,7 +40,7 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
     let assignee
     let submitter
 
-    const statuses = ["To Do", "In Progress", "Done"]
+    const statuses = ["To Do", "In Progress", "Completed"]
 
     const priorities = ["Low", "Medium", "High"]
 
@@ -41,17 +52,14 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
     const handleAddTicket = async (e) => {
         e.preventDefault()
 
-        if(priority || status){
+     if (priority || status) {
+          const updatedTicket = {
+            ...ticket,  
+            priority,   
+            status,   
+          };
 
-    
-                    
-          const obj = {
-            ...ticket
-          }
-  
-          console.log(obj);
-      
-          
+          dispatch(update(updatedTicket));
 
         }
       }

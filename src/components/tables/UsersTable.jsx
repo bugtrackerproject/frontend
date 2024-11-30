@@ -5,8 +5,6 @@ import { Box } from '@mui/system';
 import { Link } from 'react-router-dom';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 
-import "./table.scss"
-
 function QuickSearchToolbar() {
   return (
     <Box

@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { Stack } from '@mui/material';
 
-import "./table.scss"
-
 function QuickSearchToolbar() {
   return (
     <Box
@@ -32,7 +30,7 @@ function QuickSearchToolbar() {
 
 const columns = [
   { field: 'name', headerName: 'Name', minWidth: 100, flex: 1 },
-  { field: 'description', headerName: 'Description', minWidth: 130, flex: 1 },
+  { field: 'description', headerName: 'Description', minWidth: 170, flex: 1 },
   {
     field: 'project',
     headerName: 'Project',
