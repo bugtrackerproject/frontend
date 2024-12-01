@@ -29,7 +29,7 @@ const Sidebar = ({ isSidebarActive }) => {
         <div className="sidebar-brand">
           <label className="sidebar-brand-icon" for="nav-toggle">
             <Stack direction="row" alignItems="center" gap={1}>
-              <PestControlIcon className="logo" sx={{fontSize:'3rem', paddingRight: "0.5rem" }}/>
+              <PestControlIcon className={`logo ${isSidebarActive ? 'reverseRotate' : 'rotate'}`}  sx={{fontSize:'3rem', paddingRight: "0.5rem" }}/>
               <div className="sidebar-text" style={{fontSize: "2rem"}}>
                 bugtracker
               </div>
@@ -55,7 +55,7 @@ const Sidebar = ({ isSidebarActive }) => {
             <NavLink className="sidebar-link" to="/tickets">
               <Stack direction="row" alignItems="center" gap={1}>
                 <AssignmentIcon sx={{fontSize:'2rem', paddingRight: "0.5rem",}}/>
-                <div className="sidebar-text">My Tickets</div>
+                <div className="sidebar-text">Tickets</div>
               </Stack>
             </NavLink>
           </li>
@@ -64,7 +64,7 @@ const Sidebar = ({ isSidebarActive }) => {
             <NavLink className="sidebar-link" to="/projects">
                 <Stack direction="row" alignItems="center" gap={1}>
                   <FolderIcon sx={{fontSize:'2rem', paddingRight: "0.5rem",}}/>
-                  <div className="sidebar-text">My Projects</div>
+                  <div className="sidebar-text">Projects</div>
                 </Stack>
             </NavLink>
           </li>

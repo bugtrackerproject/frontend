@@ -57,11 +57,52 @@ body {
     }
 }
 
+.sidebar .logo {
+    font-size: 3rem; 
+}
+
+/* Add rotation and left shift when sidebar is toggled */
+.sidebar .logo.rotate {
+    animation: rotateAndShift 0.5s ease-out forwards;
+}
+
+@keyframes rotateAndShift {
+    0% {
+        transform: rotate(90deg) translateY(5px) translateX(5px);
+    }
+
+    100% {
+        transform: rotate(0deg) translateY(0px) translateX(0px); 
+    }
+}
+
+/* Add the opposite rotation when sidebar is open */
+.sidebar .logo.reverseRotate {
+    animation: reverseRotateAndShift 0.5s ease-out forwards;
+}
+
+@keyframes reverseRotateAndShift {
+    0% {
+        transform: rotate(0deg) translateY(0px) translateX(0px);
+    }
+
+    100% {
+        transform: rotate(90deg) translateY(5px) translateX(5px);
+    }
+}
+
 
 .sidebar-brand {
     height: 5rem;
     padding: 1rem 0rem 1rem 1rem;
     color: #fff;
+}
+
+.sidebar-brand-icon {
+    padding-left: 1rem;
+    display: block;
+    color: #fff;
+    font-size: 1.2rem;
 }
 
 .category {
@@ -74,36 +115,36 @@ body {
 
 .sidebar-menu {
     margin-top: 2rem;
-    display:flex;
+    display: flex;
     flex-direction: column;
     flex: 1;
     height: 80%;
-    
+
     li {
         width: 100%;
         margin-bottom: 1.7rem;
         padding-left: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        transition: padding-left 300ms ease;
 
         .sidebar-link {
             padding-left: 1rem;
             display: block;
             color: #fff;
             font-size: 1.2rem;
-            
         }
-        
+
         &:hover {
-            
             margin-left: 0.4rem;
             transition: all 200ms ease;
-    
         }
-    
-        
+
+
         &:nth-last-child(2) {
             margin-top: auto;
         }
-    
+
         .active {
             background: #f1f5f9;
             padding-top: 0.8rem;
@@ -114,12 +155,7 @@ body {
     }
 }
 
-.sidebar-brand-icon {
-    padding-left: 1rem;
-    display: block;
-    color: #fff;
-    font-size: 1.2rem;
-}
+
 
 
 header {

@@ -1,0 +1,28 @@
+/* Loading spinner container */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full screen height */
+}
+
+/* The spinning circle animation */
+.spinner {
+    border: 8px solid #f3f3f3; /* Light grey border */
+    border-top: 8px solid #3498db; /* Blue top border */
+    border-radius: 50%;
+    width: 50px; /* Size of the spinner */
+    height: 50px;
+    animation: spin 1.5s linear infinite; /* Animation for the spinning effect */
+}
+
+/* Spin animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg); /* Starting position */
+    }
+
+    100% {
+        transform: rotate(360deg); /* Ending position */
+    }
+}

@@ -1,5 +1,4 @@
 import React from 'react'
-import "./list.scss"
 
 import ProjectsTable from '../../components/tables/ProjectsTable'
 import Header from '../../components/header/Header'
@@ -36,7 +35,7 @@ const ListProjects = ({ toggleSidebar }) => {
                   </div>
                   <div className="table-wrapper">
                       <div className="formHeader">
-                          <h2>Projects</h2>
+                          <h2>Assigned Projects</h2>
                       </div>
                       <div className="tableContainer">
                           <ProjectsTable filter={"user"} value={user} /> </div>

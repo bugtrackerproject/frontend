@@ -27,17 +27,17 @@ export const initializeTickets = () => {
   }
 }
 
-export const createTicket = (ticketObject) => {
+export const createTicket = (ticket) => {
   return async (dispatch) => {
-    const newTicket = await ticketService.create(ticketObject)
+    const newTicket = await ticketService.create(ticket)
     dispatch(appendTicket(newTicket))
   }
 }
 
 
-export const updateTicket = (ticketObject) => {
+export const updateTicket = (id, ticket) => {
   return async (dispatch) => {
-    const updatedTicket = await ticketService.update(ticketObject)
+    const updatedTicket = await ticketService.update(id, ticket)
     dispatch(update(updatedTicket))
   }
 }

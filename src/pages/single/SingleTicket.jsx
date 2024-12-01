@@ -10,7 +10,7 @@ import { Button } from "@mui/material"
 import Select from "../../components/checkbox/Select"
 
 import { useDispatch } from 'react-redux';
-import { update } from '../../reducers/ticketsReducer'
+import { updateTicket } from '../../reducers/ticketsReducer'
 
 const SingleTicket= ({ ticket, toggleSidebar }) => {
 
@@ -53,21 +53,24 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
         e.preventDefault()
 
      if (priority || status) {
-          const updatedTicket = {
+          let updatedTicket = {
             ...ticket,  
-            priority,   
-            status,   
+            priority: priority,   
+            status: status
           };
 
-          dispatch(update(updatedTicket));
+          dispatch(updateTicket(ticket.id, updatedTicket));
 
         }
       }
 
+     const isAssignee = user.id === assignee?.id;
+
+
   return project && assignee && submitter ? (
     <>
+        
         <Header page={project.name} user={user} toggleSidebar={toggleSidebar} />
-
 
           <main>
             
@@ -86,15 +89,21 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
                                 {ticket.description}
 
                               <div className="mainTitle">PRIORITY</div>
-                                <Select defaultValue={ticket.priority} data={priorities} onChange={(event, selectedValue) => setPriority(selectedValue)}/> 
+                              {isAssignee ? (
+                                    <Select defaultValue={ticket.priority} data={priorities} onChange={(event, selectedValue) => setPriority(selectedValue)} />
+                                ) : (
+                                    ticket.priority
+                                )}
 
                               <div className="mainTitle">TYPE</div>
                                 {ticket.type}
 
                                 <div className="mainTitle">STATUS</div>
-                                <Select defaultValue={ticket.status} data={statuses} onChange={(event, selectedValue) => setStatus(selectedValue)}/> 
-
-        
+                                {isAssignee ? (
+                                    <Select defaultValue={ticket.status} data={statuses} onChange={(event, selectedValue) => setStatus(selectedValue)}/> 
+                                ) : (
+                                    ticket.status
+                                )}
 
                                 <div className="mainTitle">PROJECT</div>
                                 {project.name}
@@ -111,13 +120,13 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
 
                </div>
             </div>
-                <div className="btnAddProject">
-                    <span className="button">
-                        <Button sx={{ minWidth: 150 }} variant="contained" onClick={handleAddTicket}>Update Ticket</Button>
-                    </span>
-        
-    
-                </div>
+                {isAssignee && (
+                    <div className="button">
+                        <span className="button">
+                            <Button sx={{ minWidth: 150 }} variant="contained" onClick={handleAddTicket}>Update Ticket</Button>
+                        </span>
+                    </div>
+                )}
 
         </main>
     </>

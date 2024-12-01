@@ -1,5 +1,4 @@
 import React from 'react'
-import "./list.scss"
 
 import Header from '../../components/header/Header'
 import { useSelector } from 'react-redux'
@@ -39,7 +38,7 @@ const ListTickets = ({ toggleSidebar }) => {
 
                   <div className="table-wrapper">
                       <div className="formHeader">
-                          <h2>Projects</h2>
+                          <h2>Assigned Tickets</h2>
                       </div>
                       <div className="tableContainer">
                           <TicketsTable filter={"user"} value={user} />
