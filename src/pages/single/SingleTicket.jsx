@@ -5,6 +5,7 @@ import Header from '../../components/header/Header'
 
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from "react"
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from "@mui/material"
 import Select from "../../components/checkbox/Select"
@@ -26,6 +27,7 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
   }, [ticket])
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const projects = useSelector(state => state.projects)
     const users = useSelector(state => state.users)
@@ -61,8 +63,10 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
 
           dispatch(updateTicket(ticket.id, updatedTicket));
 
+
+           navigate('/tickets');
         }
-      }
+      };
 
      const isAssignee = user.id === assignee?.id;
 
