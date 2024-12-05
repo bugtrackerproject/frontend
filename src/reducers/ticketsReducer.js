@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import ticketService from '../services/tickets'
+import { ticketService } from '../services/apiServiceFactory'
 
 
 const ticketsSlice = createSlice({

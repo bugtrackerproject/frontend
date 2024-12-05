@@ -5,24 +5,24 @@ import { useDispatch } from 'react-redux';
 
 import LoginForm from '../../components/login/LoginForm';
 
-const Logout = ({ handleLogout }) => {
+const Logout = () => {
 
     const dispatch = useDispatch()
-  useEffect(() => {
+    useEffect(() => {
 
-    const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
-    if (loggedUserJSON) {
-        window.localStorage.removeItem("loggedBugtrackerAppUser")
+        const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
+        if (loggedUserJSON) {
+            window.localStorage.removeItem("loggedBugtrackerAppUser")
 
-        dispatch(setUser(null))
-    }
-  }, []);
+            dispatch(setUser(null))
+        }
+    }, [dispatch]);
 
-  return (
-    <div className="loginPage">
-      <LoginForm />
-    </div>
-  )
+    return (
+        <div className="loginPage">
+            <LoginForm />
+        </div>
+    )
 }
 
 export default Logout

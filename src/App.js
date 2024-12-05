@@ -13,10 +13,7 @@ import ManageRoles from './pages/manage/roles/ManageRoles'
 import Logout from './pages/logout/Logout'
 
 
-import projectService from './services/projects'
-import ticketService from './services/tickets'
-import roleService from './services/roles'
-import userService from './services/users'
+import { projectService, ticketService, roleService, userService } from './services/apiServiceFactory'
 
 
 import Register from './pages/register/Register'
@@ -39,6 +36,7 @@ import Sidebar from './components/sidebar/Sidebar'
 
 import Spinner from './components/animations/Spinner';
 import { useSwipeable } from 'react-swipeable';
+import { apiServiceFactory } from './services/apiServiceFactory'
 
 
 const PrivateRoute = (props) => {
@@ -96,35 +94,33 @@ const App = () => {
     const tickets = useSelector((state) => state.tickets)
 
     useEffect(() => {
-        const fetchData = async () => {
+        const initializeApp = async () => {
             try {
-                await dispatch(initializeUsers());
-                await dispatch(initializeRoles());
-                await dispatch(initializeProjects());
-                await dispatch(initializeTickets());
-                setLoading(false);
+                const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
+                if (loggedUserJSON) {
+                    const user = JSON.parse(loggedUserJSON);
+                    dispatch(setUser(user));
+
+                    projectService.setToken(user.token);
+                    userService.setToken(user.token);
+                    roleService.setToken(user.token);
+                    ticketService.setToken(user.token);
+                }
+
+                await Promise.all([
+                    dispatch(initializeUsers()),
+                    dispatch(initializeRoles()),
+                    dispatch(initializeProjects()),
+                    dispatch(initializeTickets()),
+                ]);
             } catch (error) {
                 console.error("Failed to initialize app:", error);
+            } finally {
+                setLoading(false);
             }
         };
-        fetchData();
+        initializeApp();
     }, [dispatch]);
-
-
-  useEffect(() => {
-    
-    const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
-    if (loggedUserJSON) {
-        const user = JSON.parse(loggedUserJSON);
-        dispatch(setUser(user))
-
-        projectService.setToken(user.token)
-        userService.setToken(user.token)
-        roleService.setToken(user.token)
-        ticketService.setToken(user.token)
-      }
-
-  }, [dispatch]);
 
     useEffect(() => {
     const handleResize = () => {
@@ -188,8 +184,6 @@ return (
                 />
 
                 <Routes>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
 
                   <Route path="/" element={<PrivateRoute />}>
                     <Route index element={<Home toggleSidebar={toggleSidebar} />} />

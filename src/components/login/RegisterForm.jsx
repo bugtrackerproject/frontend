@@ -9,8 +9,8 @@ import {
   
 
 import loginService from "../../services/login"
-import usersService from "../../services/users"
-//import { useResource } from '../../hooks/useResource';
+import { userService } from "../../services/apiServiceFactory"
+
 import './registerform.scss'
 
 const RegisterForm = () => {
@@ -29,7 +29,7 @@ const RegisterForm = () => {
         event.preventDefault();
 
         try {
-          await usersService.create({
+            await userService.create({
             email,
             name,
             password

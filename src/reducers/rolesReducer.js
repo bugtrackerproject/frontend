@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import roleService from '../services/roles'
+import { roleService } from '../services/apiServiceFactory'
 
 const rolesSlice = createSlice({
   name: 'roles',
