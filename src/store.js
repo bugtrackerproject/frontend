@@ -9,12 +9,13 @@ import usersReducer from './reducers/usersReducer'
 
 
 const store = configureStore({
-  reducer: {
-    user: userReducer,
-    users: usersReducer,
-    projects: projectsReducer,
-    tickets: ticketsReducer
-  },
+    reducer: {
+        user: userReducer,
+        users: usersReducer,
+        projects: projectsReducer,
+        tickets: ticketsReducer,
+        roles: rolesReducer
+    },
 })
 
 export default store

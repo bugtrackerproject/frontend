@@ -38,6 +38,7 @@ import CreateTicket from './pages/create/CreateTicket'
 import Sidebar from './components/sidebar/Sidebar'
 
 import Spinner from './components/animations/Spinner';
+import { useSwipeable } from 'react-swipeable';
 
 
 const PrivateRoute = (props) => {
@@ -75,13 +76,20 @@ const App = () => {
     const dispatch = useDispatch()
     const location = useLocation(); 
 
-    const [isSidebarActive, setSidebarActive] = useState(false)
+    const [isSidebarActive, setSidebarActive] = useState(false) // it is actually active by default oopsie
     const [loading, setLoading] = useState(true);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     const toggleSidebar = () => {
         setSidebarActive(!isSidebarActive);
     }
+
+    const swipeConfig = {
+      onSwipedLeft: () => setSidebarActive(false),
+      onSwipedRight: () => setSidebarActive(true)
+    };
+
+    const swipeHandlers = useSwipeable(swipeConfig);
 
     const projects = useSelector((state) => state.projects)
     const users = useSelector((state) => state.users)
@@ -148,8 +156,6 @@ const App = () => {
   const ticket = matchTicket 
     ? tickets.find(a => a.id === matchTicket.params.id) 
     : null
-
-  const isAuthPage = window.location.pathname === '/login' || window.location.pathname === '/register';
   
   
 return (
@@ -164,48 +170,56 @@ return (
         </Routes>
       ) : (
         <>
-          <Sidebar isSidebarActive={isSidebarActive} />
-          <div
-            className={`main-content ${isMobile && isSidebarActive ? 'sidebar-hidden' : ''}`}
-            onClick={() => {
-              if (isMobile && isSidebarActive) {
-                setSidebarActive(false); // Close sidebar when clicked on main content on mobile
-              }
-            }}
-          >
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
 
-              <Route path="/" element={<PrivateRoute />}>
-                <Route index element={<Home toggleSidebar={toggleSidebar} />} />
-                <Route path="logout" element={<Logout />} />
+            <Sidebar isSidebarActive={isSidebarActive} setSidebarActive={setSidebarActive} />
+          
+              <div
+                className={`main-content ${isMobile && isSidebarActive ? 'sidebar-hidden' : ''}`}
+                onClick={() => {
+                  if (isMobile && isSidebarActive) {
+                    setSidebarActive(false); // Close sidebar when clicked on main content on mobile
+                  }
+                }}
+              >
 
-                <Route path="projects">
-                  <Route index element={<ListProjects toggleSidebar={toggleSidebar} />} />
-                  <Route path=":id" element={<SingleProject project={project} toggleSidebar={toggleSidebar} />} />
-                  <Route path="new" element={<CreateProject toggleSidebar={toggleSidebar} />} />
-                </Route>
+                <div
+                  {...swipeHandlers}
+                  className={'swipeable-area'}
+                />
 
-                <Route path="tickets">
-                  <Route index element={<ListTickets toggleSidebar={toggleSidebar} />} />
-                  <Route path=":id" element={<SingleTicket ticket={ticket} toggleSidebar={toggleSidebar} />} />
-                  <Route path="new" element={<CreateTicket toggleSidebar={toggleSidebar} />} />
-                </Route>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
 
-                <Route path="users">
-                  <Route path=":id" element={<SingleUser selectedUser={user} toggleSidebar={toggleSidebar} />} />
-                </Route>
+                  <Route path="/" element={<PrivateRoute />}>
+                    <Route index element={<Home toggleSidebar={toggleSidebar} />} />
+                    <Route path="logout" element={<Logout />} />
 
-                <Route path="admin/" element={<AdminRoute />}>
-                  <Route path="projects" element={<ManageProjects toggleSidebar={toggleSidebar} />} />
-                  <Route path="roles" element={<ManageRoles toggleSidebar={toggleSidebar} />} />
-                </Route>
+                    <Route path="projects">
+                      <Route index element={<ListProjects toggleSidebar={toggleSidebar} />} />
+                      <Route path=":id" element={<SingleProject project={project} toggleSidebar={toggleSidebar} />} />
+                      <Route path="new" element={<CreateProject toggleSidebar={toggleSidebar} />} />
+                    </Route>
 
-                <Route path="*" element={<h1>404</h1>} />
-              </Route>
-            </Routes>
-          </div>
+                    <Route path="tickets">
+                      <Route index element={<ListTickets toggleSidebar={toggleSidebar} />} />
+                      <Route path=":id" element={<SingleTicket ticket={ticket} toggleSidebar={toggleSidebar} />} />
+                      <Route path="new" element={<CreateTicket toggleSidebar={toggleSidebar} />} />
+                    </Route>
+
+                    <Route path="users">
+                      <Route path=":id" element={<SingleUser selectedUser={user} toggleSidebar={toggleSidebar} />} />
+                    </Route>
+
+                    <Route path="admin/" element={<AdminRoute />}>
+                      <Route path="projects" element={<ManageProjects toggleSidebar={toggleSidebar} />} />
+                      <Route path="roles" element={<ManageRoles toggleSidebar={toggleSidebar} />} />
+                    </Route>
+
+                    <Route path="*" element={<h1>404</h1>} />
+                  </Route>
+                </Routes>
+              </div>
         </>
       )
     )}

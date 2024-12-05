@@ -52,6 +52,11 @@ const columns = [
     minWidth: 60, flex: 1
   },
   {
+    field: 'type',
+    headerName: 'Type',
+    minWidth: 60, flex: 1
+  },
+  {
     field: 'createdAt',
     headerName: 'Date Created',
     minWidth: 150, flex: 1
@@ -59,14 +64,14 @@ const columns = [
   {
     field: 'updatedAt',
     headerName: 'Date Updated',
-    minWidth: 150, flex: 1
+    minWidth: 30, flex: 1
   },
   {
     field: 'id',
     headerName: 'ID',
     sortable: false,
     flex: 1,
-    minWidth: 210,
+    minWidth: 30,
     renderCell: (params) => (
         <Link to={`/tickets/${params.value}`}>{params.value}</Link>
       )
@@ -80,11 +85,12 @@ function createData(
     user,
     priority,
     status,
+    type,
     createdAt,
     updatedAt,
     id
   ) {
-    return { name, description, project, user, priority, status, createdAt, updatedAt, id};
+    return { name, description, project, user, priority, status, type, createdAt, updatedAt, id};
   }
 
 
@@ -122,7 +128,7 @@ const TicketsTable = ({ filter, value }) => {
         .map (ticket => {
             const project = projects.find(project => project.id === ticket.project)
             const user = users.find(user => user.id === ticket.assignee)
-            return createData(ticket.name, ticket.description, project.name, user.name, ticket.priority, ticket.status, ticket.createdAt, ticket.updatedAt, ticket.id)
+            return createData(ticket.name, ticket.description, project.name, user.name, ticket.priority, ticket.status, ticket.type, ticket.createdAt, ticket.updatedAt, ticket.id)
         })
         .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     } else {

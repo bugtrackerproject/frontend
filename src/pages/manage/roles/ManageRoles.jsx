@@ -15,75 +15,74 @@ import Header from "../../../components/header/Header";
 
 const ManageRoles = ({ toggleSidebar }) => {
 
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  const [selectedUsers, setUsers] = useState([]);
-  const [role, setRole] = useState('');
-  
+    const [selectedUsers, setUsers] = useState([]);
+    const [role, setRole] = useState('');
 
-  const roles = ["Admin", "Developer", "Submitter"]
+    const users = useSelector((state) => state.users)
+    const user = useSelector(state => state.user)
+    const roles = useSelector((state) => state.roles)
 
-  const users = useSelector((state) => state.users)
-  const user = useSelector(state => state.user)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+    const handleSubmit = async (e) => {
+        e.preventDefault()
 
-    if (role !== "" && selectedUsers.length !== 0) {
-      selectedUsers.forEach(user => {
+        if (role !== "" && selectedUsers.length !== 0) {
+            selectedUsers.forEach(user => {
 
-        const obj = {
+                const obj = {
 
-          ...user,
-          role: role,
+                    ...user,
+                    role: role,
+                }
+
+                dispatch(updateUser(user.id, obj))
+
+            })
         }
-
-        dispatch(updateUser(user.id, obj))
-
-      })
     }
-  }
 
 
-  return (
-    <>
-        <Header page={"Manage Users"} user={user} toggleSidebar={toggleSidebar} />
+    return (
+        <>
+            <Header page={"Manage Users"} user={user} toggleSidebar={toggleSidebar} />
 
-          <main>
-              <div className="flexWrapper">
+            <main>
+                <div className="flexWrapper">
 
-                  <div className="formWrapper">
+                    <div className="formWrapper">
 
-                      <div className="formHeader">
-                          <h2>Add User Roles</h2>
-                      </div>
+                        <div className="formHeader">
+                            <h2>Add User Roles</h2>
+                        </div>
 
-                      <div className="formContainer">
-                          <div className="formContent">
-                              <div className="sub-title">SELECT USERS</div>
-                              <SelectMultiple data={users} label="Users" onChange={(event, selectedValue) => setUsers(selectedValue)} />
-                              <div className="sub-title">SELECT ROLE</div>
-                              <Select data={roles} label="Role" onChange={(event, selectedValue) => setRole(selectedValue)} />
-                              <div className="button">
-                                  <Button sx={{ minWidth: 150, backgroundColor: '#2873ff' }} variant="contained" onClick={handleSubmit}>Add Role</Button>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                        <div className="formContainer">
+                            <div className="formContent">
+                                <div className="sub-title">SELECT USERS</div>
+                                <SelectMultiple data={users} label="Users" onChange={(event, selectedValue) => setUsers(selectedValue)} />
+                                <div className="sub-title">SELECT ROLE</div>
+                                <Select data={roles} label="Role" onChange={(event, selectedValue) => setRole(selectedValue)} />
+                                <div className="button">
+                                    <Button sx={{ minWidth: 150, backgroundColor: '#2873ff' }} variant="contained" onClick={handleSubmit}>Add Role</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                  <div className="table-wrapper">
-                      <div className="formHeader">
-                          <h2>Users</h2>
-                      </div>
-                      <div className="tableContainer">
-                          <UsersTable />
-                      </div>
-                  </div>
-              </div>
-            
-         </main>
-    </>
-  )
+                    <div className="table-wrapper">
+                        <div className="formHeader">
+                            <h2>Users</h2>
+                        </div>
+                        <div className="tableContainer">
+                            <UsersTable />
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </>
+    )
 }
 
 export default ManageRoles

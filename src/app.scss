@@ -190,6 +190,8 @@ main {
     margin-top: 80px;
     transition: margin-left 300ms ease;
     margin-left: 330px;
+
+
     
     hr {
         padding: 1rem;
@@ -222,7 +224,7 @@ main {
 
 .formHeader {
     background-color: var(--secondary-color); /* Shaded background color */
-    padding: 15px; /* Padding for the header */
+    padding: 15px;
     display: flex;
     justify-content: center;
     border-radius: 8px 8px 0 0; /* Rounded corners on top */
@@ -247,6 +249,11 @@ main {
     flex-direction: column;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     border: 1px solid #ddd;
+}
+
+.widgetsHeader {
+    align-items: center;
+    padding-left: 2rem;
 }
 
 .formContent {
@@ -340,6 +347,7 @@ main {
 
 .widgets {
     margin-top: 1rem;
+    margin-bottom: 1.5rem;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 2rem;
@@ -355,7 +363,21 @@ main {
     flex-direction: column;
     flex: 1;
     margin-top: 1rem;
+
 }
+
+.widgets-header {
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.widgets-header h2 {
+    font-size: 1.6rem;
+    margin: 0;
+    font-weight: 600;
+}
+
 
 @media only screen and (max-width: 960px) {
     .widgets {
@@ -365,6 +387,16 @@ main {
 }
 
 @media only screen and (max-width: 768px) {
+    .swipeable-area {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 25%; 
+        height: 100%;
+        z-index: 10;
+        background-color: transparent;
+        margin-left: 0px;
+    }
 
     .flexWrapper {
         flex-direction: column;
@@ -413,52 +445,31 @@ main {
             width: 330px;
             z-index: 100;
             left: 0 !important;
-        
+
             li {
                 padding-left: 1rem;
             }
-        
+
             .sidebar-brand {
                 padding: 1rem 0rem 1rem 1rem;
             }
-        
+
             .sidebar-text {
-                display:inline;
-            }   
+                display: inline;
+            }
         }
-    
-        &.toggle  ~ .main-content {
-            margin-left: 0;
+
+        &.toggle ~ .main-content {
+            margin-left: 0 !important;
+
+            .swipeable-area {
+                margin-left: 330px;
+            }
         }
     }
 
-    #nav-toggle {
-    
-        &:checked + .sidebar {
-            width: 330px;
-            z-index: 100;
-            left: 0 !important;
-        }
-    
-        &:checked + .sidebar li {
-            padding-left: 1rem;
-        }
-    
-        &:checked + .sidebar .sidebar-brand {
-            padding: 1rem 0rem 1rem 1rem;
-        }
-
-            
-        &:checked + .sidebar .sidebar-text,
-        &:checked + .sidebar .sidebar-brand .sidebar-text {
-            display:inline;
-        }
-  
-        &:checked ~ .main-content {
-            margin-left: 0;
-        }
-
-        
+    .sidebar.toggle + .swipeable-area {
+        margin-left: 330px; /* Adjust the position of swipeable-area when sidebar is toggled */
     }
 }
 

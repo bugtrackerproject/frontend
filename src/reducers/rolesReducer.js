@@ -16,8 +16,8 @@ const rolesSlice = createSlice({
 
 export const initializeRoles = () => {
   return async (dispatch) => {
-    const tickets = await roleService.getAll()
-    dispatch(setRoles(tickets))
+    const roles = await roleService.getAll()
+      dispatch(setRoles(roles))
   }
 }
 

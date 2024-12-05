@@ -46,18 +46,24 @@ const Home = ({ toggleSidebar }) => {
         <main>
             
             
-            <div className="widgets-wrapper">
-                <div className="main-title">TOTAL</div>
-                <div className="widgets">
-                    <Widget type="tickets" count={totals.tickets}/>
-                    <Widget type="projects" count={totals.projects}/>
-                </div>
+            
+            <div className="widgets-header">
+                <h2>Total</h2>
             </div>
+            <div className="widgets">
+
+                
+                  <Widget type="tickets" count={totals.tickets}/>
+                  <Widget type="projects" count={totals.projects}/>
+
+            </div>
+           
        
 
-            <div className="main-title">TICKET PROGRESS</div>
+            <div className="widgets-header">
+                <h2>Ticket Progress</h2>
+            </div>
             <div className="widgets">
-              
                 <Widget type="to do" count={totals.todo}/>
                 <Widget type="in progress" count={totals.inprogress}/>
                 <Widget type="completed" count={totals.completed}/>
