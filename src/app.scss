@@ -4,6 +4,7 @@
     --color-dark: #1D2231;
     --text-grey: #8390A2;
     --transition-speed: 600ms;
+    --main-background: #f1f5f9;
 }
 
 * {
@@ -17,6 +18,9 @@
 
 body {
     background-color: var(--main-color);
+}
+
+.login {
 }
 
 .sidebar {
@@ -173,18 +177,20 @@ header {
 }
 
 main {
-    
-    padding: 2rem 1.5rem;
-    background: #f1f5f9;
-    min-height: calc(100vh - 80px);
-}
-
-.flexWrapper {
+    padding: 2rem;
     display: flex;
     flex-direction: column;
+    background: var(--main-background);
+    min-height: calc(100vh - 80px);
     gap: 2rem;
-    justify-content: space-between;
 }
+
+.mui-table-container {
+    height: 670px;
+    background: #f7f7f7;
+}
+
+
 
 .main-content {
     margin-top: 80px;
@@ -214,33 +220,26 @@ main {
     padding: 1rem;
 }
 
-
-.formWrapper {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto; /* Center the form */
-    width: 100%;
-}
-
-.formHeader {
-    background-color: var(--secondary-color); /* Shaded background color */
+.form-header {
+    background: #f7f7f7;
     padding: 15px;
     display: flex;
     justify-content: center;
-    border-radius: 8px 8px 0 0; /* Rounded corners on top */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-
+    border-radius: 8px 8px 0 0;
+    //box-shadow: 0 4px 8px rgb(144,202,249);
+    border: 1px solid black;
+    border-bottom: 0px;
 }
 
-.formHeader h2 {
-    color: white;
+.form-header h2 {
+    color: black;
     font-size: 1.4rem;
     margin: 0;
     font-weight: 500;
 }
 
-.formContainer {
+
+.form-container {
     flex: 1;
     padding: 2rem; /* Padding for the main content */
     background-color: #f7f7f7; /* Light background for form content */
@@ -248,7 +247,18 @@ main {
     display: flex;
     flex-direction: column;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
+    border: 1px solid black;
+}
+
+form-rows {
+    
+}
+
+.row-fields {
+    display:flex;
+    justify-content: space-evenly;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .widgetsHeader {
@@ -261,15 +271,28 @@ main {
     margin: auto;
 }
 
-.tableContainer {
-    background-color: #f7f7f7; /* Light background for form content */
-    border-radius: 0 0 8px 8px; /* Rounded corners on bottom */
-    width: 100%;
+.user-actions {
     display: flex;
-    flex-direction: column;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
+    gap: 20px;
+    justify-content: space-between;
+    margin-top: 20px;
+    flex-direction: row;
+
+    .add-users, .remove-users {
+        width: 100%;
+    }
+
+    .sub-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .MuiButton-root {
+        min-width: 150px;
+    }
 }
+
+
 .mainTitle {
     font-size: 16px;
     font-weight: 600;
@@ -359,12 +382,9 @@ main {
 }
 
 .table-wrapper {
-    display:flex;
-    flex-direction: column;
-    flex: 1;
-    margin-top: 1rem;
-
+    
 }
+
 
 .widgets-header {
     padding: 15px;
@@ -378,7 +398,6 @@ main {
     font-weight: 600;
 }
 
-
 @media only screen and (max-width: 960px) {
     .widgets {
         grid-template-columns: repeat(3, 1fr);
@@ -387,6 +406,14 @@ main {
 }
 
 @media only screen and (max-width: 768px) {
+    .forms-container {
+        flex-direction: column;
+    }
+    
+
+    .user-actions {
+        flex-direction: column;
+    }
     .swipeable-area {
         position: fixed;
         top: 0;
@@ -398,7 +425,7 @@ main {
         margin-left: 0px;
     }
 
-    .flexWrapper {
+    .flex-wrapper {
         flex-direction: column;
     }
 

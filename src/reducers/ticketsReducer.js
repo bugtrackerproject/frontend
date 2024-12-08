@@ -17,6 +17,11 @@ const ticketsSlice = createSlice({
         ticket.id !== action.payload.id ? ticket : action.payload
       )
     },
+      updateField(state, action) {
+        return state.map(ticket =>
+         ticket.id !== action.payload.id ? ticket : { ...ticket, [action.payload.field]: action.payload.value }
+        )
+    },
   },
 })
 
@@ -42,5 +47,12 @@ export const updateTicket = (id, ticket) => {
   }
 }
 
-export const { appendTicket, setTickets, update  } = ticketsSlice.actions
+export const updateTicketField = (id, field, value) => {
+    return async (dispatch) => {
+        const updatedTicket = await ticketService.update(id, { [field]: value })
+        dispatch(updateTicketField({ id, field, value: updatedTicket[field] }))
+    }
+}
+
+export const { updateField, appendTicket, setTickets, update  } = ticketsSlice.actions
 export default ticketsSlice.reducer

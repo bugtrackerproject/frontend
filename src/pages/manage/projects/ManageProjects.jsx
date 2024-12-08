@@ -7,100 +7,134 @@ import Button from '@mui/material/Button';
 import ProjectsTable from "../../../components/tables/ProjectsTable"
 import SelectMultiple from "../../../components/checkbox/SelectMultiple"
 import Select from "../../../components/checkbox/Select"
-import { updateProject } from "../../../reducers/projectsReducer"
+import { addUserToProject, removeUserFromProject } from "../../../reducers/projectsReducer"
 import { useDispatch } from "react-redux"
 import Header from "../../../components/header/Header"
 
 
 const ManageProjects = ({ toggleSidebar }) => {
 
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  const projects = useSelector((state) => state.projects)
-  const users = useSelector((state) => state.users)
-  const user = useSelector(state => state.user)
+    const projects = useSelector((state) => state.projects)
+    const users = useSelector((state) => state.users)
+    const user = useSelector(state => state.user)
 
-  const [project, setProject] = useState([]);
-  const [selectedUsers, setUsers] = useState([]);
+    const [project, setProject] = useState(null);
+    const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
+    const [selectedUsersToRemove, setSelectedUsersToRemove] = useState([]);
 
-  const handleAddUsers = async (e) => {
-    e.preventDefault()
+    const handleAddUsers = async (e) => {
+        e.preventDefault();
 
-    let obj = {
-
-      ...project,
-      users: project.users
+        for (const user of selectedUsersToAdd) {
+            const found = project.users.some(id => id === user.id);
+            if (!found) {
+                await dispatch(addUserToProject(project.id, user.id));
+                setProject(prevProject => ({
+                    ...prevProject,
+                    users: [...prevProject.users, user.id], 
+                }));
+            } else {
+                console.log("User already exists in the project");
+            }
+        }
+        setSelectedUsersToAdd([])
     }
 
-    selectedUsers.forEach(user => {
+    const handleRemoveUsers = async (e) => {
+        e.preventDefault();
 
-      const found = project.users.some(u => {
-        if (u.id === user.id) {
-          
-          return true;
+        for (const user of selectedUsersToRemove) {
+            console.log(user.id)
+            await dispatch(removeUserFromProject(project.id, user.id));
+            setProject(prevProject => ({
+                ...prevProject,
+                users: prevProject.users.filter(userId => userId !== user.id),
+            }));
         }
-        return false;
-      });
 
-      if (!found) {
-        obj = {
+        setSelectedUsersToRemove([]);
+    }
 
-          ...project,
-          users: obj.users.concat(user.id),
-        }
-      } else {
-        console.log("user already exists")
-      }
-    })
+    const usersNotInProject = users.filter(u => !project?.users.includes(u.id));
 
-    dispatch(updateProject(project.id, obj))
+    return user ? (
+        <>
+            <Header page={"Manage Projects"} user={user} toggleSidebar={toggleSidebar} />
 
-  }
-  
+            <main>
+                <div className="flex-wrapper">
+                    <div className="formWrapper">
 
-  return user ? (
-    <>
-        <Header page={"Manage Projects"} user={user} toggleSidebar={toggleSidebar} />
+                        <div className="formHeader">
+                            <h2>Add or Remove Users From Project</h2>
+                        </div>
 
-        <main>
-            <div className="flexWrapper">
-              <div className="formWrapper">
+                        <div className="formContainer">
 
-                  <div className="formHeader">
-                      <h2>Add To Project</h2>
-                  </div>
-            
-                    <div className="formContainer">
+                            <div className="formContent">
 
-                        <div className="formContent">
+                                <div className="mainTitle">SELECT PROJECT</div>
+                                <Select
+                                    data={projects}
+                                    label="Projects"
+                                    onChange={(event, selectedValue) => setProject(selectedValue)}
+                                />
 
-                            <div className="sub-title">SELECT PROJECT</div>
-                            <Select data={projects} label="Projects" onChange={(event, selectedValue) => setProject(selectedValue)} />
-                            <div className="sub-title">SELECT USERS</div>
-                            <SelectMultiple data={users} label="Users" onChange={(event, selectedValue) => setUsers(selectedValue)} />
-                            <div className="button">
+                                {project && (
+                                    <div className="user-actions">
+                                        <div className="add-users">
+                                            <div className="mainTitle">SELECT USERS TO ADD</div>
+                                            <SelectMultiple
+                                                data={users.filter(user => !project.users.includes(user.id))}
+                                                label="Users"
+                                                value={selectedUsersToAdd} // Bind selected users to the state
+                                                onChange={(event, selectedValue) => setSelectedUsersToAdd(selectedValue)}
+                                            />
+                                            <Button
+                                                sx={{ minWidth: 150, backgroundColor: '#2873ff', marginTop: '20px' }}
+                                                variant="contained"
+                                                onClick={handleAddUsers}
+                                            >
+                                                Add Users
+                                            </Button>
+                                        </div>
 
-                                  <Button sx={{ minWidth: 150, backgroundColor: '#2873ff' }} variant="contained" onClick={handleAddUsers}>Add Users to project</Button>
-
-
+                                        <div className="remove-users">
+                                            <div className="mainTitle">SELECT USERS TO REMOVE</div>
+                                            <SelectMultiple
+                                                data={project.users.map(userId => users.find(user => user.id === userId))}
+                                                label="Users"
+                                                value={selectedUsersToRemove}
+                                                onChange={(event, selectedValue) => setSelectedUsersToRemove(selectedValue)}
+                                            />
+                                            <Button
+                                                sx={{ minWidth: 150, backgroundColor: '#f44336', marginTop: '20px' }}
+                                                variant="contained"
+                                                onClick={handleRemoveUsers}
+                                            >
+                                                Remove Users
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                </div>
-            
-                
-              </div>
-              <div className="table-wrapper">
-                    <div className="formHeader">
-                        <h2>Projects</h2>
                     </div>
-                    <div className="tableContainer">
-                        <ProjectsTable className="mui-table" />
-                  </div>
+
+                    <div className="table-wrapper">
+                        <div className="formHeader">
+                            <h2>Projects</h2>
+                        </div>
+                        <div className="tableContainer">
+                            <ProjectsTable className="mui-table" />
+                        </div>
+                    </div>
                 </div>
-              </div>
-        </main>
-    </>
-  ) : null
+            </main>
+        </>
+    ) : null
 }
 
 export default ManageProjects

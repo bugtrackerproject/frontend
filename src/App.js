@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  Routes, Route, useMatch, Navigate, Outlet, useLocation
+    Routes, Route, useMatch, Navigate, Outlet, useLocation
 } from "react-router-dom"
 
 import './app.scss'
@@ -14,7 +14,7 @@ import Logout from './pages/logout/Logout'
 
 
 import { projectService, ticketService, roleService, userService } from './services/apiServiceFactory'
-
+import projectUserService from './services/projectUsers'
 
 import Register from './pages/register/Register'
 import ManageProjects from './pages/manage/projects/ManageProjects'
@@ -36,43 +36,43 @@ import Sidebar from './components/sidebar/Sidebar'
 
 import Spinner from './components/animations/Spinner';
 import { useSwipeable } from 'react-swipeable';
-import { apiServiceFactory } from './services/apiServiceFactory'
+
 
 
 const PrivateRoute = (props) => {
-  let isLoggedIn = false
+    let isLoggedIn = false
 
-  const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
-  if (loggedUserJSON) {
-    isLoggedIn = true
-  }
+    const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
+    if (loggedUserJSON) {
+        isLoggedIn = true
+    }
 
-  return ( isLoggedIn ? (
-    <Outlet />
-  ) : (
-    <Navigate
-      to="/login"
-      replace={true}
-    />
-  ))
+    return (isLoggedIn ? (
+        <Outlet />
+    ) : (
+        <Navigate
+            to="/login"
+            replace={true}
+        />
+    ))
 }
 
 const AdminRoute = (props) => {
-  const user = useSelector((state) => state.user)
+    const user = useSelector((state) => state.user)
 
-  return ( user.role === "Admin" ? (
-    <Outlet />
-  ) : (
-    <Navigate
-      to="/forbidden"
-      replace={true}
-    />
-  ))
+    return (user.role === "Admin" ? (
+        <Outlet />
+    ) : (
+        <Navigate
+            to="/forbidden"
+            replace={true}
+        />
+    ))
 }
 
 const App = () => {
     const dispatch = useDispatch()
-    const location = useLocation(); 
+    const location = useLocation();
 
     const [isSidebarActive, setSidebarActive] = useState(false) // it is actually active by default oopsie
     const [loading, setLoading] = useState(true);
@@ -83,8 +83,8 @@ const App = () => {
     }
 
     const swipeConfig = {
-      onSwipedLeft: () => setSidebarActive(false),
-      onSwipedRight: () => setSidebarActive(true)
+        onSwipedLeft: () => setSidebarActive(false),
+        onSwipedRight: () => setSidebarActive(true)
     };
 
     const swipeHandlers = useSwipeable(swipeConfig);
@@ -105,6 +105,7 @@ const App = () => {
                     userService.setToken(user.token);
                     roleService.setToken(user.token);
                     ticketService.setToken(user.token);
+                    projectUserService.setToken(user.token);
                 }
 
                 await Promise.all([
@@ -123,102 +124,102 @@ const App = () => {
     }, [dispatch]);
 
     useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Update isMobile state on resize
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768); // Update isMobile state on resize
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
 
-  const matchProject = useMatch('/projects/:id')
+    const matchProject = useMatch('/projects/:id')
 
-  const project = matchProject 
-    ? projects.find(a => a.id === matchProject.params.id) 
-    : null
+    const project = matchProject
+        ? projects.find(a => a.id === matchProject.params.id)
+        : null
 
 
-  const matchUser = useMatch('/users/:id')
+    const matchUser = useMatch('/users/:id')
 
-  const user = matchUser 
-    ? users.find(a => a.id === matchUser.params.id) 
-    : null
+    const user = matchUser
+        ? users.find(a => a.id === matchUser.params.id)
+        : null
 
-  const matchTicket = useMatch('/tickets/:id')
+    const matchTicket = useMatch('/tickets/:id')
 
-  const ticket = matchTicket 
-    ? tickets.find(a => a.id === matchTicket.params.id) 
-    : null
-  
-  
-return (
-  <div className="App">
-    {loading ? (
-      <Spinner />
-    ) : (
-      ['/login', '/register'].includes(location.pathname) ? (
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      ) : (
-        <>
+    const ticket = matchTicket
+        ? tickets.find(a => a.id === matchTicket.params.id)
+        : null
 
-            <Sidebar isSidebarActive={isSidebarActive} setSidebarActive={setSidebarActive} />
-          
-              <div
-                className={`main-content ${isMobile && isSidebarActive ? 'sidebar-hidden' : ''}`}
-                onClick={() => {
-                  if (isMobile && isSidebarActive) {
-                    setSidebarActive(false); // Close sidebar when clicked on main content on mobile
-                  }
-                }}
-              >
 
-                <div
-                  {...swipeHandlers}
-                  className={'swipeable-area'}
-                />
+    return (
+        <div className="App">
+            {loading ? (
+                <Spinner />
+            ) : (
+                ['/login', '/register'].includes(location.pathname) ? (
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                    </Routes>
+                ) : (
+                    <>
 
-                <Routes>
+                        <Sidebar isSidebarActive={isSidebarActive} setSidebarActive={setSidebarActive} />
 
-                  <Route path="/" element={<PrivateRoute />}>
-                    <Route index element={<Home toggleSidebar={toggleSidebar} />} />
-                    <Route path="logout" element={<Logout />} />
+                        <div
+                            className={`main-content ${isMobile && isSidebarActive ? 'sidebar-hidden' : ''}`}
+                            onClick={() => {
+                                if (isMobile && isSidebarActive) {
+                                    setSidebarActive(false); // Close sidebar when clicked on main content on mobile
+                                }
+                            }}
+                        >
 
-                    <Route path="projects">
-                      <Route index element={<ListProjects toggleSidebar={toggleSidebar} />} />
-                      <Route path=":id" element={<SingleProject project={project} toggleSidebar={toggleSidebar} />} />
-                      <Route path="new" element={<CreateProject toggleSidebar={toggleSidebar} />} />
-                    </Route>
+                            <div
+                                {...swipeHandlers}
+                                className={'swipeable-area'}
+                            />
 
-                    <Route path="tickets">
-                      <Route index element={<ListTickets toggleSidebar={toggleSidebar} />} />
-                      <Route path=":id" element={<SingleTicket ticket={ticket} toggleSidebar={toggleSidebar} />} />
-                      <Route path="new" element={<CreateTicket toggleSidebar={toggleSidebar} />} />
-                    </Route>
+                            <Routes>
 
-                    <Route path="users">
-                      <Route path=":id" element={<SingleUser selectedUser={user} toggleSidebar={toggleSidebar} />} />
-                    </Route>
+                                <Route path="/" element={<PrivateRoute />}>
+                                    <Route index element={<Home toggleSidebar={toggleSidebar} />} />
+                                    <Route path="logout" element={<Logout />} />
 
-                    <Route path="admin/" element={<AdminRoute />}>
-                      <Route path="projects" element={<ManageProjects toggleSidebar={toggleSidebar} />} />
-                      <Route path="roles" element={<ManageRoles toggleSidebar={toggleSidebar} />} />
-                    </Route>
+                                    <Route path="projects">
+                                        <Route index element={<ListProjects toggleSidebar={toggleSidebar} />} />
+                                        <Route path=":id" element={<SingleProject project={project} toggleSidebar={toggleSidebar} />} />
+                                        <Route path="new" element={<CreateProject toggleSidebar={toggleSidebar} />} />
+                                    </Route>
 
-                    <Route path="*" element={<h1>404</h1>} />
-                  </Route>
-                </Routes>
-              </div>
-        </>
-      )
-    )}
-  </div>
-);
+                                    <Route path="tickets">
+                                        <Route index element={<ListTickets toggleSidebar={toggleSidebar} />} />
+                                      
+                                        <Route path="new" element={<CreateTicket toggleSidebar={toggleSidebar} />} />
+                                    </Route>
+
+                                    <Route path="users">
+                                        <Route path=":id" element={<SingleUser selectedUser={user} toggleSidebar={toggleSidebar} />} />
+                                    </Route>
+
+                                    <Route path="admin/" element={<AdminRoute />}>
+                                        <Route path="projects" element={<ManageProjects toggleSidebar={toggleSidebar} />} />
+                                        <Route path="roles" element={<ManageRoles toggleSidebar={toggleSidebar} />} />
+                                    </Route>
+
+                                    <Route path="*" element={<h1>404</h1>} />
+                                </Route>
+                            </Routes>
+                        </div>
+                    </>
+                )
+            )}
+        </div>
+    );
 
 }
 

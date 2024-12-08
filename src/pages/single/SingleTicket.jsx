@@ -12,19 +12,15 @@ import Select from "../../components/checkbox/Select"
 
 import { useDispatch } from 'react-redux';
 import { updateTicket } from '../../reducers/ticketsReducer'
+import ticketMetaService from '../../services/ticketmeta'
 
 const SingleTicket= ({ ticket, toggleSidebar }) => {
 
     
-    const [status, setStatus] = useState("")
-    const [priority, setPriority] = useState("")
-
-    useEffect(() => {
-    if (ticket) {
-      setStatus(ticket.status) 
-      setPriority(ticket.priority)
-    }
-  }, [ticket])
+    const [status, setStatus] = useState(null)
+    const [priority, setPriority] = useState(null)
+    const [statuses, setStatuses] = useState(null);
+    const [priorities, setPriorities] = useState(null);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -33,25 +29,44 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
     const users = useSelector(state => state.users)
     const user = useSelector(state => state.user)
 
-    if (!ticket) {
-        return <></>
-    }
+    useEffect(() => {
+        if (ticket) {
+          setStatus(ticket.status) 
+          setPriority(ticket.priority)
+        }
+    }, [ticket])
+
+    
+    useEffect(() => {
+        const fetchTicketMeta = async () => {
+            try {
+                const fetchedStatuses = await ticketMetaService.getTicketStatuses();
+                const fetchedPriorities = await ticketMetaService.getTicketPriorities();
+                setStatuses(fetchedStatuses);
+                setPriorities(fetchedPriorities);
+            } catch (error) {
+                console.error('Error fetching ticket meta:', error);
+            }
+        };
+
+        fetchTicketMeta();
+    }, []); 
 
 
     let project
     let assignee
     let submitter
 
-    const statuses = ["To Do", "In Progress", "Completed"]
-
-    const priorities = ["Low", "Medium", "High"]
-
     project = projects.find(project => project.id === ticket.project)
     assignee = users.find(user => user.id === ticket.assignee)
     submitter = users.find(user => user.id === ticket.submitter)
 
+    const isAssignee = user.id === assignee?.id;
+
+
+
     
-    const handleAddTicket = async (e) => {
+    const handleUpdateTicket = async (e) => {
         e.preventDefault()
 
      if (priority || status) {
@@ -61,14 +76,13 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
             status: status
           };
 
-          dispatch(updateTicket(ticket.id, updatedTicket));
-
+         dispatch(updateTicket(ticket.id, updatedTicket));
 
            navigate('/tickets');
         }
       };
 
-     const isAssignee = user.id === assignee?.id;
+     
 
 
   return project && assignee && submitter ? (
@@ -78,7 +92,7 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
 
           <main>
             
-              <div className="flexWrapper">
+              <div className="flex-wrapper">
                   <div className="formWrapper">
 
                       <div className="formHeader">
@@ -127,7 +141,7 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
                 {isAssignee && (
                     <div className="button">
                         <span className="button">
-                            <Button sx={{ minWidth: 150 }} variant="contained" onClick={handleAddTicket}>Update Ticket</Button>
+                            <Button sx={{ minWidth: 150 }} variant="contained" onClick={handleUpdateTicket}>Update Ticket</Button>
                         </span>
                     </div>
                 )}

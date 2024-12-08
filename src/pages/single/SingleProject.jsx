@@ -18,7 +18,7 @@ const SingleProject = ({ project, toggleSidebar }) => {
 
 
         <main>
-              <div className="flexWrapper">
+              <div className="flex-wrapper">
                   <div className="formWrapper">
 
                       <div className="formHeader">

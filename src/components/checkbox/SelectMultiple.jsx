@@ -5,41 +5,34 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
+import './SelectMultiple.css';  // Make sure to create a separate CSS file
 
 const SelectMultiple = (props) => {
+    return (
+        <Autocomplete
+            multiple
+            limitTags={3}
+            id="checkboxes-tags-demo"
+            options={props.data}
+            disableCloseOnSelect
+            getOptionLabel={(option) => option.name}
+            renderOption={(props, option, { selected }) => (
+                <li
+                    {...props}
+                    className="option-item"
+                >
+                    {/* Wrap the checkbox and name with a div that will handle the animation */}
+                    <div className={`option-item-wrapper ${selected ? 'selected' : ''}`}>
+                        <Checkbox checked={selected} />
+                        {option.name}
+                    </div>
+                </li>
+            )}
+            renderInput={(params) => <TextField {...params} label={props.label} />}
+            onChange={props.onChange}
+            value={props.value}
+        />
+    );
+};
 
-  return (
-    <Autocomplete className='selector'
-      multiple
-      id="checkboxes-tags-demo"
-      options={props.data}
-      disableCloseOnSelect
-      getOptionLabel={(option) => option.name}
-      renderOption={(props, option, { selected }) => (
-        <li {...props}>
-          <Checkbox
-            icon={icon}
-            checkedIcon={checkedIcon}
-            style={{ marginRight: 8 }}
-            checked={selected}
-          />
-          {option.name}
-        </li>
-      )}
-      style={{ }}
-      renderInput={(params) => (
-        <TextField {...params} label={props.label} />
-      )}
-      onChange = {props.onChange} 
-      value = {props.value} 
-    />
-  );
-}
-
-
-export default SelectMultiple
+export default SelectMultiple;

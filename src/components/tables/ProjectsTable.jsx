@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { Box } from '@mui/system';
 import { Stack } from '@mui/material';
-
+import { useNavigate } from 'react-router-dom';
 
 
 function QuickSearchToolbar() {
@@ -68,6 +68,7 @@ const ProjectsTable = ({ filter, value }) => {
 
   let projectsSelector = useSelector((state) => state.projects)
   let projects = projectsSelector.slice()
+    const navigate = useNavigate();
 
   switch(filter) {
     case "user":
@@ -103,8 +104,7 @@ const ProjectsTable = ({ filter, value }) => {
       autoHeight={true}
       autoPageSize={true}
       rowsPerPageOptions={[5]}
-      disableSelectionOnClick={true}
-
+      onRowDoubleClick={(params) => navigate(`/projects/${params.row.id}`)}
       components={{ 
         Toolbar: QuickSearchToolbar,
         NoRowsOverlay: () => (

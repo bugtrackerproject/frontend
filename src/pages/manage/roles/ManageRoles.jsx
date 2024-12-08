@@ -49,7 +49,7 @@ const ManageRoles = ({ toggleSidebar }) => {
             <Header page={"Manage Users"} user={user} toggleSidebar={toggleSidebar} />
 
             <main>
-                <div className="flexWrapper">
+                <div className="flex-wrapper">
 
                     <div className="formWrapper">
 

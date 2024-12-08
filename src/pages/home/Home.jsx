@@ -45,7 +45,7 @@ const Home = ({ toggleSidebar }) => {
 
         <main>
             
-            
+              <div className="flex-wrapper">
             
             <div className="widgets-header">
                 <h2>Total</h2>
@@ -81,7 +81,7 @@ const Home = ({ toggleSidebar }) => {
                     </div>
                 <ProjectsTable filter="user" value={user} />
                 </div>
-            
+                  </div>
 
         </main>
       </>

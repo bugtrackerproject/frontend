@@ -19,7 +19,7 @@ const SingleUser = ({ toggleSidebar, selectedUser }) => {
             <Header page={`${selectedUser.name}'s Profile`} user={user} toggleSidebar={toggleSidebar}/>
 
             <main>
-                <div className="flexWrapper">
+                <div className="flex-wrapper">
                     <div className="formWrapper">
 
                         <div className="formHeader">

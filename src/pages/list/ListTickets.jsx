@@ -1,55 +1,39 @@
 import React from 'react'
-
+import { useState } from 'react'
 import Header from '../../components/header/Header'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import TicketsTable from '../../components/tables/TicketsTable'
 import { Button } from '@mui/material'
+import CreateTicket from '../../components/forms/CreateTicket'
+import UpdateTicket from '../../components/forms/UpdateTicket'
+
+import './list.scss'
 
 const ListTickets = ({ toggleSidebar }) => {
-    
     const user = useSelector(state => state.user)
-  
-    const navigate = useNavigate()
-
-    const handleCreateTicket = async (e) => {
-        e.preventDefault()
     
-        navigate("new")
-    
-    }
-        
+    return (
+        <>
+            <Header page={"My Tickets"} user={user} toggleSidebar={toggleSidebar} />
 
-  return user ? (
-    <>
-        <Header page={"My Tickets"} user={user} toggleSidebar={toggleSidebar}/>
+            <main>
 
-          <main>
-              <div className="flexWrapper">
+                <div className="table-wrapper">
+                    <div className="form-header">
+                        <h2>Assigned Tickets</h2>
+                    </div>
 
+                    <div className="mui-table-container">
+                        <TicketsTable
+                            
+                        ></TicketsTable>
+                    </div>
+                </div>
 
-                  <div className="formWrapper">
-                      <div className="button">
-
-                          <Button sx={{ marginBottom: 4, minWidth: 150, backgroundColor: '##2873ff' }} variant="contained" onClick={handleCreateTicket}>Create New Ticket </Button>
-
-                      </div>
-                  </div>
-
-                  <div className="table-wrapper">
-                      <div className="formHeader">
-                          <h2>Assigned Tickets</h2>
-                      </div>
-                      <div className="tableContainer">
-                          <TicketsTable filter={"user"} value={user} />
-                      </div>
-
-              </div>
-          
-        </div>
-    </main>
-    </>
-  ) : null
+            </main>
+        </>
+    )
 }
 
 export default ListTickets

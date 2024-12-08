@@ -4,9 +4,9 @@
 }
 
 .login-container {
-  display: table;
-  min-width: 100%;
-
+    display: table;
+    min-width: 100%;
+    min-height: calc(100vh - 20rem);
 }
 
 .login-title {
