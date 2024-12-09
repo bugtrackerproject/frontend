@@ -1,20 +1,17 @@
 import axios from "axios";
+import { getAuthConfig, checkToken } from './auth'
 const baseUrl = "/api/ticketmeta";
-
-let token = null;
-const setToken = (newToken) => {
-    token = `bearer ${newToken}`;
-};
-
 
 
 const getTicketTypes = async () => {
-    const config = {
-        headers: { Authorization: token },
-    };
+    const tokenCheckResult = await checkToken();
+
+    if (!tokenCheckResult) {
+        return;
+    }
 
     try {
-        const response = await axios.get(`${baseUrl}/types`, config);
+        const response = await axios.get(`${baseUrl}/types`, getAuthConfig());
         return response.data;
     } catch (error) {
         console.error("Error fetching ticket types:", error);
@@ -24,12 +21,15 @@ const getTicketTypes = async () => {
 
 
 const getTicketPriorities = async () => {
-    const config = {
-        headers: { Authorization: token },
-    };
+    const tokenCheckResult = await checkToken();
+
+    if (!tokenCheckResult) {
+        return;
+    }
+
 
     try {
-        const response = await axios.get(`${baseUrl}/priorities`, config);
+        const response = await axios.get(`${baseUrl}/priorities`, getAuthConfig);
         return response.data;
     } catch (error) {
         console.error("Error fetching ticket priorities:", error);
@@ -39,12 +39,14 @@ const getTicketPriorities = async () => {
 
 
 const getTicketStatuses = async () => {
-    const config = {
-        headers: { Authorization: token },
-    };
+    const tokenCheckResult = await checkToken();
+
+    if (!tokenCheckResult) {
+        return;
+    }
 
     try {
-        const response = await axios.get(`${baseUrl}/statuses`, config);
+        const response = await axios.get(`${baseUrl}/statuses`, getAuthConfig);
         return response.data;
     } catch (error) {
         console.error("Error fetching ticket statuses:", error);

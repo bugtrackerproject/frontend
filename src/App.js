@@ -13,9 +13,6 @@ import ManageRoles from './pages/manage/roles/ManageRoles'
 import Logout from './pages/logout/Logout'
 
 
-import { projectService, ticketService, roleService, userService } from './services/apiServiceFactory'
-import projectUserService from './services/projectUsers'
-
 import Register from './pages/register/Register'
 import ManageProjects from './pages/manage/projects/ManageProjects'
 
@@ -36,6 +33,7 @@ import Sidebar from './components/sidebar/Sidebar'
 
 import Spinner from './components/animations/Spinner';
 import { useSwipeable } from 'react-swipeable';
+import { setAccessToken, getAuthConfig } from './services/auth'
 
 
 
@@ -100,12 +98,9 @@ const App = () => {
                 if (loggedUserJSON) {
                     const user = JSON.parse(loggedUserJSON);
                     dispatch(setUser(user));
+                    console.log(user.token)
+                    setAccessToken(user.token)
 
-                    projectService.setToken(user.token);
-                    userService.setToken(user.token);
-                    roleService.setToken(user.token);
-                    ticketService.setToken(user.token);
-                    projectUserService.setToken(user.token);
                 }
 
                 await Promise.all([

@@ -22,19 +22,19 @@ const SingleUser = ({ toggleSidebar, selectedUser }) => {
                 <div className="flex-wrapper">
                     <div className="formWrapper">
 
-                        <div className="formHeader">
+                        <div className="form-header">
                             <h2>Profile Information</h2>
                         </div>
-                        <div className="formContainer">
-                            <div className="mainTitle">EMAIL</div>
+                        <div className="form-container">
+                            <div className="main-title">EMAIL</div>
                             {displayUser.email}
-                            <div className="mainTitle">NAME</div>
+                            <div className="main-title">NAME</div>
                             {displayUser.name}
-                            <div className="mainTitle">ROLE</div>
+                            <div className="main-title">ROLE</div>
                             {displayUser.role}
-                            <div className="mainTitle">ASSIGNED PROJECTS</div>
+                            <div className="main-title">ASSIGNED PROJECTS</div>
                             <ProjectsTable filter="user" value={displayUser} />
-                            <div className="mainTitle">ASSIGNED TICKETS</div>
+                            <div className="main-title">ASSIGNED TICKETS</div>
                             <TicketsTable filter="user" value={displayUser} />
                         </div>
                     </div>

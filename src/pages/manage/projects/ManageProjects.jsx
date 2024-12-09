@@ -65,17 +65,17 @@ const ManageProjects = ({ toggleSidebar }) => {
 
             <main>
                 <div className="flex-wrapper">
-                    <div className="formWrapper">
+                    <div className="form-wrapper">
 
-                        <div className="formHeader">
+                        <div className="form-header">
                             <h2>Add or Remove Users From Project</h2>
                         </div>
 
-                        <div className="formContainer">
+                        <div className="form-container">
 
-                            <div className="formContent">
+                            <div className="form-content">
 
-                                <div className="mainTitle">SELECT PROJECT</div>
+                                <div className="main-title">SELECT PROJECT</div>
                                 <Select
                                     data={projects}
                                     label="Projects"
@@ -85,7 +85,7 @@ const ManageProjects = ({ toggleSidebar }) => {
                                 {project && (
                                     <div className="user-actions">
                                         <div className="add-users">
-                                            <div className="mainTitle">SELECT USERS TO ADD</div>
+                                            <div className="main-title">SELECT USERS TO ADD</div>
                                             <SelectMultiple
                                                 data={users.filter(user => !project.users.includes(user.id))}
                                                 label="Users"
@@ -102,7 +102,7 @@ const ManageProjects = ({ toggleSidebar }) => {
                                         </div>
 
                                         <div className="remove-users">
-                                            <div className="mainTitle">SELECT USERS TO REMOVE</div>
+                                            <div className="main-title">SELECT USERS TO REMOVE</div>
                                             <SelectMultiple
                                                 data={project.users.map(userId => users.find(user => user.id === userId))}
                                                 label="Users"
@@ -124,10 +124,10 @@ const ManageProjects = ({ toggleSidebar }) => {
                     </div>
 
                     <div className="table-wrapper">
-                        <div className="formHeader">
+                        <div className="form-header">
                             <h2>Projects</h2>
                         </div>
-                        <div className="tableContainer">
+                        <div className="table-container">
                             <ProjectsTable className="mui-table" />
                         </div>
                     </div>

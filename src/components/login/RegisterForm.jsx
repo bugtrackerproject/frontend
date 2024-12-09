@@ -8,7 +8,7 @@ import {
   } from "react-router-dom"
   
 
-import loginService from "../../services/login"
+import { login } from "../../services/auth"
 import { userService } from "../../services/apiServiceFactory"
 
 import './registerform.scss'
@@ -35,7 +35,7 @@ const RegisterForm = () => {
             password
           });
 
-          const user = await loginService.login({
+          const user = await login({
             email,
             password
           });

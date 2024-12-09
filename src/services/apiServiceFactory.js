@@ -1,18 +1,15 @@
 import axios from 'axios';
+import { getAuthConfig, checkToken } from './auth';
 
 export const apiServiceFactory = (resourceName) => {
     const baseUrl = `/api/${resourceName}`;
-    let token = null;
-
-    const setToken = (newToken) => {
-        token = `Bearer ${newToken}`;
-    };
-
-    const getAuthConfig = () => ({
-        headers: { Authorization: token },
-    });
 
     const getAll = async () => {
+        const tokenCheckResult = await checkToken(); 
+
+        if (!tokenCheckResult) {
+            return;
+        }
         try {
             const response = await axios.get(baseUrl, getAuthConfig());
             return response.data;
@@ -22,6 +19,11 @@ export const apiServiceFactory = (resourceName) => {
     };
 
     const create = async (newObject) => {
+        const tokenCheckResult = await checkToken();
+
+        if (!tokenCheckResult) {
+            return;
+        }
         try {
             const response = await axios.post(baseUrl, newObject, getAuthConfig());
             return response.data;
@@ -31,6 +33,11 @@ export const apiServiceFactory = (resourceName) => {
     };
 
     const update = async (id, updatedObject) => {
+        const tokenCheckResult = await checkToken();
+
+        if (!tokenCheckResult) {
+            return;
+        }
         try {
             const response = await axios.put(`${baseUrl}/${id}`, updatedObject, getAuthConfig());
             return response.data;
@@ -40,6 +47,11 @@ export const apiServiceFactory = (resourceName) => {
     };
 
     const remove = async (id) => {
+        const tokenCheckResult = await checkToken();
+
+        if (!tokenCheckResult) {
+            return;
+        }
         try {
             await axios.delete(`${baseUrl}/${id}`, getAuthConfig());
         } catch (error) {
@@ -48,7 +60,6 @@ export const apiServiceFactory = (resourceName) => {
     };
 
     return {
-        setToken,
         getAll,
         create,
         update,

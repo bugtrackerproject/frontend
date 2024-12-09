@@ -21,30 +21,30 @@ const SingleProject = ({ project, toggleSidebar }) => {
               <div className="flex-wrapper">
                   <div className="formWrapper">
 
-                      <div className="formHeader">
+                      <div className="form-header">
                           <h2>PROJECT DETAILS</h2>
                       </div>
 
-                      <div className="formContainer">
+                      <div className="form-container">
 
                           <div>
-                              <div className="mainTitle">PROJECT TITLE</div>
+                              <div className="main-title">PROJECT TITLE</div>
                               {project.name}
-                              <div className="mainTitle">PROJECT DESCRIPTION</div>
+                              <div className="main-title">PROJECT DESCRIPTION</div>
                               {project.description}
                           </div>
 
 
                           <div className="table-wrapper">
-                              <div className="mainTitle">ASSIGNED USERS</div>
-                              <div className="tableContainer">
+                              <div className="main-title">ASSIGNED USERS</div>
+                              <div className="table-container">
                                   <UsersTable filter="project" value={project} />
                               </div>
                           </div>
 
                           <div className="table-wrapper">
-                              <div className="mainTitle">TICKETS FOR PROJECT</div>
-                              <div className="tableContainer">
+                              <div className="main-title">TICKETS FOR PROJECT</div>
+                              <div className="table-container">
                                   <TicketsTable filter="project" value={project} />
                               </div>
                           </div>

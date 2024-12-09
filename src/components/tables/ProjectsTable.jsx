@@ -2,11 +2,12 @@ import * as React from 'react';
 
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
+import { GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { Box } from '@mui/system';
 import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+import ProjectCrudTable from './ProjectCrudTable'
 
 function QuickSearchToolbar() {
   return (
@@ -28,31 +29,6 @@ function QuickSearchToolbar() {
     </Box>
   );
 }
-
-const columns = [
-  { field: 'name', headerName: 'Name', minWidth: 130, flex: 1 },
-  { field: 'description', headerName: 'Description', minWidth: 130, flex: 1 },
-  {
-    field: 'createdAt',
-    headerName: 'Date Created',
-    minWidth: 150, flex: 1
-  },
-  {
-    field: 'updatedAt',
-    headerName: 'Date Updated',
-    minWidth: 150, flex: 1
-  },
-  {
-    field: 'id',
-    headerName: 'ID',
-    sortable: false,
-    flex: 1,
-    minWidth: 210,
-    renderCell: (params) => (
-        <Link to={`/projects/${params.value}`}>{params.value}</Link>
-      )
-  },
-];
 
 function createData(
   name,
@@ -92,27 +68,41 @@ const ProjectsTable = ({ filter, value }) => {
     
 
   return (
-    <DataGrid 
-      sx={{
-        boxShadow: 1,
-        backgroundColor:'white'
-      }}
+      <ProjectCrudTable
 
-      rows={rows}
-      columns={columns}
-      pageSize={5}
-      autoHeight={true}
-      autoPageSize={true}
-      rowsPerPageOptions={[5]}
-      onRowDoubleClick={(params) => navigate(`/projects/${params.row.id}`)}
-      components={{ 
-        Toolbar: QuickSearchToolbar,
-        NoRowsOverlay: () => (
-          <Stack height="100%" alignItems="center" justifyContent="center">
-            User has no projects
-          </Stack>
-        )
-      }}
+          initialRows={rows}
+          sx={{
+              boxShadow: 2,
+              border: 1,
+              borderColor: 'primary.black',
+              '& .MuiDataGrid-cell:hover': {
+                  color: 'primary.main',
+              },
+              '& .MuiDataGrid-virtualScroller': {
+                  overflow: 'auto', // Enable overflow for scrolling
+              }
+          }}
+
+          slotProps={{
+              loadingOverlay: {
+                  variant: 'linear-progress',
+                  noRowsVariant: 'skeleton',
+              },
+          }}
+          initialState={{
+              sorting: {
+                  sortModel: [{ field: 'updatedAt', sort: 'desc' }],
+              },
+          }}
+          /*onRowDoubleClick={(params) => navigate(`/projects/${params.row.id}`)}*/
+          components={{
+              Toolbar: QuickSearchToolbar,
+              NoRowsOverlay: () => (
+                  <Stack height="100%" alignItems="center" justifyContent="center">
+                      User has no tickets
+                  </Stack>
+              )
+          }}
     />
   );
 }

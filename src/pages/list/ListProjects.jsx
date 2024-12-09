@@ -34,10 +34,10 @@ const ListProjects = ({ toggleSidebar }) => {
                       </div>
                   </div>
                   <div className="table-wrapper">
-                      <div className="formHeader">
+                      <div className="form-header">
                           <h2>Assigned Projects</h2>
                       </div>
-                      <div className="tableContainer">
+                      <div className="table-container">
                           <ProjectsTable filter={"user"} value={user} /> </div>
                      </div>
               </div>

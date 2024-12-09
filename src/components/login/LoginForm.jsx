@@ -9,7 +9,7 @@ import {
   
 import "./loginform.scss"
 
-import loginService from "../../services/login"
+import { login, setAccessToken } from "../../services/auth"
 //import { useResource } from '../../hooks/useResource';
 
 const LoginForm = () => {
@@ -28,15 +28,16 @@ const LoginForm = () => {
         event.preventDefault();
 
         try {
-          const user = await loginService.login({
-            email,
-            password
+          const user = await login({
+              email,
+              password
           });
-          window.localStorage.setItem("loggedBugtrackerAppUser", JSON.stringify(user));
-
+            window.localStorage.setItem("loggedBugtrackerAppUser", JSON.stringify(user));
           dispatch(
             setUser(user)
-          )
+            )
+
+
 
           setEmail("");
           setPassword("");

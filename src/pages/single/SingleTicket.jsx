@@ -95,42 +95,42 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
               <div className="flex-wrapper">
                   <div className="formWrapper">
 
-                      <div className="formHeader">
+                      <div className="form-header">
                           <h2>TICKET DETAILS</h2>
                       </div>
-                      <div className="formContainer">
+                      <div className="form-container">
                           <div>
-                                <div className="mainTitle">TICKET TITLE</div>
+                                <div className="main-title">TICKET TITLE</div>
                                 {ticket.name}
 
-                              <div className="mainTitle">PROJECT DESCRIPTION</div>
+                              <div className="main-title">PROJECT DESCRIPTION</div>
                                 {ticket.description}
 
-                              <div className="mainTitle">PRIORITY</div>
+                              <div className="main-title">PRIORITY</div>
                               {isAssignee ? (
                                     <Select defaultValue={ticket.priority} data={priorities} onChange={(event, selectedValue) => setPriority(selectedValue)} />
                                 ) : (
                                     ticket.priority
                                 )}
 
-                              <div className="mainTitle">TYPE</div>
+                              <div className="main-title">TYPE</div>
                                 {ticket.type}
 
-                                <div className="mainTitle">STATUS</div>
+                                <div className="main-title">STATUS</div>
                                 {isAssignee ? (
                                     <Select defaultValue={ticket.status} data={statuses} onChange={(event, selectedValue) => setStatus(selectedValue)}/> 
                                 ) : (
                                     ticket.status
                                 )}
 
-                                <div className="mainTitle">PROJECT</div>
+                                <div className="main-title">PROJECT</div>
                                 {project.name}
             
             
-                                <div className="mainTitle">ASSIGNED TO</div>
+                                <div className="main-title">ASSIGNED TO</div>
                                 {assignee.name}
 
-                                <div className="mainTitle">SUBMITTED BY</div>
+                                <div className="main-title">SUBMITTED BY</div>
                                 {submitter.name}
                           </div>
 

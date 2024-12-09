@@ -71,19 +71,19 @@ const CreateTicket = ({ toggleSidebar }) => {
         <>
 
 
-            <div className="formHeader">
+            <div className="form-header">
                 <h2>Create New Ticket</h2>
             </div>
-            <div className="formContainer">
-                <div className="mainTitle">SELECT PROJECT</div>
+            <div className="form-container">
+                <div className="main-title">SELECT PROJECT</div>
                 <Select data={filteredProjects} label="Project" onChange={(event, selectedValue) => setProject(selectedValue)} />
-                <div className="mainTitle">TICKET NAME</div>
+                <div className="main-title">TICKET NAME</div>
                 <TextField id="filled-basic" label="Name" variant="outlined" onChange={(event) => setNewName(event.target.value)} />
-                <div className="mainTitle">TICKET DESCRIPTION</div>
+                <div className="main-title">TICKET DESCRIPTION</div>
                 <TextField id="filled-basic" label="Description" variant="outlined" onChange={(event) => setNewDesc(event.target.value)} />
-                <div className="mainTitle">ASSIGN USER</div>
+                <div className="main-title">ASSIGN USER</div>
                 <Select data={users} label="User" onChange={(event, selectedValue) => setNewUser(selectedValue)} value={newUser} />
-                <div className="mainTitle">TYPE</div>
+                <div className="main-title">TYPE</div>
                 {types && (
                     <Select
                         data={types}
@@ -92,7 +92,7 @@ const CreateTicket = ({ toggleSidebar }) => {
                         value={type}
                     />
                 )}
-                <div className="mainTitle">PRIORITY</div>
+                <div className="main-title">PRIORITY</div>
                 {priorities && (
                     <Select
                         data={priorities}

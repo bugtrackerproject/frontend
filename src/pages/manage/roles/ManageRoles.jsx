@@ -53,11 +53,11 @@ const ManageRoles = ({ toggleSidebar }) => {
 
                     <div className="formWrapper">
 
-                        <div className="formHeader">
+                        <div className="form-header">
                             <h2>Add User Roles</h2>
                         </div>
 
-                        <div className="formContainer">
+                        <div className="form-container">
                             <div className="formContent">
                                 <div className="sub-title">SELECT USERS</div>
                                 <SelectMultiple data={users} label="Users" onChange={(event, selectedValue) => setUsers(selectedValue)} />
@@ -71,10 +71,10 @@ const ManageRoles = ({ toggleSidebar }) => {
                     </div>
 
                     <div className="table-wrapper">
-                        <div className="formHeader">
+                        <div className="form-header">
                             <h2>Users</h2>
                         </div>
-                        <div className="tableContainer">
+                        <div className="table-container">
                             <UsersTable />
                         </div>
                     </div>

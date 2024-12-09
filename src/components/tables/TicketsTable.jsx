@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { GridToolbarQuickFilter } from '@mui/x-data-grid';
 import {  Stack, Box } from '@mui/material';
-import CrudTable from './CrudTable';
+import TicketCrudTable from './TicketCrudTable';
 import { useDispatch } from 'react-redux'
 function QuickSearchToolbar() {
     return (
@@ -50,15 +50,11 @@ const TicketsTable = ({ filter, value }) => {
     //const users = useSelector(state => state.users)
     let filteredTickets = tickets
 
-    tickets.forEach(t => {
-        console.log(`doesnt match assignee` + t.assignee);
-    });
+
     switch (filter) {
         case "user": // filter to show only tickets assigned to logged in user
             filteredTickets = tickets.filter(ticket => ticket.assignee === value.id)
-            filteredTickets.forEach(t => {
-                console.log(`og assignee` + t.assignee);
-            });
+          
             break;
         case "project":
             filteredTickets = tickets.filter(ticket => ticket.project === value.id)
@@ -93,7 +89,7 @@ const TicketsTable = ({ filter, value }) => {
 
     return rows ? (
 
-        <CrudTable
+        <TicketCrudTable
             initialRows={rows}
             sx={{
                 boxShadow: 2,
