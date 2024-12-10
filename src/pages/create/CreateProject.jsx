@@ -1,6 +1,4 @@
 
-import Header from '../../components/header/Header'
-
 import { TextField, Button } from '@mui/material'
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,12 +7,12 @@ import { createProject } from '../../reducers/projectsReducer'
 import SelectMultiple from '../../components/checkbox/SelectMultiple'
 import { useNavigate } from 'react-router-dom'
 
-const CreateProject = ({ toggleSidebar }) => {
+const CreateProject = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.data)
     const user = useSelector((state) => state.user)
 
     const [selectedUsers, setUsers] = useState([]);
@@ -45,23 +43,22 @@ const CreateProject = ({ toggleSidebar }) => {
 
   return (
     <>
-        <Header page={"My Projects"} user={user} toggleSidebar={toggleSidebar} />
         <main>
               <div className="formWrapper">
 
-                  <div className="formHeader">
+                  <div className="form-header">
                       <h2>Create New Project</h2>
                   </div>
 
-                  <div className="formContainer">     
+                  <div className="form-container">     
 
-                      <div className="mainTitle">PROJECT NAME</div>
+                      <div className="main-title">PROJECT NAME</div>
                           <TextField id="filled-basic" label="Name" variant="outlined" onChange={(event) => setNewName(event.target.value)}/>
 
-                      <div className="mainTitle">PROJECT DESCRIPTION</div>
+                      <div className="main-title">PROJECT DESCRIPTION</div>
                           <TextField id="filled-basic" label="Description" variant="outlined" onChange={(event) => setNewDesc(event.target.value)}/>
 
-                      <div className="mainTitle">SELECT USERS</div>
+                      <div className="main-title">SELECT USERS</div>
                       <SelectMultiple data={users} label="Users" onChange={(event, selectedValue) => setUsers(selectedValue)} />
 
                       <div className="button">

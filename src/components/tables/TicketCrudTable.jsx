@@ -10,7 +10,7 @@ import {
     GridRowEditStopReasons,
 } from '@mui/x-data-grid';
 import { ArrowDropDown, WarningAmber, ErrorOutline } from '@mui/icons-material';
-import { GridToolbarContainer} from '@mui/x-data-grid';
+import { GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react'
@@ -42,9 +42,9 @@ function EditToolbar(props) {
 
     });
 
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.data)
     const user = useSelector(state => state.user)
-    const projects = useSelector(state => state.projects)
+    const projects = useSelector(state => state.projects.data)
 
     const filteredProjects = projects.filter(project =>
         Array.isArray(project.users) && project.users.includes(user.id)
@@ -66,14 +66,16 @@ function EditToolbar(props) {
                 ...newTicketData
             },
         ]);
+        console.log(newTicketData.project)
         
         const newTicket = {
-            project: newTicketData.project,
-            name: newTicketData.name,
-            description: newTicketData.description,
-            assignee: newTicketData.assignee,
-            type: newTicketData.type,
-            priority: newTicketData.priority
+            ProjectId: newTicketData.project,
+            Name: newTicketData.name,
+            Description: newTicketData.description,
+            AssigneeId: newTicketData.assignee,
+            Type: newTicketData.type,
+            Status: newTicketData.status,
+            Priority: newTicketData.priority
         }
 
        
@@ -97,7 +99,11 @@ function EditToolbar(props) {
     };
 
     return (
-        <GridToolbarContainer>
+    
+
+            <GridToolbarContainer>
+
+
             <Button color="primary" startIcon={<AddIcon />} onClick={handleOpenDialog}>
                 Add Ticket
             </Button>
@@ -214,7 +220,25 @@ function EditToolbar(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Box
+                sx={{
+                    textAlign: "right",
+                    p: 0.5,
+                    pb: 0,
+                    marginLeft: 'auto'
+                }}
+            >
+                <GridToolbarQuickFilter
+                    quickFilterParser={(searchInput) =>
+                        searchInput
+                            .split(',')
+                            .map((value) => value.trim())
+                            .filter((value) => value !== '')
+                    }
+                />
+            </Box>
         </GridToolbarContainer>
+      
     );
 }
 
@@ -222,8 +246,8 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState({});
     const dispatch = useDispatch()
-    const projects = useSelector(state => state.projects)
-    const users = useSelector(state => state.users)
+    const projects = useSelector(state => state.projects.data)
+    const users = useSelector(state => state.users.data)
 
     const columns = [
         {
@@ -480,22 +504,17 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
 
-        console.log(updatedRow)
-
         const project = projects.find(project => project.name === updatedRow.project);
         const assignee = users.find(user => user.name === updatedRow.assignee)
-        console.log(updatedRow.project)
         const newTicket = {
-            project: project.id,
-            name: updatedRow.name,
-            description: updatedRow.description,
-            type: updatedRow.type,
-            priority: updatedRow.priority,
-            status: updatedRow.status,
-            assignee: assignee.id 
+            ProjectId: project.id,
+            Name: updatedRow.name,
+            Description: updatedRow.description,
+            Type: updatedRow.type,
+            Priority: updatedRow.priority,
+            Status: updatedRow.status,
+            AssigneeId: assignee.id 
         }
-
-        console.log(newTicket)
         dispatch(updateTicket(newRow.id, newTicket));
 
         return updatedRow;
@@ -510,21 +529,21 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
     }
     return (
 
-            <DataGrid
-                rows={rows}
+        <DataGrid
+            rows={rows}
             columns={columns}
             sx={sx}
-            
-                editMode="row"
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
+
+            editMode="row"
+            rowModesModel={rowModesModel}
+            onRowModesModelChange={handleRowModesModelChange}
+            onRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}
-            onProcessRowUpdateError={handleProcessRowUpdateError }
-                slots={{ toolbar: EditToolbar }}
-                slotProps={{
-                    toolbar: { setRows, setRowModesModel },
-                }}
-            />
+            onProcessRowUpdateError={handleProcessRowUpdateError}
+            slots={{ toolbar: EditToolbar }}
+            slotProps={{
+                toolbar: { setRows, setRowModesModel },
+            }}
+        />
     );
 }

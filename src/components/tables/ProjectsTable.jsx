@@ -42,7 +42,8 @@ function createData(
 
 const ProjectsTable = ({ filter, value }) => {
 
-  let projectsSelector = useSelector((state) => state.projects)
+    let projectsSelector = useSelector((state) => state.projects.data)
+
   let projects = projectsSelector.slice()
     const navigate = useNavigate();
 

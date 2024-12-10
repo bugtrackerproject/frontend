@@ -1,50 +1,7 @@
 import * as React from 'react';
 
 import { useSelector } from 'react-redux';
-import { Box } from '@mui/system';
-import { Link } from 'react-router-dom';
-import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
-
-function QuickSearchToolbar() {
-  return (
-    <Box
-      sx={{
-        textAlign: "right",
-        p: 0.5,
-        pb: 0,
-      }}
-    >
-      <GridToolbarQuickFilter
-        quickFilterParser={(searchInput) =>
-          searchInput
-            .split(',')
-            .map((value) => value.trim())
-            .filter((value) => value !== '')
-        }
-      />
-    </Box>
-  );
-}
-
-const columns = [
-  { field: 'name', headerName: 'Name', minWidth: 130, flex: 1 },
-  { field: 'email', headerName: 'Email', minWidth: 130, flex: 1 },
-  {
-    field: 'role',
-    headerName: 'Role',
-    minWidth: 130, flex: 1
-  },
-  {
-    field: 'id',
-    headerName: 'ID',
-    sortable: false,
-    flex: 1,
-    minWidth: 210,
-    renderCell: (params) => (
-        <Link to={`/users/${params.value}`}>{params.value}</Link>
-      )
-  },
-];
+import UserCrudTable from './UserCrudTable'
 
 function createData(
   name,
@@ -58,7 +15,7 @@ function createData(
 
 const UsersTable = ({ filter, value }) => {
 
-  let users = useSelector((state) => state.users)
+  let users = useSelector((state) => state.users.data)
 
   switch(filter) {
     case "project":
@@ -89,21 +46,18 @@ const UsersTable = ({ filter, value }) => {
   })   
 
   return (
-    <DataGrid 
+      <UserCrudTable
+          initialRows={rows}
       sx={{
         boxShadow: 1,
         backgroundColor:'white'
-      }}
-
-      rows={rows}
-      columns={columns}
-      pageSize={5}
-      autoHeight={true}
-      autoPageSize={true}
-      rowsPerPageOptions={[5]}
-      disableSelectionOnClick={true}
-
-      components={{ Toolbar: QuickSearchToolbar }}
+          }}
+          slotProps={{
+              loadingOverlay: {
+                  variant: 'linear-progress',
+                  noRowsVariant: 'skeleton',
+              },
+          }}
     />
   );
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getAuthConfig, checkToken } from './auth';
+import { getAuthConfig, checkToken, removeToken } from './auth';
 
 export const apiServiceFactory = (resourceName) => {
     const baseUrl = `/api/${resourceName}`;
@@ -10,12 +10,9 @@ export const apiServiceFactory = (resourceName) => {
         if (!tokenCheckResult) {
             return;
         }
-        try {
-            const response = await axios.get(baseUrl, getAuthConfig());
-            return response.data;
-        } catch (error) {
-            console.error(`Failed to fetch ${resourceName}:`, error.response?.data || error.message);
-        }
+        const response = await axios.get(baseUrl, getAuthConfig());
+        return response.data;
+
     };
 
     const create = async (newObject) => {
@@ -24,12 +21,8 @@ export const apiServiceFactory = (resourceName) => {
         if (!tokenCheckResult) {
             return;
         }
-        try {
-            const response = await axios.post(baseUrl, newObject, getAuthConfig());
-            return response.data;
-        } catch (error) {
-            console.error(`Failed to create ${resourceName}:`, error.response?.data || error.message);
-        }
+        const response = await axios.post(baseUrl, newObject, getAuthConfig());
+        return response.data;
     };
 
     const update = async (id, updatedObject) => {

@@ -16,12 +16,6 @@ import Logout from './pages/logout/Logout'
 import Register from './pages/register/Register'
 import ManageProjects from './pages/manage/projects/ManageProjects'
 
-import { setUser } from './reducers/userReducer'
-import { initializeUsers } from './reducers/usersReducer'
-import { initializeProjects } from './reducers/projectsReducer'
-import { initializeTickets } from './reducers/ticketsReducer'
-import { initializeRoles } from './reducers/rolesReducer'
-import store from './store'
 import SingleProject from './pages/single/SingleProject'
 import SingleTicket from './pages/single/SingleTicket'
 import SingleUser from './pages/single/SingleUser'
@@ -32,18 +26,45 @@ import CreateTicket from './pages/create/CreateTicket'
 import Sidebar from './components/sidebar/Sidebar'
 
 import Spinner from './components/animations/Spinner';
+import Loader from './components/animations/Loader';
 import { useSwipeable } from 'react-swipeable';
-import { setAccessToken, getAuthConfig } from './services/auth'
-
+import useAppInitialisation from './hooks/useAppInitialisation'
+import Header from './components/header/Header'
+import { toggleSidebar, setSidebar } from './reducers/appReducer'
 
 
 const PrivateRoute = (props) => {
-    let isLoggedIn = false
+    const user = useSelector((state) => state.user)
+    const initialiseApp = useAppInitialisation();
+    const { loading } = useSelector((state) => state.app); 
+
+    useEffect(() => {
+        const checkAndInitialise = async () => {
+            const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
+
+            if (loggedUserJSON && !user) {
+                await initialiseApp();
+            }
+        };
+
+        checkAndInitialise();
+    }, [user, initialiseApp]);
+
 
     const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
-    if (loggedUserJSON) {
-        isLoggedIn = true
+    const isLoggedIn = !!loggedUserJSON;
+
+
+    if (loading) {
+        return (
+            <>
+                <Header page="Loading..." />
+                <Loader />;
+            </>
+            
+        )
     }
+
 
     return (isLoggedIn ? (
         <Outlet />
@@ -69,54 +90,29 @@ const AdminRoute = (props) => {
 }
 
 const App = () => {
-    const dispatch = useDispatch()
     const location = useLocation();
+    const dispatch = useDispatch();
 
-    const [isSidebarActive, setSidebarActive] = useState(false) // it is actually active by default oopsie
-    const [loading, setLoading] = useState(true);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-    const toggleSidebar = () => {
-        setSidebarActive(!isSidebarActive);
-    }
+    const sidebar = useSelector((state) => state.app.sidebar);
 
     const swipeConfig = {
-        onSwipedLeft: () => setSidebarActive(false),
-        onSwipedRight: () => setSidebarActive(true)
+        onSwipedLeft: () => dispatch(setSidebar(false)),
+        onSwipedRight: () => dispatch(setSidebar(true))
     };
 
     const swipeHandlers = useSwipeable(swipeConfig);
 
-    const projects = useSelector((state) => state.projects)
-    const users = useSelector((state) => state.users)
-    const tickets = useSelector((state) => state.tickets)
+    const projects = useSelector((state) => state.projects.data)
+    const users = useSelector((state) => state.users.data)
+
+    const tickets = useSelector((state) => state.tickets.data)
+
+    const initialiseApp = useAppInitialisation();
 
     useEffect(() => {
-        const initializeApp = async () => {
-            try {
-                const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
-                if (loggedUserJSON) {
-                    const user = JSON.parse(loggedUserJSON);
-                    dispatch(setUser(user));
-                    console.log(user.token)
-                    setAccessToken(user.token)
-
-                }
-
-                await Promise.all([
-                    dispatch(initializeUsers()),
-                    dispatch(initializeRoles()),
-                    dispatch(initializeProjects()),
-                    dispatch(initializeTickets()),
-                ]);
-            } catch (error) {
-                console.error("Failed to initialize app:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        initializeApp();
-    }, [dispatch]);
+        initialiseApp()
+    }, [])
 
     useEffect(() => {
         const handleResize = () => {
@@ -149,12 +145,29 @@ const App = () => {
         ? tickets.find(a => a.id === matchTicket.params.id)
         : null
 
+    const matchProjects = useMatch('/projects')
+    const matchTickets = useMatch('/tickets')
+    const matchManageProjects = useMatch('/admin/projects')
+    const matchManageRoles = useMatch('/admin/projects')
+
+    const getHeaderTitle = () => {
+        if (matchTickets) return 'Tickets';
+        if (matchProjects) return 'Projects';
+        if (matchManageProjects) return 'Manage Projects';
+        if (matchManageRoles) return 'Manage User Roles';
+        if (matchUser) return `${user.name}'s Profile`
+        if (matchTicket) return `${ticket.name} Ticket Details`
+        if (matchProject) return `${project.name} Project Details`
+        return 'Home';
+    };
+
+    const handleSidebarToggle = () => {
+        dispatch(toggleSidebar());
+    };
 
     return (
         <div className="App">
-            {loading ? (
-                <Spinner />
-            ) : (
+            {
                 ['/login', '/register'].includes(location.pathname) ? (
                     <Routes>
                         <Route path="/login" element={<Login />} />
@@ -163,13 +176,13 @@ const App = () => {
                 ) : (
                     <>
 
-                        <Sidebar isSidebarActive={isSidebarActive} setSidebarActive={setSidebarActive} />
-
+                            <Sidebar isSidebarActive={sidebar} setSidebarActive={handleSidebarToggle} />
+                        
                         <div
-                            className={`main-content ${isMobile && isSidebarActive ? 'sidebar-hidden' : ''}`}
+                            className={`main-content ${isMobile && sidebar ? 'sidebar-hidden' : ''}`}
                             onClick={() => {
-                                if (isMobile && isSidebarActive) {
-                                    setSidebarActive(false); // Close sidebar when clicked on main content on mobile
+                                if (isMobile && sidebar) {
+                                    dispatch(setSidebar(false)); // Close sidebar when clicked on main content on mobile
                                 }
                             }}
                         >
@@ -178,32 +191,32 @@ const App = () => {
                                 {...swipeHandlers}
                                 className={'swipeable-area'}
                             />
-
+                                <Header page={getHeaderTitle} toggleSidebar={handleSidebarToggle} />
                             <Routes>
 
                                 <Route path="/" element={<PrivateRoute />}>
-                                    <Route index element={<Home toggleSidebar={toggleSidebar} />} />
+                                    <Route index element={<Home />} />
                                     <Route path="logout" element={<Logout />} />
 
                                     <Route path="projects">
-                                        <Route index element={<ListProjects toggleSidebar={toggleSidebar} />} />
-                                        <Route path=":id" element={<SingleProject project={project} toggleSidebar={toggleSidebar} />} />
-                                        <Route path="new" element={<CreateProject toggleSidebar={toggleSidebar} />} />
+                                        <Route index element={<ListProjects />} />
+                                        <Route path=":id" element={<SingleProject project={project} />} />
+                                        <Route path="new" element={<CreateProject />} />
                                     </Route>
 
                                     <Route path="tickets">
-                                        <Route index element={<ListTickets toggleSidebar={toggleSidebar} />} />
+                                        <Route index element={<ListTickets />} />
                                       
-                                        <Route path="new" element={<CreateTicket toggleSidebar={toggleSidebar} />} />
+                                        <Route path="new" element={<CreateTicket  />} />
                                     </Route>
 
                                     <Route path="users">
-                                        <Route path=":id" element={<SingleUser selectedUser={user} toggleSidebar={toggleSidebar} />} />
+                                        <Route path=":id" element={<SingleUser selectedUser={user} />} />
                                     </Route>
 
                                     <Route path="admin/" element={<AdminRoute />}>
-                                        <Route path="projects" element={<ManageProjects toggleSidebar={toggleSidebar} />} />
-                                        <Route path="roles" element={<ManageRoles toggleSidebar={toggleSidebar} />} />
+                                        <Route path="projects" element={<ManageProjects />} />
+                                        <Route path="roles" element={<ManageRoles />} />
                                     </Route>
 
                                     <Route path="*" element={<h1>404</h1>} />
@@ -212,7 +225,7 @@ const App = () => {
                         </div>
                     </>
                 )
-            )}
+            }
         </div>
     );
 

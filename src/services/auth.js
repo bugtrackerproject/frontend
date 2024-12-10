@@ -7,7 +7,6 @@ var accessToken = null;
 
 const setAccessToken = (newToken) => {
     accessToken = `bearer ${newToken}`;
-    console.log(accessToken)
 };
 
 const getAuthConfig = () => ({
@@ -19,7 +18,7 @@ const checkToken = async () => {
         const newAccessToken = await refreshToken();
         if (!newAccessToken) {
             console.error("Failed to refresh token");
-            return false; // Explicitly return false
+            return false;
         } else {
             setAccessToken(newAccessToken);
         }

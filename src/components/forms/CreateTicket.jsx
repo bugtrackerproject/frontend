@@ -12,9 +12,9 @@ const CreateTicket = ({ toggleSidebar }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.data)
     const user = useSelector(state => state.user)
-    const projects = useSelector(state => state.projects)
+    const projects = useSelector(state => state.projects.data)
 
     const filteredProjects = projects.filter(project =>
         Array.isArray(project.users) && project.users.includes(user.id)
@@ -76,26 +76,26 @@ const CreateTicket = ({ toggleSidebar }) => {
             </div>
             <div className="form-container">
                 <div className="form-rows">
-                    <div className="mainTitle">SELECT PROJECT</div>
+                    <div className="main-title">SELECT PROJECT</div>
                     <Select data={filteredProjects} label="Project" onChange={(event, selectedValue) => setProject(selectedValue)} />
                 </div>
                 <div className="form-rows">
 
-                    <div className="mainTitle">TICKET NAME</div>
+                    <div className="main-title">TICKET NAME</div>
                     <TextField id="filled-basic" label="Name" variant="outlined" onChange={(event) => setNewName(event.target.value)} />
                 </div>
                 <div className="form-rows">
 
-                    <div className="mainTitle">TICKET DESCRIPTION</div>
+                    <div className="main-title">TICKET DESCRIPTION</div>
                     <TextField id="filled-basic" label="Description" variant="outlined" onChange={(event) => setNewDesc(event.target.value)} />
                 </div>
                 <div className="form-rows">
-                    <div className="mainTitle">ASSIGN USER</div>
+                    <div className="main-title">ASSIGN USER</div>
                     <Select data={users} label="User" onChange={(event, selectedValue) => setNewUser(selectedValue)} value={newUser} />
 
                 </div>
                 <div className="form-rows">
-                    <div className="mainTitle">TYPE</div>
+                    <div className="main-title">TYPE</div>
                     {types && (
                         <Select
                             data={types}
@@ -107,7 +107,7 @@ const CreateTicket = ({ toggleSidebar }) => {
 
                 </div>
                 <div className="form-rows">
-                    <div className="mainTitle">PRIORITY</div>
+                    <div className="main-title">PRIORITY</div>
                     {priorities && (
                         <Select
                             data={priorities}

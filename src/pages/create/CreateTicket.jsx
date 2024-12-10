@@ -7,14 +7,14 @@ import Select from '../../components/checkbox/Select'
 import { createTicket } from '../../reducers/ticketsReducer'
 import ticketMetaService from '../../services/ticketmeta'
 
-const CreateTicket = ({ toggleSidebar }) => {
+const CreateTicket = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.data)
     const user = useSelector(state => state.user)
-    const projects = useSelector(state => state.projects)
+    const projects = useSelector(state => state.projects.data)
 
     const filteredProjects = projects.filter(project =>
         Array.isArray(project.users) && project.users.includes(user.id)

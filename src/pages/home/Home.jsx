@@ -1,18 +1,17 @@
 
 import { useSelector } from 'react-redux'
-import Header from '../../components/header/Header'
 import ProjectsTable from '../../components/tables/ProjectsTable'
 import TicketsTable from '../../components/tables/TicketsTable'
 import Widget from '../../components/widgets/Widget'
 import "./home.scss"
 
 
-const Home = ({ toggleSidebar }) => {
+const Home = () => {
 
-  let ticketsSelector = useSelector(state => state.tickets)
+  let ticketsSelector = useSelector(state => state.tickets.data)
   let tickets = ticketsSelector.slice()
 
-  let projectsSelector = useSelector((state) => state.projects)
+  let projectsSelector = useSelector((state) => state.projects.data)
   let projects = projectsSelector.slice()
 
   
@@ -41,7 +40,6 @@ const Home = ({ toggleSidebar }) => {
 
   return user ? (
     <>
-        <Header page={"Dashboard"} user={user} toggleSidebar={toggleSidebar}/>
 
         <main>
             
@@ -70,13 +68,13 @@ const Home = ({ toggleSidebar }) => {
             </div>
 
             <div className="table-wrapper">
-                    <div className="formHeader">
+                    <div className="form-header">
                         <h2>Recent Tickets</h2>
                     </div>
                 <TicketsTable filter="user" value={user} />
             </div>
             <div className='table-wrapper'>
-                <div className="formHeader">
+                <div className="form-header">
                         <h2>Recent Projects</h2>
                     </div>
                 <ProjectsTable filter="user" value={user} />

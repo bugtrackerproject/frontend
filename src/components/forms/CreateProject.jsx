@@ -14,7 +14,7 @@ const CreateProject = ({ toggleSidebar }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.data)
     const user = useSelector((state) => state.user)
 
     const [selectedUsers, setUsers] = useState([]);
@@ -53,13 +53,13 @@ const CreateProject = ({ toggleSidebar }) => {
 
                 <div className="form-container">     
 
-                    <div className="mainTitle">PROJECT NAME</div>
+                    <div className="main-title">PROJECT NAME</div>
                         <TextField id="filled-basic" label="Name" variant="outlined" onChange={(event) => setNewName(event.target.value)}/>
 
-                    <div className="mainTitle">PROJECT DESCRIPTION</div>
+                    <div className="main-title">PROJECT DESCRIPTION</div>
                         <TextField id="filled-basic" label="Description" variant="outlined" onChange={(event) => setNewDesc(event.target.value)}/>
 
-                    <div className="mainTitle">SELECT USERS</div>
+                    <div className="main-title">SELECT USERS</div>
                     <SelectMultiple data={users} label="Users" onChange={(event, selectedValue) => setUsers(selectedValue)} />
 
                     <div className="button">

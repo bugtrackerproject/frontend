@@ -1,30 +1,8 @@
 import * as React from 'react';
 
 import { useSelector } from 'react-redux';
-import { GridToolbarQuickFilter } from '@mui/x-data-grid';
 import {  Stack, Box } from '@mui/material';
 import TicketCrudTable from './TicketCrudTable';
-import { useDispatch } from 'react-redux'
-function QuickSearchToolbar() {
-    return (
-        <Box
-            sx={{
-                textAlign: "right",
-                p: 0.5,
-                pb: 0,
-            }}
-        >
-            <GridToolbarQuickFilter
-                quickFilterParser={(searchInput) =>
-                    searchInput
-                        .split(',')
-                        .map((value) => value.trim())
-                        .filter((value) => value !== '')
-                }
-            />
-        </Box>
-    );
-}
 
 function createData(
     name,
@@ -44,10 +22,10 @@ function createData(
 
 const TicketsTable = ({ filter, value }) => {
 
-    let tickets = useSelector(state => state.tickets)
-    const projects = useSelector(state => state.projects)
-    const users = useSelector(state => state.users)
-    //const users = useSelector(state => state.users)
+    let tickets = useSelector(state => state.tickets.data)
+    const projects = useSelector(state => state.projects.data)
+    const users = useSelector(state => state.users.data)
+    //const users = useSelector(state => state.users.data)
     let filteredTickets = tickets
 
 
@@ -116,7 +94,6 @@ const TicketsTable = ({ filter, value }) => {
             }}
             /*onRowDoubleClick={(params) => navigate(`/tickets/${params.row.id}`)}*/
             components={{
-                Toolbar: QuickSearchToolbar,
                 NoRowsOverlay: () => (
                     <Stack height="100%" alignItems="center" justifyContent="center">
                         User has no tickets

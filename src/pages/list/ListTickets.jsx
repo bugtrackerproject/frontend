@@ -1,21 +1,14 @@
 import React from 'react'
-import { useState } from 'react'
-import Header from '../../components/header/Header'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import TicketsTable from '../../components/tables/TicketsTable'
-import { Button } from '@mui/material'
-import CreateTicket from '../../components/forms/CreateTicket'
-import UpdateTicket from '../../components/forms/UpdateTicket'
 
 import './list.scss'
 
-const ListTickets = ({ toggleSidebar }) => {
+const ListTickets = () => {
     const user = useSelector(state => state.user)
     
     return (
         <>
-            <Header page={"My Tickets"} user={user} toggleSidebar={toggleSidebar} />
 
             <main>
 

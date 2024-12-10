@@ -4,11 +4,10 @@ import { useSelector } from "react-redux"
 
 import ProjectsTable from "../../components/tables/ProjectsTable"
 import TicketsTable from "../../components/tables/TicketsTable"
-import Header from "../../components/header/Header"
 
 
-const SingleUser = ({ toggleSidebar, selectedUser }) => {
-    const users = useSelector(state => state.users)
+const SingleUser = ({ selectedUser }) => {
+    const users = useSelector(state => state.users.data)
     const user = useSelector(state => state.user)
 
 
@@ -16,8 +15,6 @@ const SingleUser = ({ toggleSidebar, selectedUser }) => {
 
     return selectedUser ? (
     <>
-            <Header page={`${selectedUser.name}'s Profile`} user={user} toggleSidebar={toggleSidebar}/>
-
             <main>
                 <div className="flex-wrapper">
                     <div className="formWrapper">

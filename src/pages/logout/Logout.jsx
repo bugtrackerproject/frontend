@@ -1,27 +1,20 @@
 import React from 'react'
 import { useEffect } from 'react';
-import { setUser } from '../../reducers/userReducer';
+import { setUser, logout } from '../../reducers/userReducer';
 import { useDispatch } from 'react-redux';
 
-import LoginForm from '../../components/login/LoginForm';
+import Login from '../../pages/login/Login';
 
 const Logout = () => {
 
     const dispatch = useDispatch()
-    useEffect(() => {
 
-        const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
-        if (loggedUserJSON) {
-            window.localStorage.removeItem("loggedBugtrackerAppUser")
+    window.localStorage.removeItem("loggedBugtrackerAppUser")
+    dispatch(logout())
 
-            dispatch(setUser(null))
-        }
-    }, [dispatch]);
 
     return (
-        <div className="loginPage">
-            <LoginForm />
-        </div>
+      <Login />    
     )
 }
 

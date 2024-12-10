@@ -1,24 +1,15 @@
 import "./header.scss"
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import FullscreenExitOutlinedIcon from '@mui/icons-material/FullscreenExitOutlined';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useSelector } from 'react-redux'
 
-const Header = ({ page, user, toggleSidebar }) => {
+const Header = ({ page, toggleSidebar }) => {
+
+    const user = useSelector((state) => state.user)
 
 
-  console.log(user)
   return (
     <header>
-
-          
           <div className="header-nav">
             <span onClick={toggleSidebar}>
                 <MenuIcon className="material-icons" sx={{fontSize:'2rem' }}/>
@@ -28,8 +19,12 @@ const Header = ({ page, user, toggleSidebar }) => {
           </div>
 
           <div className="user-wrapper">
-            <h4>{user.name}</h4>
-            <small>{user.role}</small>
+              {user ? (
+                  <>
+                      <h4>{user.name}</h4>
+                      <small>{user.role}</small>
+                  </>
+              ) : null}
           </div>
     </header>
   )

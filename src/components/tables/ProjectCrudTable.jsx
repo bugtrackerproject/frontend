@@ -10,12 +10,12 @@ import {
     GridRowEditStopReasons,
 } from '@mui/x-data-grid';
 import { ArrowDropDown, WarningAmber, ErrorOutline } from '@mui/icons-material';
-import { GridToolbarContainer } from '@mui/x-data-grid';
+import { GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { addUserToProject, createProject, updateProject } from '../../reducers/projectsReducer'
+import { initializeProjects, createProject, updateProject } from '../../reducers/projectsReducer'
 import { useSelector } from 'react-redux';
 import SelectMultiple from '../checkbox/SelectMultiple';
 
@@ -35,11 +35,11 @@ function EditToolbar(props) {
         description: '',
 
     });
-    const projects = useSelector((state) => state.projects)
+    const projects = useSelector((state) => state.projects.data)
 
     const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
 
-    const users = useSelector((state) => state.users)
+    const users = useSelector((state) => state.users.data)
     const user = useSelector(state => state.user)
 
     const handleOpenDialog = () => setIsDialogOpen(true);
@@ -57,19 +57,41 @@ function EditToolbar(props) {
             ...oldRows,
             {
                 id,
+                
                 ...newProjectData
             },
         ]);
 
         const newProject = {
            
-            name: newProjectData.name,
-            description: newProjectData.description,
-            users: selectedUsersToAdd.id
+            Name: newProjectData.name,
+            Description: newProjectData.description,
+            Users: selectedUsersToAdd.map(user => user.id) 
         }
 
+        try {
+            const createdProject = await dispatch(createProject(newProject));
+         console.log(createdProject.payload.createdAt)
+            setRows((oldRows) =>
+                oldRows.map((row) =>
+                    row.id === id
+                        ? {
+                            id: createdProject.payload.id,
+                            name: createdProject.payload.name,
+                            description: createdProject.payload.description,
+                            createdAt: createdProject.payload.createdAt,
+                            updatedAt: createdProject.payload.updatedAt
+                        }
+                        : row
+                )
+            );
+            
+        } catch (error) {
+            console.error("Failed to create project:", error);
 
-        dispatch(createProject(newProject));
+            // Remove the temporary row in case of an error
+            setRows((oldRows) => oldRows.filter((row) => row.id !== id));
+        }
 
         setSelectedUsersToAdd([])
 
@@ -135,6 +157,23 @@ function EditToolbar(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Box
+                sx={{
+                    textAlign: "right",
+                    p: 0.5,
+                    pb: 0,
+                    marginLeft: 'auto'
+                }}
+            >
+                <GridToolbarQuickFilter
+                    quickFilterParser={(searchInput) =>
+                        searchInput
+                            .split(',')
+                            .map((value) => value.trim())
+                            .filter((value) => value !== '')
+                    }
+                />
+            </Box>
         </GridToolbarContainer>
     );
 }
@@ -143,8 +182,8 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState({});
     const dispatch = useDispatch()
-    const projects = useSelector(state => state.projects)
-    const users = useSelector(state => state.users)
+    const projects = useSelector(state => state.projects.data)
+    const users = useSelector(state => state.users.data)
 
     const columns = [
         {
@@ -267,6 +306,11 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
 
+        const newProject = {
+            name: updatedRow.name,
+            description: updatedRow.description
+        }
+
   /*      const project = projects.find(project => project.name === updatedRow.project);
         const assignee = users.find(user => user.name === updatedRow.assignee)
         
@@ -276,8 +320,8 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
             description: updatedRow.description
         }
 
-        console.log(newProject)
-        dispatch(updateProject(newRow.id, newProject));*/
+        console.log(newProject)*/
+        dispatch(updateProject(newRow.id, newProject));
 
         return updatedRow;
     };

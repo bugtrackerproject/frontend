@@ -9,15 +9,14 @@ import SelectMultiple from "../../../components/checkbox/SelectMultiple"
 import Select from "../../../components/checkbox/Select"
 import { addUserToProject, removeUserFromProject } from "../../../reducers/projectsReducer"
 import { useDispatch } from "react-redux"
-import Header from "../../../components/header/Header"
 
 
-const ManageProjects = ({ toggleSidebar }) => {
+const ManageProjects = () => {
 
     const dispatch = useDispatch();
 
-    const projects = useSelector((state) => state.projects)
-    const users = useSelector((state) => state.users)
+    const projects = useSelector((state) => state.projects.data)
+    const users = useSelector((state) => state.users.data)
     const user = useSelector(state => state.user)
 
     const [project, setProject] = useState(null);
@@ -61,10 +60,18 @@ const ManageProjects = ({ toggleSidebar }) => {
 
     return user ? (
         <>
-            <Header page={"Manage Projects"} user={user} toggleSidebar={toggleSidebar} />
-
             <main>
                 <div className="flex-wrapper">
+
+
+                    <div className="table-wrapper">
+                        <div className="form-header">
+                            <h2>Projects</h2>
+                        </div>
+                        <div className="table-container">
+                            <ProjectsTable className="mui-table" />
+                        </div>
+                    </div>
                     <div className="form-wrapper">
 
                         <div className="form-header">
@@ -120,15 +127,6 @@ const ManageProjects = ({ toggleSidebar }) => {
                                     </div>
                                 )}
                             </div>
-                        </div>
-                    </div>
-
-                    <div className="table-wrapper">
-                        <div className="form-header">
-                            <h2>Projects</h2>
-                        </div>
-                        <div className="table-container">
-                            <ProjectsTable className="mui-table" />
                         </div>
                     </div>
                 </div>

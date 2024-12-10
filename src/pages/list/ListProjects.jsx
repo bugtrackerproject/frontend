@@ -21,18 +21,8 @@ const ListProjects = ({ toggleSidebar }) => {
 
   return user ? (
     <>  
-        <Header page={"My Projects"} user={user} toggleSidebar={toggleSidebar}/>
-
-
           <main>
               <div className="flex-wrapper">
-                  <div className="formWrapper">
-                      <div className="button">
-
-                          <Button sx={{ marginBottom: 4, minWidth: 150, backgroundColor: '##2873ff' }} variant="contained" onClick={handleCreateProject}>Create New Project</Button>
-
-                      </div>
-                  </div>
                   <div className="table-wrapper">
                       <div className="form-header">
                           <h2>Assigned Projects</h2>

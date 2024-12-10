@@ -19,8 +19,8 @@ const UpdateTicket = ({ ticket }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const projects = useSelector(state => state.projects)
-    const users = useSelector(state => state.users)
+    const projects = useSelector(state => state.projects.data)
+    const users = useSelector(state => state.users.data)
     const user = useSelector(state => state.user)
 
     useEffect(() => {
@@ -96,41 +96,41 @@ const UpdateTicket = ({ ticket }) => {
                 </div>
                 <div className="form-container">
                     <div>
-                        <div className="mainTitle">TICKET TITLE</div>
+                        <div className="main-title">TICKET TITLE</div>
                         {ticket.name}
 
-                        <div className="mainTitle">PROJECT DESCRIPTION</div>
+                        <div className="main-title">PROJECT DESCRIPTION</div>
                         {ticket.description}
 
-                        <div className="mainTitle">PRIORITY</div>
+                        <div className="main-title">PRIORITY</div>
                         {isAssignee ? (
                             <Select defaultValue={ticket.priority} data={priorities} onChange={(event, selectedValue) => setPriority(selectedValue)} />
                         ) : (
                             ticket.priority
                         )}
 
-                        <div className="mainTitle">TYPE</div>
+                        <div className="main-title">TYPE</div>
                         {ticket.type}
 
 
-                        <div className="mainTitle">STATUS</div>
+                        <div className="main-title">STATUS</div>
                         {isAssignee ? (
                             <Select defaultValue={ticket.status} data={statuses} onChange={(event, selectedValue) => setStatus(selectedValue)} />
                         ) : (
                             ticket.status
                         )}
 
-                        <div className="mainTitle">PROJECT</div>
+                        <div className="main-title">PROJECT</div>
                         {project.name}
 
                         <div className="row-fields">
                             <div>
-                                <div className="mainTitle">ASSIGNED TO</div>
+                                <div className="main-title">ASSIGNED TO</div>
                                 {assignee.name}
                             </div>
 
                             <div>
-                                <div className="mainTitle">SUBMITTED BY</div>
+                                <div className="main-title">SUBMITTED BY</div>
                                 {submitter.name}
                             </div>
                         </div>

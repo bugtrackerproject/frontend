@@ -25,8 +25,8 @@ const SingleTicket= ({ ticket, toggleSidebar }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const projects = useSelector(state => state.projects)
-    const users = useSelector(state => state.users)
+    const projects = useSelector(state => state.projects.data)
+    const users = useSelector(state => state.users.data)
     const user = useSelector(state => state.user)
 
     useEffect(() => {
