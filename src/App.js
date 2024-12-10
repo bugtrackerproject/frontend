@@ -191,7 +191,7 @@ const App = () => {
                                 {...swipeHandlers}
                                 className={'swipeable-area'}
                             />
-                                <Header page={getHeaderTitle} toggleSidebar={handleSidebarToggle} />
+                                <Header page={getHeaderTitle()} toggleSidebar={handleSidebarToggle} />
                             <Routes>
 
                                 <Route path="/" element={<PrivateRoute />}>
