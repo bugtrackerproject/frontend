@@ -33,10 +33,9 @@ const Home = () => {
     };
 
     const handleStatusClick = (status) => {
-        console.log(status)
         dispatch(setFilters({ ...filters, status }));
     };
-    console.log(filteredTickets)
+
     useEffect(() => {
         if (user) {
             dispatch(setFilters({ ...filters, assignee: user.id }));

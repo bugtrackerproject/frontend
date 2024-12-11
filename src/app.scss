@@ -4,7 +4,7 @@
     --third-color: #E8E8E8;
     --fourth-color: #fff;
     --color-dark: #333333;
-    --text-grey: #333333;
+    --text-grey: black;
     --transition-speed: 300ms;
     --main-background: #f1f5f9;
 }
@@ -21,6 +21,14 @@
 body {
     background-color: var(--main-color);
 }
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Ensure the body and HTML take the full height */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
 
 .login {
 }
@@ -207,7 +215,7 @@ main {
 }
 
 .mui-table-container {
-    height: calc(100vh - 210px);
+    height: calc(100vh - 200px);
     background: var(--fourth-color);
     border: 1px solid black;
     border-top: 0px;
@@ -406,7 +414,7 @@ form-rows {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.4rem;
-    padding-left: 2rem;
+    //padding-left: 2rem;
 }
 
 
@@ -571,6 +579,7 @@ form-rows {
 @media only screen and (max-height: 560px) {
     .sidebar {
         overflow-y: auto;
+        max-height: 100vh;
 
         ul {
             height: 100vh;
@@ -586,6 +595,7 @@ form-rows {
     header {
         width: calc(100% - 330px);
     }
+
 }
 
 @media only screen and (max-width: 430px) {
