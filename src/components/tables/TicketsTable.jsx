@@ -20,35 +20,15 @@ function createData(
 }
 
 
-const TicketsTable = ({ filter, value }) => {
+const TicketsTable = () => {
 
-    let tickets = useSelector(state => state.tickets.data)
     const projects = useSelector(state => state.projects.data)
     const users = useSelector(state => state.users.data)
-    //const users = useSelector(state => state.users.data)
-    let filteredTickets = tickets
 
+    const tickets = useSelector(state => state.tickets.filteredTickets);
 
-    switch (filter) {
-        case "user": // filter to show only tickets assigned to logged in user
-            filteredTickets = tickets.filter(ticket => ticket.assignee === value.id)
-          
-            break;
-        case "project":
-            filteredTickets = tickets.filter(ticket => ticket.project === value.id)
-            break;
-        case "recent":
-            //tickets = tickets.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-
-            //tickets = tickets.slice(tickets, 4)
-            break;
-        default:
-            // show all tickets
-
-
-            break;
-    }
-    const rows = filteredTickets.map(ticket => {
+    console.log("TicketsTable received tickets:", tickets);
+    const rows = tickets.map(ticket => {
         const project = projects.find(project => project.id === ticket.project);
         const assignee = users.find(user => user.id === ticket.assignee)
         return createData(
@@ -68,6 +48,7 @@ const TicketsTable = ({ filter, value }) => {
     return rows ? (
 
         <TicketCrudTable
+            key={JSON.stringify(rows.map(row => row.id))}
             initialRows={rows}
             sx={{
                 boxShadow: 2,

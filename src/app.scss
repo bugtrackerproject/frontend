@@ -1,12 +1,14 @@
 :root {
-    --main-color: #2873ff;
-    --secondary-color: #2873ff;
-    --color-dark: #1D2231;
-    --text-grey: #8390A2;
-    --transition-speed: 600ms;
+    --main-color: #0E4EAD;
+    --secondary-color: #F6F6F6;
+    --third-color: #E8E8E8;
+    --fourth-color: #fff;
+    --color-dark: #333333;
+    --text-grey: #333333;
+    --transition-speed: 300ms;
     --main-background: #f1f5f9;
 }
-
+// #E8DDCB,#CDB380,#036564,#033649,#031634,#E8DDCB,#CDB380,#036564
 * {
     padding: 0;
     margin: 0;
@@ -23,6 +25,12 @@ body {
 .login {
 }
 
+.flex-wrapper {
+    display:flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
 .sidebar {
     width: 330px;
     position: fixed;
@@ -32,7 +40,7 @@ body {
     height: 100%;
     background: var(--main-color);
     z-index: 100;
-    transition: all 300ms ease;
+    transition: all var(--transition-speed) ease;
 
     &.toggle {
         width: 70px;
@@ -99,21 +107,26 @@ body {
 .sidebar-brand {
     height: 5rem;
     padding: 1rem 0rem 1rem 1rem;
-    color: #fff;
 }
 
 .sidebar-brand-icon {
     padding-left: 1rem;
     display: block;
-    color: #fff;
+    color: var(--secondary-color);
     font-size: 1.2rem;
 }
+
+.sidebar-brand-text {
+    color: var(--secondary-color);
+}
+
+
 
 .category {
     padding-left: 2rem;
     font-size: 1.1rem;
     font-weight: bold;
-    color: #fff;
+    color: var(--third-color);
     padding-bottom: 0.5rem;
 }
 
@@ -130,12 +143,12 @@ body {
         padding-left: 1rem;
         white-space: nowrap;
         overflow: hidden;
-        transition: padding-left 300ms ease;
+        transition: padding-left var(--transition-speed) ease;
 
         .sidebar-link {
             padding-left: 1rem;
             display: block;
-            color: #fff;
+            color: var(--secondary-color);
             font-size: 1.2rem;
         }
 
@@ -150,7 +163,7 @@ body {
         }
 
         .active {
-            background: #f1f5f9;
+            background: var(--secondary-color);
             padding-top: 0.8rem;
             padding-bottom: 0.8rem;
             color: var(--main-color);
@@ -172,29 +185,41 @@ header {
     top: 0;
     width: calc(100% - 330px);
     z-index: 200;
-    background: #fff;
-    transition: all 300ms ease;
+    background: var(--third-color);
+    transition: all var(--transition-speed) ease;
 }
 
 main {
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    background: var(--main-background);
+    background: var(--secondary-color);
     min-height: calc(100vh - 80px);
-    gap: 2rem;
+    gap: 2.5rem;
+}
+
+.home-mui-table-container {
+    height: calc(100vh - 400px);
+    background: var(--fourth-color);
+    border: 1px solid black;
+    border-top: 0px;
+    box-shadow: 0 2px 2px rgb(144,202,249);
 }
 
 .mui-table-container {
-    height: 670px;
-    background: #f7f7f7;
+    height: calc(100vh - 210px);
+    background: var(--fourth-color);
+    border: 1px solid black;
+    border-top: 0px;
+    box-shadow: 0 2px 2px rgb(144,202,249);
 }
+
 
 
 
 .main-content {
     margin-top: 80px;
-    transition: margin-left 300ms ease;
+    transition: margin-left var(--transition-speed) ease;
     margin-left: 330px;
 
 
@@ -221,12 +246,12 @@ main {
 }
 
 .form-header {
-    background: #f7f7f7;
-    padding: 15px;
+    background: var(--fourth-color);
+    padding: 0.3rem;
     display: flex;
     justify-content: center;
-    border-radius: 8px 8px 0 0;
-    //box-shadow: 0 4px 8px rgb(144,202,249);
+    border-radius: 8px 8px 4px 4px;
+    box-shadow: 0 2px 2px rgb(144,202,249);
     border: 1px solid black;
     border-bottom: 0px;
 }
@@ -241,13 +266,13 @@ main {
 
 .form-container {
     flex: 1;
-    padding: 2rem; /* Padding for the main content */
-    background-color: #f7f7f7; /* Light background for form content */
-    border-radius: 0 0 8px 8px; /* Rounded corners on bottom */
+    padding: 2rem;
+    background-color: var(--third-color);
+    border-radius: 0 0 8px 8px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid black;
+    border: 1px solid red;
 }
 
 form-rows {
@@ -293,11 +318,11 @@ form-rows {
 }
 
 
-.mainTitle {
+.main-title {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 8px;
-    color: #333;
+    color: var(--color-dark);
     margin-top: 16px;
 }
 .button {
@@ -331,7 +356,7 @@ form-rows {
 }
 
 .search-wrapper {
-    border: 1px solid #ccc;
+    border: 1px solid red;
     border-radius: 30px;
     height:50px;
     display: flex;
@@ -369,11 +394,48 @@ form-rows {
 
 
 .widgets {
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 2rem;
+}
+
+.widget-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding-left: 2rem;
+}
+
+
+.widget {
+    
+    // background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    align-items: center;
+
+
+
+    h1 {
+        padding-left: 0.4rem;
+        color: orangered;
+
+    }
+
+    h2 {
+        font-size: 1.3rem;
+        font-weight: 500;
+    }
+}
+
+.widget:hover {
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -381,13 +443,11 @@ form-rows {
     padding: 1rem;
 }
 
-.table-wrapper {
-    
-}
+
+
 
 
 .widgets-header {
-    padding: 15px;
     display: flex;
     justify-content: center;
 }
@@ -450,7 +510,7 @@ form-rows {
         height: 40px;
         width: 40px;
         border-radius: 50%;
-        color: #fff;
+        color: var(--secondary-color);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -508,6 +568,25 @@ form-rows {
 
 }
 
+@media only screen and (max-height: 560px) {
+    .sidebar {
+        overflow-y: auto;
+
+        ul {
+            height: 100vh;
+
+            li {
+
+                .active {
+                    margin-bottom: 0.5rem;
+                }
+            }
+        }
+    }
+    header {
+        width: calc(100% - 330px);
+    }
+}
 
 @media only screen and (max-width: 430px) {
 

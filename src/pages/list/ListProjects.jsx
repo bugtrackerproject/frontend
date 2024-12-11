@@ -27,7 +27,7 @@ const ListProjects = ({ toggleSidebar }) => {
                       <div className="form-header">
                           <h2>Assigned Projects</h2>
                       </div>
-                      <div className="table-container">
+                      <div className="mui-table-container">
                           <ProjectsTable filter={"user"} value={user} /> </div>
                      </div>
               </div>

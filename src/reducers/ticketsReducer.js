@@ -6,6 +6,12 @@ const initialState = {
     data: [],
     loading: false,
     error: null,
+    filteredTickets: [],
+    filters: {
+        status: 'all',      // 'all', 'To Do', 'In Progress', 'Completed'
+        assignee: null,   // Assignee's ID or name (can be null for no filter)
+        priority: 'all',    // 'all', 'Low', 'Medium', 'High', 'Critical'
+    },
 };
 
 
@@ -29,6 +35,10 @@ const ticketsSlice = createSlice({
                 ticket.id !== action.payload.id ? ticket : { ...ticket, [action.payload.field]: action.payload.value }
             )
         },
+        setFilters: (state, action) => {
+            state.filters = action.payload;
+            state.filteredTickets = filterTickets(state.data, state.filters);
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -37,6 +47,7 @@ const ticketsSlice = createSlice({
             })
             .addCase(initialiseTickets.fulfilled, (state, action) => {
                 state.data = action.payload;
+                state.filteredTickets = filterTickets(state.data, state.filters); 
                 state.loading = false;
             })
             .addCase(initialiseTickets.rejected, (state, action) => {
@@ -56,6 +67,22 @@ export const initialiseTickets = createAsyncThunk(
             return rejectWithValue(error.response?.data || error.message)
         }
     })
+
+export const filterTickets = (tickets, filters) => {
+    return tickets.filter(ticket => {
+        let match = true;
+        if (filters.status && filters.status !== 'all' && ticket.status !== filters.status) {
+            match = false;
+        }
+        if (filters.assignee && ticket.assignee !== filters.assignee) {
+            match = false;
+        }
+        if (filters.priority && filters.priority !== 'all' && ticket.priority !== filters.priority) {
+            match = false;
+        }
+        return match;
+    });
+};
 
 
 export const createTicket = (ticket) => {
@@ -80,5 +107,5 @@ export const updateTicketField = (id, field, value) => {
     }
 }
 
-export const { updateField, appendTicket, setTickets, update } = ticketsSlice.actions
+export const { updateField, appendTicket, setTickets, update, setFilters } = ticketsSlice.actions
 export default ticketsSlice.reducer

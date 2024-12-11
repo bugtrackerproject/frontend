@@ -1,88 +1,74 @@
 
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 import ProjectsTable from '../../components/tables/ProjectsTable'
 import TicketsTable from '../../components/tables/TicketsTable'
 import Widget from '../../components/widgets/Widget'
 import "./home.scss"
 
+import { setFilters } from '../../reducers/ticketsReducer'
+
 
 const Home = () => {
+    const dispatch = useDispatch()
 
-  let ticketsSelector = useSelector(state => state.tickets.data)
-  let tickets = ticketsSelector.slice()
+    const filters = useSelector((state) => state.tickets.filters);
 
   let projectsSelector = useSelector((state) => state.projects.data)
-  let projects = projectsSelector.slice()
+    let projects = projectsSelector.slice()
 
+    const allTickets = useSelector((state) => state.tickets.data); 
+    const filteredTickets = useSelector((state) => state.tickets.filteredTickets);
   
   const user = useSelector(state => state.user)
 
+    const filteredTicketsForTotals = allTickets.filter(ticket => ticket.assignee === user.id);
 
-  projects = projectsSelector.filter(project => project.users.some(
-    u => u === user.id
-  ))
+    const totals = {
+        tickets: filteredTicketsForTotals.length,
+        projects: projects.length,
+        todo: filteredTicketsForTotals.filter(t => t.status === "To Do").length,
+        inprogress: filteredTicketsForTotals.filter(t => t.status === "In Progress").length,
+        completed: filteredTicketsForTotals.filter(t => t.status === "Completed").length
+    };
 
-  tickets = ticketsSelector.filter(ticket => ticket.assignee === user.id)
+    const handleStatusClick = (status) => {
+        console.log(status)
+        dispatch(setFilters({ ...filters, status }));
+    };
+    console.log(filteredTickets)
+    useEffect(() => {
+        if (user) {
+            dispatch(setFilters({ ...filters, assignee: user.id }));
+        }
+    }, [user, dispatch]);
 
-  const totals = {
-    tickets: tickets.length,
-    projects: projects.length,
-    todo: (tickets.filter(t => {
-      return t.status==="To Do"
-    })).length,
-    inprogress: (tickets.filter(t => {
-      return t.status==="In Progress"
-    })).length,
-    completed: (tickets.filter(t => {
-      return t.status==="Completed"
-    })).length
-  }
 
-  return user ? (
-    <>
+    return user ? (
+        <>
 
-        <main>
-            
-              <div className="flex-wrapper">
-            
-            <div className="widgets-header">
-                <h2>Total</h2>
-            </div>
-            <div className="widgets">
+            <main>
 
-                
-                  <Widget type="tickets" count={totals.tickets}/>
-                  <Widget type="projects" count={totals.projects}/>
-
-            </div>
-           
-       
-
-            <div className="widgets-header">
-                <h2>Ticket Progress</h2>
-            </div>
-            <div className="widgets">
-                <Widget type="to do" count={totals.todo}/>
-                <Widget type="in progress" count={totals.inprogress}/>
-                <Widget type="completed" count={totals.completed}/>
-            </div>
-
-            <div className="table-wrapper">
-                    <div className="form-header">
-                        <h2>Recent Tickets</h2>
+                <div className="flex-wrapper">
+                    <div className="widgets">
+                        <Widget type="to do" count={totals.todo} onClick={() => handleStatusClick("To Do")} active={filters.status === "To Do"} />
+                        <Widget type="in progress" count={totals.inprogress} onClick={() => handleStatusClick("In Progress")} active={filters.status === "In Progress"} />
+                        <Widget type="completed" count={totals.completed} onClick={() => handleStatusClick("Completed")} active={filters.status === "Completed"} />
                     </div>
-                <TicketsTable filter="user" value={user} />
-            </div>
-            <div className='table-wrapper'>
-                <div className="form-header">
-                        <h2>Recent Projects</h2>
+
+                    <div className="table-wrapper">
+                        <div className="form-header">
+                            <h2>My Tickets</h2>
+                        </div>
+
+                        <div className="home-mui-table-container">
+                            <TicketsTable tickets={filteredTickets || []} />
+                        </div>
                     </div>
-                <ProjectsTable filter="user" value={user} />
                 </div>
-                  </div>
 
-        </main>
-      </>
+            </main>
+        </>
   ) : null
 }
 

@@ -51,8 +51,7 @@ function EditToolbar(props) {
         e.preventDefault()
 
 
-        // TO DO, NEEDS TO MATCH DATABASE
-        const id = Date.now().toString(); // Unique ID
+        const id = Date.now().toString(); // temporary id
         setRows((oldRows) => [
             ...oldRows,
             {
@@ -108,8 +107,8 @@ function EditToolbar(props) {
 
     return (
         <GridToolbarContainer>
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleOpenDialog}>
-                Add Project
+            <Button color="primary" size="large" style={{ fontSize: '1rem', paddingLeft: '1.5rem'}}  startIcon={<AddIcon />} onClick={handleOpenDialog}>
+                Create a Project
             </Button>
             <Dialog open={isDialogOpen} onClose={handleCloseDialog} fullWidth maxWidth="md">
                 <DialogTitle>Create New Project</DialogTitle>
@@ -165,13 +164,23 @@ function EditToolbar(props) {
                     marginLeft: 'auto'
                 }}
             >
-                <GridToolbarQuickFilter
+                <GridToolbarQuickFilter 
                     quickFilterParser={(searchInput) =>
                         searchInput
                             .split(',')
                             .map((value) => value.trim())
                             .filter((value) => value !== '')
                     }
+                    style={{
+                        width: '400px'
+                    }}
+                    InputProps={{
+                        style: {
+                            fontSize: '1.2rem',  // Larger font size
+                            padding: '10px',     // Padding inside the input
+                            height: '50px',      // Input height
+                        },
+                    }}
                 />
             </Box>
         </GridToolbarContainer>

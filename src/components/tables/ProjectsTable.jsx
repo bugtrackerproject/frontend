@@ -74,8 +74,7 @@ const ProjectsTable = ({ filter, value }) => {
           initialRows={rows}
           sx={{
               boxShadow: 2,
-              border: 1,
-              borderColor: 'primary.black',
+              
               '& .MuiDataGrid-cell:hover': {
                   color: 'primary.main',
               },

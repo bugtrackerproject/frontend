@@ -104,8 +104,8 @@ function EditToolbar(props) {
             <GridToolbarContainer>
 
 
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleOpenDialog}>
-                Add Ticket
+            <Button color="primary" size="large" style={{ fontSize: '1rem', paddingLeft: '1.5rem'}} startIcon={<AddIcon />} onClick={handleOpenDialog}>
+                Create a Ticket
             </Button>
             <Dialog open={isDialogOpen} onClose={handleCloseDialog} fullWidth maxWidth="md">
                 <DialogTitle>Create New Ticket</DialogTitle>
@@ -235,6 +235,16 @@ function EditToolbar(props) {
                             .map((value) => value.trim())
                             .filter((value) => value !== '')
                     }
+                    style={{
+                        width: '400px'
+                    }}
+                    InputProps={{
+                        style: {
+                            fontSize: '1.2rem',
+                            padding: '10px',
+                            height: '50px',
+                        },
+                    }}
                 />
             </Box>
         </GridToolbarContainer>
