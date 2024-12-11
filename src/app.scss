@@ -8,7 +8,7 @@
     --transition-speed: 300ms;
     --main-background: #f1f5f9;
 }
-// #E8DDCB,#CDB380,#036564,#033649,#031634,#E8DDCB,#CDB380,#036564
+
 * {
     padding: 0;
     margin: 0;
@@ -25,8 +25,8 @@ body {
 body, html {
     margin: 0;
     padding: 0;
-    height: 100%; /* Ensure the body and HTML take the full height */
-    overflow-x: hidden; /* Prevent horizontal scrolling */
+    height: 100%;
+    overflow-x: hidden;
 }
 
 
@@ -207,7 +207,7 @@ main {
 }
 
 .home-mui-table-container {
-    height: calc(100vh - 400px);
+    height: calc(100vh - 24.5rem);
     background: var(--fourth-color);
     border: 1px solid black;
     border-top: 0px;
@@ -215,7 +215,7 @@ main {
 }
 
 .mui-table-container {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 12rem);
     background: var(--fourth-color);
     border: 1px solid black;
     border-top: 0px;
@@ -223,7 +223,13 @@ main {
 }
 
 
-
+.manage-mui-table-container {
+    height: calc(100vh - 42.8rem);
+    background: var(--fourth-color);
+    border: 1px solid black;
+    border-top: 0px;
+    box-shadow: 0 2px 2px rgb(144,202,249);
+}
 
 .main-content {
     margin-top: 80px;
@@ -231,7 +237,7 @@ main {
     margin-left: 330px;
 
 
-    
+
     hr {
         padding: 1rem;
         border: none;
@@ -273,66 +279,62 @@ main {
 
 
 .form-container {
-    flex: 1;
+    
     padding: 2rem;
-    background-color: var(--third-color);
+    background-color: var(--secondary-color);
     border-radius: 0 0 8px 8px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid red;
+    border: 1px solid black;
+    gap: 2rem;
+
+    h2 {
+        font-size: 1.3rem;
+        font-weight: 500;
+    }
 }
 
-form-rows {
-    
-}
-
-.row-fields {
-    display:flex;
-    justify-content: space-evenly;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
 
 .widgetsHeader {
     align-items: center;
     padding-left: 2rem;
 }
 
-.formContent {
-    width: 70%;
-    margin: auto;
+.placeholder {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #aaa;
 }
+
 
 .user-actions {
     display: flex;
-    gap: 20px;
-    justify-content: space-between;
-    margin-top: 20px;
-    flex-direction: row;
+    gap: 1rem;
+    min-height: 12rem;
 
     .add-users, .remove-users {
+        display: flex;
+        flex-direction: column;
+
+        h2 {
+            padding-bottom: 1rem;
+        }
+
         width: 100%;
-    }
 
-    .sub-title {
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
+        .mui-button {
+            margin-right: 1rem;
+            align-self: flex-end;
+            
+        }
 
-    .MuiButton-root {
-        min-width: 150px;
     }
 }
 
-
-.main-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--color-dark);
-    margin-top: 16px;
-}
 .button {
     margin-top: 20px;
     display: flex;
@@ -419,20 +421,21 @@ form-rows {
 
 
 .widget {
-    
-    // background: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     align-items: center;
 
-
+    &.active {
+        padding-top: 2.2rem;
+        background-color: #eee;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
     h1 {
         padding-left: 0.4rem;
         color: orangered;
-
     }
 
     h2 {
@@ -440,6 +443,7 @@ form-rows {
         font-weight: 500;
     }
 }
+
 
 .widget:hover {
     transform: translateY(-2px); /* Slight lift effect on hover */

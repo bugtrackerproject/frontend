@@ -9,7 +9,8 @@ import SelectMultiple from "../../../components/checkbox/SelectMultiple"
 import Select from "../../../components/checkbox/Select"
 import { addUserToProject, removeUserFromProject } from "../../../reducers/projectsReducer"
 import { useDispatch } from "react-redux"
-
+import DeleteOutline from "@mui/icons-material/DeleteOutline"
+import AddIcon from '@mui/icons-material/Add';
 
 const ManageProjects = () => {
 
@@ -32,7 +33,7 @@ const ManageProjects = () => {
                 await dispatch(addUserToProject(project.id, user.id));
                 setProject(prevProject => ({
                     ...prevProject,
-                    users: [...prevProject.users, user.id], 
+                    users: [...prevProject.users, user.id],
                 }));
             } else {
                 console.log("User already exists in the project");
@@ -63,15 +64,6 @@ const ManageProjects = () => {
             <main>
                 <div className="flex-wrapper">
 
-
-                    <div className="table-wrapper">
-                        <div className="form-header">
-                            <h2>Projects</h2>
-                        </div>
-                        <div className="table-container">
-                            <ProjectsTable className="mui-table" />
-                        </div>
-                    </div>
                     <div className="form-wrapper">
 
                         <div className="form-header">
@@ -80,36 +72,41 @@ const ManageProjects = () => {
 
                         <div className="form-container">
 
-                            <div className="form-content">
 
-                                <div className="main-title">SELECT PROJECT</div>
-                                <Select
-                                    data={projects}
-                                    label="Projects"
-                                    onChange={(event, selectedValue) => setProject(selectedValue)}
-                                />
 
-                                {project && (
-                                    <div className="user-actions">
+                            <h2>SELECT PROJECT</h2>
+                            <Select
+                                data={projects}
+                                label="Projects"
+                                onChange={(event, selectedValue) => setProject(selectedValue)}
+                            />
+
+                            <div className="user-actions">
+                                {project ? (
+                                    <>
                                         <div className="add-users">
-                                            <div className="main-title">SELECT USERS TO ADD</div>
+                                            <h2>SELECT USERS TO ADD</h2>
                                             <SelectMultiple
                                                 data={users.filter(user => !project.users.includes(user.id))}
                                                 label="Users"
-                                                value={selectedUsersToAdd} // Bind selected users to the state
+                                                value={selectedUsersToAdd}
                                                 onChange={(event, selectedValue) => setSelectedUsersToAdd(selectedValue)}
                                             />
                                             <Button
-                                                sx={{ minWidth: 150, backgroundColor: '#2873ff', marginTop: '20px' }}
-                                                variant="contained"
+                                                className="mui-button"
+                                                size="large"
+                                                sx={{ minWidth: "13rem", marginTop: '2rem' }}
+                                                variant="outlined"
                                                 onClick={handleAddUsers}
+                                                startIcon={<AddIcon /> }
+
                                             >
                                                 Add Users
                                             </Button>
                                         </div>
 
                                         <div className="remove-users">
-                                            <div className="main-title">SELECT USERS TO REMOVE</div>
+                                            <h2>SELECT USERS TO REMOVE</h2>
                                             <SelectMultiple
                                                 data={project.users.map(userId => users.find(user => user.id === userId))}
                                                 label="Users"
@@ -117,16 +114,35 @@ const ManageProjects = () => {
                                                 onChange={(event, selectedValue) => setSelectedUsersToRemove(selectedValue)}
                                             />
                                             <Button
-                                                sx={{ minWidth: 150, backgroundColor: '#f44336', marginTop: '20px' }}
-                                                variant="contained"
+                                                className="mui-button"
+                                                size="large"
+                                                sx={{ minWidth: "13rem", marginTop: '2rem'  }}
+                                                variant="outlined"
+                                                startIcon={<DeleteOutline />}
+                                                color="error"
                                                 onClick={handleRemoveUsers}
                                             >
                                                 Remove Users
                                             </Button>
                                         </div>
+                                    </>
+                                ) : (
+                                    <div className="placeholder">
+                                        <p>Please select a project to manage users.</p>
                                     </div>
                                 )}
                             </div>
+                        
+        
+
+                        </div>
+                    </div>
+                    <div className="table-wrapper">
+                        <div className="form-header">
+                            <h2>Projects</h2>
+                        </div>
+                        <div className="manage-mui-table-container">
+                            <ProjectsTable />
                         </div>
                     </div>
                 </div>

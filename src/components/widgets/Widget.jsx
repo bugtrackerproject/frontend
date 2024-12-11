@@ -11,7 +11,7 @@ import {
   } from "react-router-dom"
   
 
-const Widget = ({ type, count, onClick }) => {
+const Widget = ({ type, count, onClick, active }) => {
 
     let link = false
     let icon = ""
@@ -50,28 +50,28 @@ const Widget = ({ type, count, onClick }) => {
 
   return (
       <div> 
-        {link ? 
-            <div className="link">
-                <Link style={{ textDecoration: "none", color: "black"}} to={type}>
-                    <div className="widget">
+          {link ?
+              <div className="link">
+                  <Link style={{ textDecoration: "none", color: "black" }} to={type}>
+                      <div className="widget">
 
-                        <div className="widget-text">
-                            <h1>{count}</h1>
-                            <span>{type.toUpperCase()}</span>
-                        </div>
+                          <div className="widget-text">
+                              <h1>{count}</h1>
+                              <span>{type.toUpperCase()}</span>
+                          </div>
 
-                        <div>
-                            <span> {icon} </span>
-                        </div>
+                          <div>
+                              <span> {icon} </span>
+                          </div>
 
 
-                     </div>
+                      </div>
 
-                </Link>
-            </div>
+                  </Link>
+              </div>
 
-            :                    
-              <div className="widget" onClick={handleClick}>
+              :
+              <div className={active ? "widget active" : "widget"} onClick={handleClick}>
 
 
                   <div className="widget-text">

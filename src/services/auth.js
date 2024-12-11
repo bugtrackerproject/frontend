@@ -1,6 +1,6 @@
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
-
+import { useNavigate } from "react-router-dom"
 const baseUrl = "/api/auth";
 
 var accessToken = null;
@@ -42,6 +42,7 @@ const refreshToken = async () => {
     } catch (error) {
         console.error("Failed to refresh token:", error);
         window.localStorage.removeItem("loggedBugtrackerAppUser");
+        return false;
     }
         
 };

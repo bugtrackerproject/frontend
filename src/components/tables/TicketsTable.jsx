@@ -20,14 +20,12 @@ function createData(
 }
 
 
-const TicketsTable = () => {
+const TicketsTable = ({ tickets }) => {
 
     const projects = useSelector(state => state.projects.data)
     const users = useSelector(state => state.users.data)
 
-    const tickets = useSelector(state => state.tickets.filteredTickets);
 
-    console.log("TicketsTable received tickets:", tickets);
     const rows = tickets.map(ticket => {
         const project = projects.find(project => project.id === ticket.project);
         const assignee = users.find(user => user.id === ticket.assignee)
@@ -51,8 +49,6 @@ const TicketsTable = () => {
             key={JSON.stringify(rows.map(row => row.id))}
             initialRows={rows}
             sx={{
-                boxShadow: 2,
-                border: 1,
                 borderColor: 'primary.black',
                 '& .MuiDataGrid-cell:hover': {
                     color: 'primary.main',

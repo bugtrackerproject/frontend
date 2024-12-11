@@ -1,18 +1,57 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit'
 import { ticketService } from '../services/apiServiceFactory'
 
 
 const initialState = {
     data: [],
     loading: false,
-    error: null,
-    filteredTickets: [],
-    filters: {
-        status: 'all',      // 'all', 'To Do', 'In Progress', 'Completed'
-        assignee: null,   // Assignee's ID or name (can be null for no filter)
-        priority: 'all',    // 'all', 'Low', 'Medium', 'High', 'Critical'
-    },
+    error: null
 };
+
+const selectAllProjects = (state) => state.projects.data;
+const selectAllTickets = (state) => state.tickets.data;
+const selectUser = (state) => state.user;
+const selectUserId = (state) => state.user?.id; 
+
+// Select all the user's projects
+export const selectUserProjects = createSelector(
+    [selectAllProjects, selectUserId],
+    (projects, userId) => {
+        return projects.filter((project) =>
+            project.users.some((id) => id === userId)
+        )
+    }
+);
+
+// Select all the user's tickets
+export const selectUserTickets = createSelector(
+    [selectAllTickets, selectUserId],
+    (tickets, userId) =>
+        tickets.filter((ticket) =>
+            ticket.assignee === userId
+        )
+);
+
+export const selectUserTicketsByStatus = (status) => createSelector(
+    [selectUserTickets],
+    (tickets) => {
+
+        return tickets.filter((ticket) =>
+            ticket.status === status
+        )
+    }
+        
+);
+
+
+// Select all tickets for each project the user is a member of
+export const selectTicketsForUserProjects = createSelector(
+    [selectAllTickets, selectUserProjects],
+    (tickets, userProjects) => tickets.filter((ticket) =>
+        userProjects.some((project) => project.id === ticket.project)
+    )
+);
+
 
 
 const ticketsSlice = createSlice({
@@ -20,25 +59,21 @@ const ticketsSlice = createSlice({
     initialState,
     reducers: {
         appendTicket(state, action) {
-            state.push(action.payload)
+            state.data.push(action.payload)
         },
         setTickets(state, action) {
             return action.payload
         },
         update(state, action) {
-            return state.map(ticket =>
+            return state.data.map(ticket =>
                 ticket.id !== action.payload.id ? ticket : action.payload
-            )
+            );
         },
         updateField(state, action) {
-            return state.map(ticket =>
+            return state.data.map(ticket =>
                 ticket.id !== action.payload.id ? ticket : { ...ticket, [action.payload.field]: action.payload.value }
             )
-        },
-        setFilters: (state, action) => {
-            state.filters = action.payload;
-            state.filteredTickets = filterTickets(state.data, state.filters);
-        },
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -47,7 +82,6 @@ const ticketsSlice = createSlice({
             })
             .addCase(initialiseTickets.fulfilled, (state, action) => {
                 state.data = action.payload;
-                state.filteredTickets = filterTickets(state.data, state.filters); 
                 state.loading = false;
             })
             .addCase(initialiseTickets.rejected, (state, action) => {
@@ -67,23 +101,6 @@ export const initialiseTickets = createAsyncThunk(
             return rejectWithValue(error.response?.data || error.message)
         }
     })
-
-export const filterTickets = (tickets, filters) => {
-    return tickets.filter(ticket => {
-        let match = true;
-        if (filters.status && filters.status !== 'all' && ticket.status !== filters.status) {
-            match = false;
-        }
-        if (filters.assignee && ticket.assignee !== filters.assignee) {
-            match = false;
-        }
-        if (filters.priority && filters.priority !== 'all' && ticket.priority !== filters.priority) {
-            match = false;
-        }
-        return match;
-    });
-};
-
 
 export const createTicket = (ticket) => {
     return async (dispatch) => {
@@ -107,5 +124,5 @@ export const updateTicketField = (id, field, value) => {
     }
 }
 
-export const { updateField, appendTicket, setTickets, update, setFilters } = ticketsSlice.actions
+export const { updateField, appendTicket, setTickets, update } = ticketsSlice.actions
 export default ticketsSlice.reducer

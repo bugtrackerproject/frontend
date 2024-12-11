@@ -6,7 +6,7 @@ import projectUserService from '../services/projectUsers'
 const initialState = {
     data: [],
     loading: false,
-    error: null,
+    error: null
 };
 
 
@@ -15,9 +15,10 @@ const projectsSlice = createSlice({
     initialState,
     reducers: {
         update(state, action) {
-            return state.map(project =>
-                project.id !== action.payload.id ? project : action.payload
-            )
+
+            state = state.data.map(project =>
+                project.id !== action.payload.id ? project : action.payload);
+
         },
         appendProject(state, action) {
             state.push(action.payload)
@@ -26,17 +27,17 @@ const projectsSlice = createSlice({
             return action.payload
         },
         addUser(state, action) {
-            const project = state.find(p => p.id === action.payload.projectId);
+            const project = state.data.find(p => p.id === action.payload.projectId);
             if (project && !project.users.some(user => user.id === action.payload.userId)) {
                 project.users.push({ id: action.payload.userId });
             }
         },
         removeUser(state, action) {
-            const project = state.find(p => p.id === action.payload.projectId);
+            const project = state.data.find(p => p.id === action.payload.projectId);
             if (project) {
                 project.users = project.users.filter(user => user.id !== action.payload.userId);
             }
-        },
+        }
 
     }, extraReducers: (builder) => {
         builder
