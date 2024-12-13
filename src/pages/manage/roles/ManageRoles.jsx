@@ -49,7 +49,7 @@ const ManageRoles = () => {
                         <div className="form-header">
                             <h2>Users</h2>
                         </div>
-                        <div className="table-container">
+                        <div className="mui-table-container">
                             <UsersTable />
                         </div>
                     </div>

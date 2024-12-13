@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import TicketsTable from '../../components/tables/TicketsTable'
-import { selectTicketsForUserProjects } from '../../reducers/ticketsReducer';
+import { selectTicketsForUserProjects } from '../../reducers/appReducer';
 import { useEffect, useState } from 'react'
 import { setFilters as setProjectsFilter } from '../../reducers/projectsReducer';
 import './list.scss'

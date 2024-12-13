@@ -2,8 +2,7 @@ import * as React from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Chip from '@mui/material/Chip'
 
 import './SelectMultiple.css';  // Make sure to create a separate CSS file
 
@@ -29,6 +28,18 @@ const SelectMultiple = (props) => {
                 </li>
             )}
             renderInput={(params) => <TextField {...params} label={props.label} />}
+            renderTags={(tagValue, getTagProps) =>
+                tagValue.map((option, index) => {
+                    const { key, ...rest } = getTagProps({ index });
+                    return (
+                        <Chip
+                            label={option['title']}
+                            {...rest}
+                            key={key}
+                        />
+                    );
+                })
+            }
             onChange={props.onChange}
             value={props.value}
         />

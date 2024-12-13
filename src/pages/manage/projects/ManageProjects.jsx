@@ -64,10 +64,10 @@ const ManageProjects = () => {
             <main>
                 <div className="flex-wrapper">
 
-                    <div className="form-wrapper">
+{/*                    <div className="form-wrapper">
 
                         <div className="form-header">
-                            <h2>Add or Remove Users From Project</h2>
+                            <h2>Add/Remove Users</h2>
                         </div>
 
                         <div className="form-container">
@@ -136,12 +136,12 @@ const ManageProjects = () => {
         
 
                         </div>
-                    </div>
+                    </div>*/}
                     <div className="table-wrapper">
                         <div className="form-header">
-                            <h2>Projects</h2>
+                            <h2>All Projects</h2>
                         </div>
-                        <div className="manage-mui-table-container">
+                        <div className="mui-table-container">
                             <ProjectsTable />
                         </div>
                     </div>

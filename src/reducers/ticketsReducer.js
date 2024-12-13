@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ticketService } from '../services/apiServiceFactory'
 
 
@@ -7,50 +7,6 @@ const initialState = {
     loading: false,
     error: null
 };
-
-const selectAllProjects = (state) => state.projects.data;
-const selectAllTickets = (state) => state.tickets.data;
-const selectUser = (state) => state.user;
-const selectUserId = (state) => state.user?.id; 
-
-// Select all the user's projects
-export const selectUserProjects = createSelector(
-    [selectAllProjects, selectUserId],
-    (projects, userId) => {
-        return projects.filter((project) =>
-            project.users.some((id) => id === userId)
-        )
-    }
-);
-
-// Select all the user's tickets
-export const selectUserTickets = createSelector(
-    [selectAllTickets, selectUserId],
-    (tickets, userId) =>
-        tickets.filter((ticket) =>
-            ticket.assignee === userId
-        )
-);
-
-export const selectUserTicketsByStatus = (status) => createSelector(
-    [selectUserTickets],
-    (tickets) => {
-
-        return tickets.filter((ticket) =>
-            ticket.status === status
-        )
-    }
-        
-);
-
-
-// Select all tickets for each project the user is a member of
-export const selectTicketsForUserProjects = createSelector(
-    [selectAllTickets, selectUserProjects],
-    (tickets, userProjects) => tickets.filter((ticket) =>
-        userProjects.some((project) => project.id === ticket.project)
-    )
-);
 
 
 

@@ -40,27 +40,7 @@ function createData(
   return { name, description, createdAt, updatedAt, id};
 }
 
-const ProjectsTable = ({ filter, value }) => {
-
-    let projectsSelector = useSelector((state) => state.projects.data)
-
-  let projects = projectsSelector.slice()
-    const navigate = useNavigate();
-
-  switch(filter) {
-    case "user":
-
-      projects = projectsSelector.filter(project => project.users.some(
-        user => user === value.id
-      ))
-      break;
-
-    case "recent":
-      projects = projects.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-      break;
-    default:
-      break;    
-  }
+const ProjectsTable = ({ projects }) => {
 
   const rows = projects.map(project => {
     return createData(project.name, project.description, project.createdAt, project.updatedAt, project.id)

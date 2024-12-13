@@ -1,22 +1,17 @@
 import "./single.scss"
 
-import Header from '../../components/header/Header'
-
 import { useSelector } from 'react-redux'
 
 import UsersTable from "../../components/tables/UsersTable"
 import TicketsTable from "../../components/tables/TicketsTable"
 
 
-const SingleProject = ({ project, toggleSidebar }) => {
+const SingleProject = ({ project }) => {
 
   const user = useSelector(state => state.user)
 
   return project ? (
     <>
-        <Header page={project.name} user={user} toggleSidebar={toggleSidebar} />
-
-
         <main>
               <div className="flex-wrapper">
                   <div className="formWrapper">
