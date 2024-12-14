@@ -30,7 +30,7 @@ function createData(
 	};
 }
 
-const TicketsTable = ({ tickets }) => {
+const TicketsTable = ({ tickets, projectId }) => {
 	const projects = useSelector((state) => state.projects.data);
 	const users = useSelector((state) => state.users.data);
 
@@ -72,6 +72,7 @@ const TicketsTable = ({ tickets }) => {
 					noRowsVariant: "skeleton",
 				},
 			}}
+			projectId={projectId}
 			initialState={{
 				sorting: {
 					sortModel: [{ field: "updatedAt", sort: "desc" }],

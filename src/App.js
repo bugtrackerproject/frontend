@@ -124,12 +124,11 @@ const App = () => {
 		: null;
 
 	const matchUser = useMatch("/users/:id");
-	console.log(matchUser);
 
 	const user = matchUser
 		? users.find((a) => a.id === matchUser.params.id)
 		: null;
-	console.log(users);
+
 	const matchTicket = useMatch("/tickets/:id");
 
 	const ticket = matchTicket
@@ -194,9 +193,7 @@ const App = () => {
 									<Route index element={<ListProjects />} />
 									<Route
 										path=":id"
-										element={
-											<SingleProject project={project} />
-										}
+										element={<SingleProject />}
 									/>
 									<Route
 										path="new"
@@ -206,6 +203,11 @@ const App = () => {
 
 								<Route path="tickets">
 									<Route index element={<ListTickets />} />
+
+									<Route
+										path=":id"
+										element={<SingleTicket />}
+									/>
 
 									<Route
 										path="new"

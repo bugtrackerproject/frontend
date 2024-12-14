@@ -9,7 +9,12 @@ import {
 	GridActionsCellItem,
 	GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { ArrowDropDown, WarningAmber, ErrorOutline } from "@mui/icons-material";
+import {
+	ArrowDropDown,
+	WarningAmber,
+	ErrorOutline,
+	Launch,
+} from "@mui/icons-material";
 import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import {
 	TextField,
@@ -17,6 +22,7 @@ import {
 	Dialog,
 	DialogTitle,
 	DialogContent,
+	DialogContentText,
 	DialogActions,
 	Box,
 	Typography,
@@ -26,8 +32,10 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createTicket, updateTicket } from "../../reducers/ticketsReducer";
 import { useSelector } from "react-redux";
-import { selectUserIdByUserName } from "../../reducers/appReducer";
-import { selectProjectIdByProjectName } from "../../reducers/appReducer";
+import {
+	selectUserIdByUserName,
+	selectUserProjects,
+} from "../../reducers/appReducer";
 import { useNavigate } from "react-router-dom";
 
 const typographyStyle = {
@@ -39,9 +47,19 @@ const priorities = ["Low", "Medium", "High", "Critical"];
 const types = ["Bug", "Feature Request", "Improvement"];
 const statuses = ["To Do", "In Progress", "Completed", "Closed"];
 
-function EditToolbar(props) {
-	const dispatch = useDispatch();
+function EditToolbar({ projectId, ...props }) {
+	const [selectedProjectId, setSelectedProjectId] = useState(
+		projectId ? projectId : null
+	);
 
+	const handleProjectChange = (event) => {
+		const projectId = event.target.value;
+		setSelectedProjectId(projectId);
+		handleChange("project")(event);
+	};
+
+	const dispatch = useDispatch();
+	console.log(props);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [newTicketData, setNewTicketData] = useState({
 		project: "",
@@ -53,13 +71,16 @@ function EditToolbar(props) {
 	});
 
 	const users = useSelector((state) => state.users.data);
-	const user = useSelector((state) => state.user);
-	const projects = useSelector((state) => state.projects.data);
+	const projects = useSelector(selectUserProjects);
 
-	const filteredProjects = projects.filter(
-		(project) =>
-			Array.isArray(project.users) && project.users.includes(user.id)
+	const selectedProject = projects.find(
+		(proj) => proj.id === selectedProjectId
 	);
+
+	const filteredUsers = selectedProject
+		? users.filter((user) => selectedProject.users.includes(user.id))
+		: [];
+	console.log(filteredUsers);
 
 	const handleOpenDialog = () => setIsDialogOpen(true);
 	const handleCloseDialog = () => setIsDialogOpen(false);
@@ -67,7 +88,6 @@ function EditToolbar(props) {
 	const { setRows, setRowModesModel } = props;
 
 	const handleAddTicket = () => {
-		// TO DO, NEEDS TO MATCH DATABASE
 		const id = Date.now().toString(); // Unique ID
 		setRows((oldRows) => [
 			...oldRows,
@@ -79,7 +99,7 @@ function EditToolbar(props) {
 		console.log(newTicketData.project);
 
 		const newTicket = {
-			ProjectId: newTicketData.project,
+			ProjectId: projectId ? projectId : newTicketData.project,
 			Name: newTicketData.name,
 			Description: newTicketData.description,
 			AssigneeId: newTicketData.assignee,
@@ -105,6 +125,7 @@ function EditToolbar(props) {
 	const handleChange = (field) => (e) => {
 		setNewTicketData({ ...newTicketData, [field]: e.target.value });
 	};
+	console.log(filteredUsers);
 
 	return (
 		<GridToolbarContainer>
@@ -128,17 +149,22 @@ function EditToolbar(props) {
 					<Box sx={{ margin: "10px 0" }}>
 						<TextField
 							fullWidth
-							value={newTicketData.project}
-							onChange={handleChange("project")}
+							value={
+								projectId ? projectId : newTicketData.project
+							}
+							onChange={handleProjectChange}
 							select
-							SelectProps={{
-								native: true,
+							slotProps={{
+								select: {
+									native: true,
+								},
 							}}
+							disabled={!!projectId}
 						>
 							<option value="" disabled>
 								Select a project
 							</option>
-							{filteredProjects.map((project) => (
+							{projects.map((project) => (
 								<option key={project.id} value={project.id}>
 									{project.name}
 								</option>
@@ -169,14 +195,17 @@ function EditToolbar(props) {
 							value={newTicketData.assignee}
 							onChange={handleChange("assignee")}
 							select
-							SelectProps={{
-								native: true,
+							disabled={!selectedProjectId}
+							slotProps={{
+								select: {
+									native: true,
+								},
 							}}
 						>
 							<option value="" disabled>
 								Select a user
 							</option>
-							{users.map((user) => (
+							{filteredUsers.map((user) => (
 								<option key={user.id} value={user.id}>
 									{user.name}
 								</option>
@@ -189,8 +218,10 @@ function EditToolbar(props) {
 							value={newTicketData.type}
 							onChange={handleChange("type")}
 							select
-							SelectProps={{
-								native: true,
+							slotProps={{
+								select: {
+									native: true,
+								},
 							}}
 						>
 							<option value="" disabled>
@@ -209,8 +240,10 @@ function EditToolbar(props) {
 							value={newTicketData.priority}
 							onChange={handleChange("priority")}
 							select
-							SelectProps={{
-								native: true,
+							slotProps={{
+								select: {
+									native: true,
+								},
 							}}
 						>
 							<option value="" disabled>
@@ -267,23 +300,15 @@ function EditToolbar(props) {
 		</GridToolbarContainer>
 	);
 }
-
-export default function FullFeaturedCrudGrid({ sx, initialRows }) {
+export default function FullFeaturedCrudGrid({ sx, initialRows, projectId }) {
 	const [rows, setRows] = React.useState(initialRows);
 	const [rowModesModel, setRowModesModel] = React.useState({});
 	const dispatch = useDispatch();
-	const users = useSelector((state) => state.users.data);
 	const [userId, setUserId] = useState(null);
-	const [projectId, setProjectId] = useState(null);
+	const [deleteId, setDeleteId] = useState(null);
+	const [open, setOpen] = useState(false);
+
 	const navigate = useNavigate();
-
-	const useUserId = (userName) => {
-		setUserId(useSelector(selectUserIdByUserName(userName)));
-	};
-
-	const useProjectId = (userName) => {
-		setProjectId(useSelector(selectProjectIdByProjectName(userName)));
-	};
 
 	const columns = [
 		{
@@ -396,7 +421,7 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 		{
 			field: "priority",
 			headerName: "Priority",
-			minWidth: 110,
+			minWidth: 160,
 			type: "singleSelect",
 			editable: true,
 			valueOptions: priorities,
@@ -510,7 +535,7 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 			field: "actions",
 			type: "actions",
 			headerName: "Actions",
-			width: 100,
+			width: 160,
 			cellClassName: "actions",
 			getActions: ({ id }) => {
 				const isInEditMode =
@@ -518,6 +543,14 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 
 				if (isInEditMode) {
 					return [
+						<GridActionsCellItem
+							icon={<Launch />}
+							label="View"
+							sx={{
+								color: "primary.main",
+							}}
+							onClick={() => handleViewClick(id)}
+						/>,
 						<GridActionsCellItem
 							icon={<SaveIcon />}
 							label="Save"
@@ -538,6 +571,14 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 
 				return [
 					<GridActionsCellItem
+						icon={<Launch />}
+						label="View"
+						sx={{
+							color: "primary.main",
+						}}
+						onClick={() => handleViewClick(id)}
+					/>,
+					<GridActionsCellItem
 						icon={<EditIcon />}
 						label="Edit"
 						className="textPrimary"
@@ -547,7 +588,7 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 					<GridActionsCellItem
 						icon={<DeleteIcon />}
 						label="Delete"
-						onClick={handleDeleteClick(id)}
+						onClick={() => handleDeleteClick(id)}
 						color="inherit"
 					/>,
 				];
@@ -575,8 +616,20 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 		});
 	};
 
-	const handleDeleteClick = (id) => () => {
-		setRows(rows.filter((row) => row.id !== id));
+	const handleDeleteClick = (id) => {
+		setDeleteId(id);
+		setOpen(true);
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+		setDeleteId(null);
+	};
+
+	const handleConfirmDelete = () => {
+		setRows(rows.filter((row) => row.id !== deleteId));
+		setOpen(false);
+		setDeleteId(null);
 	};
 
 	const handleCancelClick = (id) => () => {
@@ -615,28 +668,61 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 		console.error("Row update error:", error.message);
 	};
 
-	const handleRowDoubleClick = (params) => {
-		const url = `/tickets/${params.row.id}`;
+	const handleViewClick = (id) => {
+		const url = `/tickets/${id}`;
 		navigate(url);
 	};
 
 	return (
-		<DataGrid
-			rows={rows}
-			columns={columns}
-			sx={sx}
-			rowHeight={80}
-			editMode="row"
-			rowModesModel={rowModesModel}
-			onRowModesModelChange={handleRowModesModelChange}
-			onRowEditStop={handleRowEditStop}
-			processRowUpdate={processRowUpdate}
-			onProcessRowUpdateError={handleProcessRowUpdateError}
-			onRowDoubleClick={handleRowDoubleClick}
-			slots={{ toolbar: EditToolbar }}
-			slotProps={{
-				toolbar: { setRows, setRowModesModel },
-			}}
-		/>
+		<>
+			<DataGrid
+				rows={rows}
+				columns={columns}
+				sx={sx}
+				rowHeight={80}
+				editMode="row"
+				rowModesModel={rowModesModel}
+				onRowModesModelChange={handleRowModesModelChange}
+				onRowEditStop={handleRowEditStop}
+				processRowUpdate={processRowUpdate}
+				onProcessRowUpdateError={handleProcessRowUpdateError}
+				slots={{
+					toolbar: (props) => (
+						<EditToolbar {...props} projectId={projectId} />
+					),
+				}}
+				slotProps={{
+					toolbar: { setRows, setRowModesModel },
+				}}
+			/>
+
+			<Dialog
+				open={open}
+				onClose={handleClose}
+				aria-labelledby="alert-dialog-title"
+				aria-describedby="alert-dialog-description"
+			>
+				<DialogTitle id="alert-dialog-title">
+					{"Confirm Delete"}
+				</DialogTitle>
+				<DialogContent>
+					<DialogContentText id="alert-dialog-description">
+						Are you sure you want to delete this ticket?
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleClose} color="primary">
+						Cancel
+					</Button>
+					<Button
+						onClick={handleConfirmDelete}
+						color="primary"
+						autoFocus
+					>
+						Confirm
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</>
 	);
 }

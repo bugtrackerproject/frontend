@@ -1,70 +1,16 @@
-import "./manageprojects.scss"
+import "./manageprojects.scss";
 
-import { useSelector } from "react-redux"
-import { useState } from "react"
-
-import Button from '@mui/material/Button';
-import ProjectsTable from "../../../components/tables/ProjectsTable"
-import SelectMultiple from "../../../components/checkbox/SelectMultiple"
-import Select from "../../../components/checkbox/Select"
-import { addUserToProject, removeUserFromProject } from "../../../reducers/projectsReducer"
-import { useDispatch } from "react-redux"
-import DeleteOutline from "@mui/icons-material/DeleteOutline"
-import AddIcon from '@mui/icons-material/Add';
+import { useSelector } from "react-redux";
+import ProjectsTable from "../../../components/tables/ProjectsTable";
 
 const ManageProjects = () => {
+	const projects = useSelector((state) => state.projects.data);
 
-    const dispatch = useDispatch();
-
-    const projects = useSelector((state) => state.projects.data)
-    const users = useSelector((state) => state.users.data)
-    const user = useSelector(state => state.user)
-
-    const [project, setProject] = useState(null);
-    const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
-    const [selectedUsersToRemove, setSelectedUsersToRemove] = useState([]);
-
-    const handleAddUsers = async (e) => {
-        e.preventDefault();
-
-        for (const user of selectedUsersToAdd) {
-            const found = project.users.some(id => id === user.id);
-            if (!found) {
-                await dispatch(addUserToProject(project.id, user.id));
-                setProject(prevProject => ({
-                    ...prevProject,
-                    users: [...prevProject.users, user.id],
-                }));
-            } else {
-                console.log("User already exists in the project");
-            }
-        }
-        setSelectedUsersToAdd([])
-    }
-
-    const handleRemoveUsers = async (e) => {
-        e.preventDefault();
-
-        for (const user of selectedUsersToRemove) {
-            console.log(user.id)
-            await dispatch(removeUserFromProject(project.id, user.id));
-            setProject(prevProject => ({
-                ...prevProject,
-                users: prevProject.users.filter(userId => userId !== user.id),
-            }));
-        }
-
-        setSelectedUsersToRemove([]);
-    }
-
-    const usersNotInProject = users.filter(u => !project?.users.includes(u.id));
-
-    return user ? (
-        <>
-            <main>
-                <div className="flex-wrapper">
-
-{/*                    <div className="form-wrapper">
+	return projects ? (
+		<>
+			<main>
+				<div className="flex-wrapper">
+					{/*                    <div className="form-wrapper">
 
                         <div className="form-header">
                             <h2>Add/Remove Users</h2>
@@ -137,18 +83,18 @@ const ManageProjects = () => {
 
                         </div>
                     </div>*/}
-                    <div className="table-wrapper">
-                        <div className="form-header">
-                            <h2>All Projects</h2>
-                        </div>
-                        <div className="mui-table-container">
-                            <ProjectsTable />
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </>
-    ) : null
-}
+					<div className="table-wrapper">
+						<div className="form-header">
+							<h2>All Projects</h2>
+						</div>
+						<div className="mui-table-container">
+							<ProjectsTable projects={projects} />
+						</div>
+					</div>
+				</div>
+			</main>
+		</>
+	) : null;
+};
 
-export default ManageProjects
+export default ManageProjects;

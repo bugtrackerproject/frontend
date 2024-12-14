@@ -52,7 +52,7 @@ const SingleUser = () => {
 							<h2>Profile Information</h2>
 						</div>
 						<div className="form-container">
-							<div>
+							<div className="full-row">
 								<div className="main-title">EMAIL</div>
 								<h2>{user.email}</h2>
 							</div>

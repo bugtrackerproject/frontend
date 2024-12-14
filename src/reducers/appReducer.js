@@ -44,6 +44,16 @@ export const selectProjectIdByProjectName = (name) =>
 		return projects.filter((project) => project.name === name);
 	});
 
+export const selectProjectTicketsByProjectId = (id) =>
+	createSelector([selectAllTickets], (tickets) => {
+		return tickets.filter((ticket) => ticket.project === id);
+	});
+
+export const selectProjectUsersByProjectId = (id) =>
+	createSelector([selectAllTickets], (tickets) => {
+		return tickets.filter((ticket) => ticket.project === id);
+	});
+
 // Select all tickets for each project the user is a member of
 export const selectTicketsForUserProjects = createSelector(
 	[selectAllTickets, selectUserProjects],
