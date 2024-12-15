@@ -562,6 +562,14 @@ main {
 	.sidebar.toggle + .swipeable-area {
 		margin-left: 330px; /* Adjust the position of swipeable-area when sidebar is toggled */
 	}
+
+	.smaller-mui-table-container {
+		height: 100%;
+	}
+
+	.mui-table-container {
+		height: 100%;
+	}
 }
 
 @media only screen and (max-width: 560px) {

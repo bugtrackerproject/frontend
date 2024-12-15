@@ -30,7 +30,11 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createTicket, updateTicket } from "../../reducers/ticketsReducer";
+import {
+	createTicket,
+	updateTicket,
+	removeTicket,
+} from "../../reducers/ticketsReducer";
 import { useSelector } from "react-redux";
 import {
 	selectUserIdByUserName,
@@ -59,7 +63,6 @@ function EditToolbar({ projectId, ...props }) {
 	};
 
 	const dispatch = useDispatch();
-	console.log(props);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [newTicketData, setNewTicketData] = useState({
 		project: "",
@@ -80,7 +83,6 @@ function EditToolbar({ projectId, ...props }) {
 	const filteredUsers = selectedProject
 		? users.filter((user) => selectedProject.users.includes(user.id))
 		: [];
-	console.log(filteredUsers);
 
 	const handleOpenDialog = () => setIsDialogOpen(true);
 	const handleCloseDialog = () => setIsDialogOpen(false);
@@ -96,7 +98,6 @@ function EditToolbar({ projectId, ...props }) {
 				...newTicketData,
 			},
 		]);
-		console.log(newTicketData.project);
 
 		const newTicket = {
 			ProjectId: projectId ? projectId : newTicketData.project,
@@ -107,8 +108,6 @@ function EditToolbar({ projectId, ...props }) {
 			Status: newTicketData.status,
 			Priority: newTicketData.priority,
 		};
-
-		console.log(newTicket);
 		dispatch(createTicket(newTicket));
 
 		setNewTicketData({
@@ -125,7 +124,6 @@ function EditToolbar({ projectId, ...props }) {
 	const handleChange = (field) => (e) => {
 		setNewTicketData({ ...newTicketData, [field]: e.target.value });
 	};
-	console.log(filteredUsers);
 
 	return (
 		<GridToolbarContainer>
@@ -300,7 +298,12 @@ function EditToolbar({ projectId, ...props }) {
 		</GridToolbarContainer>
 	);
 }
-export default function FullFeaturedCrudGrid({ sx, initialRows, projectId }) {
+export default function FullFeaturedCrudGrid({
+	sx,
+	initialRows,
+	projectId,
+	onDelete,
+}) {
 	const [rows, setRows] = React.useState(initialRows);
 	const [rowModesModel, setRowModesModel] = React.useState({});
 	const dispatch = useDispatch();
@@ -519,17 +522,18 @@ export default function FullFeaturedCrudGrid({ sx, initialRows, projectId }) {
 				<Typography sx={typographyStyle}>{params.value}</Typography>
 			),
 		},
-		/*         {
-            field: 'id',
-            headerName: 'ID',
-            sortable: false,
-            flex: 1,
-            minWidth: 30,
-            /*        renderCell: (params) => (
+		{
+			field: "id",
+			headerName: "ID",
+			sortable: false,
+			flex: 1,
+			minWidth: 30,
+			/*        renderCell: (params) => (
                         <Link sx={typographyStyle} to={`/tickets/${params.value}`}>
                             {params.value}
                         </Link>
                     ),*/
+		},
 
 		{
 			field: "actions",
@@ -621,13 +625,17 @@ export default function FullFeaturedCrudGrid({ sx, initialRows, projectId }) {
 		setOpen(true);
 	};
 
-	const handleClose = () => {
-		setOpen(false);
-		setDeleteId(null);
+	const handleDeleteConfirm = () => {
+		if (onDelete) {
+			onDelete(deleteId);
+			setRows((prevRows) =>
+				prevRows.filter((row) => row.id !== deleteId)
+			);
+			setOpen(false);
+		}
 	};
 
-	const handleConfirmDelete = () => {
-		setRows(rows.filter((row) => row.id !== deleteId));
+	const handleClose = () => {
 		setOpen(false);
 		setDeleteId(null);
 	};
@@ -715,7 +723,7 @@ export default function FullFeaturedCrudGrid({ sx, initialRows, projectId }) {
 						Cancel
 					</Button>
 					<Button
-						onClick={handleConfirmDelete}
+						onClick={() => handleDeleteConfirm(deleteId)}
 						color="primary"
 						autoFocus
 					>

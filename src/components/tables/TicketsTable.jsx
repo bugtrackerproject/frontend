@@ -3,6 +3,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { Stack, Box } from "@mui/material";
 import TicketCrudTable from "./TicketCrudTable";
+import { useState } from "react";
 
 function createData(
 	name,
@@ -30,32 +31,34 @@ function createData(
 	};
 }
 
-const TicketsTable = ({ tickets, projectId }) => {
+const TicketsTable = ({ tickets, projectId, deleteTicket }) => {
 	const projects = useSelector((state) => state.projects.data);
 	const users = useSelector((state) => state.users.data);
+	let rows = useState([]);
 
-	const rows = tickets.map((ticket) => {
-		const project = projects.find(
-			(project) => project.id === ticket.project
-		);
-		const assignee = users.find((user) => user.id === ticket.assignee);
-		return createData(
-			ticket.name,
-			ticket.description,
-			project.name,
-			assignee.name,
-			ticket.priority,
-			ticket.status,
-			ticket.type,
-			ticket.createdAt,
-			ticket.updatedAt,
-			ticket.id
-		);
-	});
+	if (tickets) {
+		rows = tickets.map((ticket) => {
+			const project = projects.find(
+				(project) => project.id === ticket.project
+			);
+			const assignee = users.find((user) => user.id === ticket.assignee);
+			return createData(
+				ticket.name,
+				ticket.description,
+				project.name,
+				assignee.name,
+				ticket.priority,
+				ticket.status,
+				ticket.type,
+				ticket.createdAt,
+				ticket.updatedAt,
+				ticket.id
+			);
+		});
+	}
 
 	return rows ? (
 		<TicketCrudTable
-			key={JSON.stringify(rows.map((row) => row.id))}
 			initialRows={rows}
 			sx={{
 				borderColor: "primary.black",
@@ -78,6 +81,7 @@ const TicketsTable = ({ tickets, projectId }) => {
 					sortModel: [{ field: "updatedAt", sort: "desc" }],
 				},
 			}}
+			onDelete={deleteTicket}
 			/*onRowDoubleClick={(params) => navigate(`/tickets/${params.row.id}`)}*/
 			components={{
 				NoRowsOverlay: () => (

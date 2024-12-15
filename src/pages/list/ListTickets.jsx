@@ -4,10 +4,16 @@ import TicketsTable from "../../components/tables/TicketsTable";
 import { selectTicketsForUserProjects } from "../../reducers/appReducer";
 import { useEffect, useState } from "react";
 import { setFilters as setProjectsFilter } from "../../reducers/projectsReducer";
+import { removeTicket } from "../../reducers/ticketsReducer";
 import "./list.scss";
 
 const ListTickets = () => {
 	const tickets = useSelector(selectTicketsForUserProjects);
+	const dispatch = useDispatch();
+
+	const handleDeleteTicket = (ticketId) => {
+		dispatch(removeTicket(ticketId));
+	};
 
 	return (
 		<>
@@ -18,7 +24,10 @@ const ListTickets = () => {
 					</div>
 
 					<div className="mui-table-container">
-						<TicketsTable tickets={tickets} />
+						<TicketsTable
+							tickets={tickets}
+							deleteTicket={handleDeleteTicket}
+						/>
 					</div>
 				</div>
 			</main>

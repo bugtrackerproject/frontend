@@ -3,6 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
+import { Launch } from "@mui/icons-material";
 import {
 	GridRowModes,
 	DataGrid,
@@ -17,6 +18,7 @@ import {
 	Dialog,
 	DialogTitle,
 	DialogContent,
+	DialogContentText,
 	DialogActions,
 	Box,
 	Typography,
@@ -356,12 +358,14 @@ function EditToolbar(props) {
 	);
 }
 
-export default function FullFeaturedCrudGrid({ sx, initialRows }) {
+export default function FullFeaturedCrudGrid({ sx, initialRows, onDelete }) {
 	const [rows, setRows] = React.useState(initialRows);
 	const [rowModesModel, setRowModesModel] = React.useState({});
 	const dispatch = useDispatch();
 	const projects = useSelector((state) => state.projects.data);
 	const users = useSelector((state) => state.users.data);
+	const [deleteId, setDeleteId] = useState(null);
+	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
 
 	const columns = [
@@ -414,7 +418,7 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 			field: "actions",
 			type: "actions",
 			headerName: "Actions",
-			width: 100,
+			width: 160,
 			cellClassName: "actions",
 			getActions: ({ id }) => {
 				const isInEditMode =
@@ -422,6 +426,14 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 
 				if (isInEditMode) {
 					return [
+						<GridActionsCellItem
+							icon={<Launch />}
+							label="View"
+							sx={{
+								color: "primary.main",
+							}}
+							onClick={() => handleViewClick(id)}
+						/>,
 						<GridActionsCellItem
 							icon={<SaveIcon />}
 							label="Save"
@@ -442,6 +454,14 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 
 				return [
 					<GridActionsCellItem
+						icon={<Launch />}
+						label="View"
+						sx={{
+							color: "primary.main",
+						}}
+						onClick={() => handleViewClick(id)}
+					/>,
+					<GridActionsCellItem
 						icon={<EditIcon />}
 						label="Edit"
 						className="textPrimary"
@@ -451,7 +471,7 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 					<GridActionsCellItem
 						icon={<DeleteIcon />}
 						label="Delete"
-						onClick={handleDeleteClick(id)}
+						onClick={() => handleDeleteClick(id)}
 						color="inherit"
 					/>,
 				];
@@ -479,8 +499,24 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 		});
 	};
 
-	const handleDeleteClick = (id) => () => {
-		setRows(rows.filter((row) => row.id !== id));
+	const handleDeleteClick = (id) => {
+		setDeleteId(id);
+		setOpen(true);
+	};
+
+	const handleDeleteConfirm = () => {
+		if (onDelete) {
+			onDelete(deleteId);
+			setRows((prevRows) =>
+				prevRows.filter((row) => row.id !== deleteId)
+			);
+			setOpen(false);
+		}
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+		setDeleteId(null);
 	};
 
 	const handleCancelClick = (id) => () => {
@@ -527,29 +563,57 @@ export default function FullFeaturedCrudGrid({ sx, initialRows }) {
 		console.error("Row update error:", error.message);
 	};
 
-	const handleRowDoubleClick = (params) => {
-		const url = `/projects/${params.row.id}`;
+	const handleViewClick = (id) => {
+		const url = `/projects/${id}`;
 		navigate(url);
 	};
-
 	return (
-		<DataGrid
-			rows={rows}
-			columns={columns}
-			sx={sx}
-			disableColumnResize="true"
-			rowHeight={80}
-			editMode="row"
-			rowModesModel={rowModesModel}
-			onRowModesModelChange={handleRowModesModelChange}
-			onRowEditStop={handleRowEditStop}
-			processRowUpdate={processRowUpdate}
-			onProcessRowUpdateError={handleProcessRowUpdateError}
-			onRowDoubleClick={handleRowDoubleClick}
-			slots={{ toolbar: EditToolbar }}
-			slotProps={{
-				toolbar: { setRows, setRowModesModel },
-			}}
-		/>
+		<>
+			<DataGrid
+				rows={rows}
+				columns={columns}
+				sx={sx}
+				disableColumnResize="true"
+				rowHeight={80}
+				editMode="row"
+				rowModesModel={rowModesModel}
+				onRowModesModelChange={handleRowModesModelChange}
+				onRowEditStop={handleRowEditStop}
+				processRowUpdate={processRowUpdate}
+				onProcessRowUpdateError={handleProcessRowUpdateError}
+				slots={{ toolbar: EditToolbar }}
+				slotProps={{
+					toolbar: { setRows, setRowModesModel },
+				}}
+			/>
+
+			<Dialog
+				open={open}
+				onClose={handleClose}
+				aria-labelledby="alert-dialog-title"
+				aria-describedby="alert-dialog-description"
+			>
+				<DialogTitle id="alert-dialog-title">
+					{"Confirm Delete"}
+				</DialogTitle>
+				<DialogContent>
+					<DialogContentText id="alert-dialog-description">
+						Are you sure you want to delete this project?
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleClose} color="primary">
+						Cancel
+					</Button>
+					<Button
+						onClick={() => handleDeleteConfirm(deleteId)}
+						color="primary"
+						autoFocus
+					>
+						Confirm
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</>
 	);
 }

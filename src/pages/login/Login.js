@@ -86,7 +86,7 @@ const LoginForm = () => {
 												setEmail(e.target.value)
 											}
 											value={email}
-											placeholder=""
+											placeholder="Email"
 											required
 										/>
 										<label
@@ -105,7 +105,7 @@ const LoginForm = () => {
 												setPassword(e.target.value)
 											}
 											value={password}
-											placeholder=""
+											placeholder="Password"
 											required
 										/>
 										<label

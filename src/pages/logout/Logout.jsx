@@ -1,21 +1,17 @@
-import React from 'react'
-import { useEffect } from 'react';
-import { setUser, logout } from '../../reducers/userReducer';
-import { useDispatch } from 'react-redux';
-
-import Login from '../../pages/login/Login';
+import React from "react";
+import { useEffect } from "react";
+import { setUser, logout } from "../../reducers/userReducer";
+import { useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const Logout = () => {
+	const dispatch = useDispatch();
 
-    const dispatch = useDispatch()
+	window.localStorage.removeItem("loggedBugtrackerAppUser");
+	dispatch(logout());
+	window.location.reload();
 
-    window.localStorage.removeItem("loggedBugtrackerAppUser")
-    dispatch(logout())
+	return null;
+};
 
-
-    return (
-      <Login />    
-    )
-}
-
-export default Logout
+export default Logout;
