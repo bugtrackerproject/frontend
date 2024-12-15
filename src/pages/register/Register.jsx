@@ -12,7 +12,7 @@ import {
 	useMatch,
 } from "react-router-dom";
 
-import { login } from "../../services/auth";
+import { login, register } from "../../services/auth";
 import { userService } from "../../services/apiServiceFactory";
 
 //import './registerform.scss'
@@ -32,7 +32,7 @@ const RegisterForm = () => {
 		event.preventDefault();
 
 		try {
-			await userService.create({
+			await register({
 				email,
 				name,
 				password,
