@@ -1,92 +1,80 @@
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import ProjectsTable from "../../components/tables/ProjectsTable";
+import TicketsTable from "../../components/tables/TicketsTable";
+import Widget from "../../components/widgets/Widget";
+import "./home.scss";
 
-import { useSelector } from 'react-redux'
-import Header from '../../components/header/Header'
-import ProjectsTable from '../../components/tables/ProjectsTable'
-import TicketsTable from '../../components/tables/TicketsTable'
-import Widget from '../../components/widgets/Widget'
-import "./home.scss"
+import {
+	selectUserTickets,
+	selectUserTicketsByStatus,
+} from "../../reducers/appReducer";
 
+const Home = () => {
+	const dispatch = useDispatch();
+	const [status, setStatus] = useState("All");
+	const user = useSelector((state) => state.user);
+	const tickets = useSelector(selectUserTicketsByStatus(status));
+	const allUserTickets = useSelector(selectUserTickets);
 
-const Home = ({ toggleSidebar }) => {
+	const totals = {
+		todo: allUserTickets.filter((t) => t.status === "To Do").length,
+		inprogress: allUserTickets.filter((t) => t.status === "In Progress")
+			.length,
+		completed: allUserTickets.filter((t) => t.status === "Completed")
+			.length,
+	};
 
-  let ticketsSelector = useSelector(state => state.tickets)
-  let tickets = ticketsSelector.slice()
+	const handleStatusClick = (newStatus) => {
+		if (status === newStatus) {
+			setStatus("All");
+		} else {
+			setStatus(newStatus);
+		}
+	};
 
-  let projectsSelector = useSelector((state) => state.projects)
-  let projects = projectsSelector.slice()
+	return user ? (
+		<>
+			<main>
+				<div className="flex-wrapper">
+					<div className="widgets">
+						<Widget
+							type="to do"
+							count={totals.todo}
+							onClick={() => handleStatusClick("To Do")}
+							active={status === "To Do"}
+						/>
+						<Widget
+							type="in progress"
+							count={totals.inprogress}
+							onClick={() => handleStatusClick("In Progress")}
+							active={status === "In Progress"}
+						/>
+						<Widget
+							type="completed"
+							count={totals.completed}
+							onClick={() => handleStatusClick("Completed")}
+							active={status === "Completed"}
+						/>
+					</div>
 
-  
-  const user = useSelector(state => state.user)
+					<div className="table-wrapper">
+						<div className="form-header">
+							<h2>{status}</h2>
+						</div>
 
+						<div className="smaller-mui-table-container">
+							<TicketsTable
+								tickets={
+									status === "All" ? allUserTickets : tickets
+								}
+							/>
+						</div>
+					</div>
+				</div>
+			</main>
+		</>
+	) : null;
+};
 
-  projects = projectsSelector.filter(project => project.users.some(
-    u => u === user.id
-  ))
-
-  tickets = ticketsSelector.filter(ticket => ticket.assignee === user.id)
-
-  const totals = {
-    tickets: tickets.length,
-    projects: projects.length,
-    todo: (tickets.filter(t => {
-      return t.status==="To Do"
-    })).length,
-    inprogress: (tickets.filter(t => {
-      return t.status==="In Progress"
-    })).length,
-    completed: (tickets.filter(t => {
-      return t.status==="Completed"
-    })).length
-  }
-
-  return user ? (
-    <>
-        <Header page={"Dashboard"} user={user} toggleSidebar={toggleSidebar}/>
-
-        <main>
-            
-            
-            
-            <div className="widgets-header">
-                <h2>Total</h2>
-            </div>
-            <div className="widgets">
-
-                
-                  <Widget type="tickets" count={totals.tickets}/>
-                  <Widget type="projects" count={totals.projects}/>
-
-            </div>
-           
-       
-
-            <div className="widgets-header">
-                <h2>Ticket Progress</h2>
-            </div>
-            <div className="widgets">
-                <Widget type="to do" count={totals.todo}/>
-                <Widget type="in progress" count={totals.inprogress}/>
-                <Widget type="completed" count={totals.completed}/>
-            </div>
-
-            <div className="table-wrapper">
-                    <div className="formHeader">
-                        <h2>Recent Tickets</h2>
-                    </div>
-                <TicketsTable filter="user" value={user} />
-            </div>
-            <div className='table-wrapper'>
-                <div className="formHeader">
-                        <h2>Recent Projects</h2>
-                    </div>
-                <ProjectsTable filter="user" value={user} />
-                </div>
-            
-
-        </main>
-      </>
-  ) : null
-}
-
-export default Home
-
+export default Home;

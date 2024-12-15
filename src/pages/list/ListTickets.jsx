@@ -1,55 +1,38 @@
-import React from 'react'
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import TicketsTable from "../../components/tables/TicketsTable";
+import { selectTicketsForUserProjects } from "../../reducers/appReducer";
+import { useEffect, useState } from "react";
+import { setFilters as setProjectsFilter } from "../../reducers/projectsReducer";
+import { removeTicket } from "../../reducers/ticketsReducer";
+import "./list.scss";
 
-import Header from '../../components/header/Header'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import TicketsTable from '../../components/tables/TicketsTable'
-import { Button } from '@mui/material'
+const ListTickets = () => {
+	const tickets = useSelector(selectTicketsForUserProjects);
+	const dispatch = useDispatch();
 
-const ListTickets = ({ toggleSidebar }) => {
-    
-    const user = useSelector(state => state.user)
-  
-    const navigate = useNavigate()
+	const handleDeleteTicket = (ticketId) => {
+		dispatch(removeTicket(ticketId));
+	};
 
-    const handleCreateTicket = async (e) => {
-        e.preventDefault()
-    
-        navigate("new")
-    
-    }
-        
+	return (
+		<>
+			<main>
+				<div className="table-wrapper">
+					<div className="form-header">
+						<h2>Tickets</h2>
+					</div>
 
-  return user ? (
-    <>
-        <Header page={"My Tickets"} user={user} toggleSidebar={toggleSidebar}/>
+					<div className="mui-table-container">
+						<TicketsTable
+							tickets={tickets}
+							deleteTicket={handleDeleteTicket}
+						/>
+					</div>
+				</div>
+			</main>
+		</>
+	);
+};
 
-          <main>
-              <div className="flexWrapper">
-
-
-                  <div className="formWrapper">
-                      <div className="button">
-
-                          <Button sx={{ marginBottom: 4, minWidth: 150, backgroundColor: '##2873ff' }} variant="contained" onClick={handleCreateTicket}>Create New Ticket </Button>
-
-                      </div>
-                  </div>
-
-                  <div className="table-wrapper">
-                      <div className="formHeader">
-                          <h2>Assigned Tickets</h2>
-                      </div>
-                      <div className="tableContainer">
-                          <TicketsTable filter={"user"} value={user} />
-                      </div>
-
-              </div>
-          
-        </div>
-    </main>
-    </>
-  ) : null
-}
-
-export default ListTickets
+export default ListTickets;

@@ -1,62 +1,80 @@
-import axios from 'axios';
+import axios from "axios";
+import { getAuthConfig, checkToken, removeToken } from "./auth";
 
 export const apiServiceFactory = (resourceName) => {
-    const baseUrl = `/api/${resourceName}`;
-    let token = null;
+	const baseUrl = `/api/${resourceName}`;
 
-    const setToken = (newToken) => {
-        token = `Bearer ${newToken}`;
-    };
+	const getAll = async () => {
+		const tokenCheckResult = await checkToken();
 
-    const getAuthConfig = () => ({
-        headers: { Authorization: token },
-    });
+		if (!tokenCheckResult) {
+			return;
+		}
+		const response = await axios.get(baseUrl, getAuthConfig());
+		return response.data;
+	};
 
-    const getAll = async () => {
-        try {
-            const response = await axios.get(baseUrl, getAuthConfig());
-            return response.data;
-        } catch (error) {
-            console.error(`Failed to fetch ${resourceName}:`, error.response?.data || error.message);
-        }
-    };
+	const create = async (newObject) => {
+		const tokenCheckResult = await checkToken();
 
-    const create = async (newObject) => {
-        try {
-            const response = await axios.post(baseUrl, newObject, getAuthConfig());
-            return response.data;
-        } catch (error) {
-            console.error(`Failed to create ${resourceName}:`, error.response?.data || error.message);
-        }
-    };
+		if (!tokenCheckResult) {
+			return;
+		}
+		const response = await axios.post(baseUrl, newObject, getAuthConfig());
+		return response.data;
+	};
 
-    const update = async (id, updatedObject) => {
-        try {
-            const response = await axios.put(`${baseUrl}/${id}`, updatedObject, getAuthConfig());
-            return response.data;
-        } catch (error) {
-            console.error(`Failed to update ${resourceName}:`, error.response?.data || error.message);
-        }
-    };
+	const update = async (id, updatedObject) => {
+		const tokenCheckResult = await checkToken();
 
-    const remove = async (id) => {
-        try {
-            await axios.delete(`${baseUrl}/${id}`, getAuthConfig());
-        } catch (error) {
-            console.error(`Failed to delete ${resourceName}:`, error.response?.data || error.message);
-        }
-    };
+		if (!tokenCheckResult) {
+			return;
+		}
+		try {
+			const response = await axios.put(
+				`${baseUrl}/${id}`,
+				updatedObject,
+				getAuthConfig()
+			);
+			return response.data;
+		} catch (error) {
+			console.error(
+				`Failed to update ${resourceName}:`,
+				error.response?.data || error.message
+			);
+		}
+	};
 
-    return {
-        setToken,
-        getAll,
-        create,
-        update,
-        remove,
-    };
+	const remove = async (id) => {
+		const tokenCheckResult = await checkToken();
+
+		if (!tokenCheckResult) {
+			return;
+		}
+		try {
+			const response = await axios.delete(
+				`${baseUrl}/${id}`,
+				getAuthConfig()
+			);
+			return response.data;
+		} catch (error) {
+			console.error(
+				`Failed to delete ${resourceName}:`,
+				error.response?.data || error.message
+			);
+			throw error;
+		}
+	};
+
+	return {
+		getAll,
+		create,
+		update,
+		remove,
+	};
 };
 
-export const userService = apiServiceFactory('users');
-export const projectService = apiServiceFactory('projects');
-export const ticketService = apiServiceFactory('tickets');
-export const roleService = apiServiceFactory('roles');
+export const userService = apiServiceFactory("users");
+export const projectService = apiServiceFactory("projects");
+export const ticketService = apiServiceFactory("tickets");
+export const roleService = apiServiceFactory("roles");

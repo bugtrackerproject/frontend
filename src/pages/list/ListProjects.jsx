@@ -1,50 +1,39 @@
-import React from 'react'
+import React from "react";
 
-import ProjectsTable from '../../components/tables/ProjectsTable'
-import Header from '../../components/header/Header'
-import { useSelector } from 'react-redux'
-import { Button } from '@mui/material'
+import ProjectsTable from "../../components/tables/ProjectsTable";
 
-import { useNavigate } from 'react-router-dom'
+import { useSelector } from "react-redux";
+import { selectUserProjects } from "../../reducers/appReducer";
+import { useDispatch } from "react-redux";
+import { removeProject } from "../../reducers/projectsReducer";
 
-const ListProjects = ({ toggleSidebar }) => {
-    const navigate = useNavigate()
-    const user = useSelector(state => state.user)
+const ListProjects = () => {
+	const projects = useSelector(selectUserProjects);
+	const dispatch = useDispatch();
 
-    const handleCreateProject = async (e) => {
-        e.preventDefault()
-    
-        navigate("new")
-    
-    }
-        
+	const handleDeleteProject = (projectId) => {
+		dispatch(removeProject(projectId));
+	};
 
-  return user ? (
-    <>  
-        <Header page={"My Projects"} user={user} toggleSidebar={toggleSidebar}/>
+	return (
+		<>
+			<main>
+				<div className="flex-wrapper">
+					<div className="table-wrapper">
+						<div className="form-header">
+							<h2>Assigned Projects</h2>
+						</div>
+						<div className="mui-table-container">
+							<ProjectsTable
+								projects={projects}
+								deleteProject={handleDeleteProject}
+							/>
+						</div>
+					</div>
+				</div>
+			</main>
+		</>
+	);
+};
 
-
-          <main>
-              <div className="flexWrapper">
-                  <div className="formWrapper">
-                      <div className="button">
-
-                          <Button sx={{ marginBottom: 4, minWidth: 150, backgroundColor: '##2873ff' }} variant="contained" onClick={handleCreateProject}>Create New Project</Button>
-
-                      </div>
-                  </div>
-                  <div className="table-wrapper">
-                      <div className="formHeader">
-                          <h2>Assigned Projects</h2>
-                      </div>
-                      <div className="tableContainer">
-                          <ProjectsTable filter={"user"} value={user} /> </div>
-                     </div>
-              </div>
-        </main>
-
-    </>
-  ) : null
-}
-
-export default ListProjects
+export default ListProjects;

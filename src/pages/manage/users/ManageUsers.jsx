@@ -19,19 +19,19 @@ const ManageUsers = ({ type }) => {
         <Header />
 
         <div className="main-content">
-            <div className="mainTitle">ASSIGN USER ROLES</div>
+            <div className="main-title">ASSIGN USER ROLES</div>
             <div className="split">
                 <div className="roleContainer">
                     <div className="checkboxWrapper">
-                        <div className="mainTitle">SELECT USERS</div>
+                        <div className="main-title">SELECT USERS</div>
                         <SelectMultiple />
                     </div>
                     <div className="checkboxWrapper">
-                        <div className="mainTitle">SELECT ROLES</div>
+                        <div className="main-title">SELECT ROLES</div>
                         <CheckboxesTags />
                     </div>
                     <div className="checkboxWrapper">
-                        <div className="mainTitle">SELECT ROLES</div>
+                        <div className="main-title">SELECT ROLES</div>
                         <SelectMultiple />
                     </div>
             
@@ -49,7 +49,7 @@ const ManageUsers = ({ type }) => {
             
             </div>
               <div className="tableWrapper">
-                    <div className="mainTitle">ALL USERS</div>
+                    <div className="main-title">ALL USERS</div>
                     <BasicTable type="Tickets"/>
                 </div>
         </div>

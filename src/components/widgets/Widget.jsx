@@ -11,7 +11,7 @@ import {
   } from "react-router-dom"
   
 
-const Widget = ({ type, count }) => {
+const Widget = ({ type, count, onClick, active }) => {
 
     let link = false
     let icon = ""
@@ -42,39 +42,46 @@ const Widget = ({ type, count }) => {
             
     }
 
+    const handleClick = () => {
+        if (onClick) {
+            onClick();
+        }
+    };
+
   return (
-    <div> 
-        {link ? 
-            <div className="link">
-                <Link style={{ textDecoration: "none", color: "black"}} to={type}>
-                    <div className="widget">
+      <div> 
+          {link ?
+              <div className="link">
+                  <Link style={{ textDecoration: "none", color: "black" }} to={type}>
+                      <div className="widget">
 
-                        <div>
-                            <h1>{count}</h1>
-                            <span>{type.toUpperCase()}</span>
-                        </div>
+                          <div className="widget-text">
+                              <h1>{count}</h1>
+                              <span>{type.toUpperCase()}</span>
+                          </div>
 
-                        <div>
-                            <span> {icon} </span>
-                        </div>
+                          <div>
+                              <span> {icon} </span>
+                          </div>
 
 
-                     </div>
+                      </div>
 
-                </Link>
-            </div>
+                  </Link>
+              </div>
 
-            :                    
-            <div className="widget">
+              :
+              <div className={active ? "widget active" : "widget"} onClick={handleClick}>
 
-                <div>
-                    <h1>{count}</h1>
-                    <span>{type.toUpperCase()}</span>
-                </div>
 
-                <div>
-                    <span> {icon} </span>
-                </div>
+                  <div className="widget-text">
+                      <h1>{count}</h1>
+                      <h2>{type.toUpperCase()}</h2>
+                  </div>
+
+                  <div>
+                      <span> {icon} </span>
+                  </div>
 
 
             </div>

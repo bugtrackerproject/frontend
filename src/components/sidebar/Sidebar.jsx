@@ -29,7 +29,7 @@ const Sidebar = ({ isSidebarActive, setSidebarActive }) => {
           <label className="sidebar-brand-icon" htmlFor="nav-toggle">
             <Stack direction="row" alignItems="center" gap={1}>
               <PestControlIcon className={`logo ${isSidebarActive ? 'reverseRotate' : 'rotate'}`}  sx={{fontSize:'3rem', paddingRight: "0.5rem" }}/>
-              <div className="sidebar-text" style={{fontSize: "2rem"}}>
+                      <div className="sidebar-brand-text" style={{fontSize: "2rem"}}>
                 bugtracker
               </div>
             </Stack>

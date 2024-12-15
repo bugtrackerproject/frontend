@@ -1,0 +1,13 @@
+.forms-container {
+    display: flex;
+    gap: 20px;
+}
+
+.forms-container > * {
+    flex: 1;
+    min-width: 300px;
+}
+
+form-container {
+    height:100%;
+}

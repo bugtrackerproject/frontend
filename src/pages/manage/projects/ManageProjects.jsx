@@ -1,106 +1,100 @@
-import "./manageprojects.scss"
+import "./manageprojects.scss";
 
-import { useSelector } from "react-redux"
-import { useState } from "react"
+import { useSelector } from "react-redux";
+import ProjectsTable from "../../../components/tables/ProjectsTable";
 
-import Button from '@mui/material/Button';
-import ProjectsTable from "../../../components/tables/ProjectsTable"
-import SelectMultiple from "../../../components/checkbox/SelectMultiple"
-import Select from "../../../components/checkbox/Select"
-import { updateProject } from "../../../reducers/projectsReducer"
-import { useDispatch } from "react-redux"
-import Header from "../../../components/header/Header"
+const ManageProjects = () => {
+	const projects = useSelector((state) => state.projects.data);
 
+	return projects ? (
+		<>
+			<main>
+				<div className="flex-wrapper">
+					{/*                    <div className="form-wrapper">
 
-const ManageProjects = ({ toggleSidebar }) => {
-
-  const dispatch = useDispatch();
-
-  const projects = useSelector((state) => state.projects)
-  const users = useSelector((state) => state.users)
-  const user = useSelector(state => state.user)
-
-  const [project, setProject] = useState([]);
-  const [selectedUsers, setUsers] = useState([]);
-
-  const handleAddUsers = async (e) => {
-    e.preventDefault()
-
-    let obj = {
-
-      ...project,
-      users: project.users
-    }
-
-    selectedUsers.forEach(user => {
-
-      const found = project.users.some(u => {
-        if (u.id === user.id) {
-          
-          return true;
-        }
-        return false;
-      });
-
-      if (!found) {
-        obj = {
-
-          ...project,
-          users: obj.users.concat(user.id),
-        }
-      } else {
-        console.log("user already exists")
-      }
-    })
-
-    dispatch(updateProject(project.id, obj))
-
-  }
-  
-
-  return user ? (
-    <>
-        <Header page={"Manage Projects"} user={user} toggleSidebar={toggleSidebar} />
-
-        <main>
-            <div className="flexWrapper">
-              <div className="formWrapper">
-
-                  <div className="formHeader">
-                      <h2>Add To Project</h2>
-                  </div>
-            
-                    <div className="formContainer">
-
-                        <div className="formContent">
-
-                            <div className="sub-title">SELECT PROJECT</div>
-                            <Select data={projects} label="Projects" onChange={(event, selectedValue) => setProject(selectedValue)} />
-                            <div className="sub-title">SELECT USERS</div>
-                            <SelectMultiple data={users} label="Users" onChange={(event, selectedValue) => setUsers(selectedValue)} />
-                            <div className="button">
-
-                                  <Button sx={{ minWidth: 150, backgroundColor: '#2873ff' }} variant="contained" onClick={handleAddUsers}>Add Users to project</Button>
-
-
-                            </div>
+                        <div className="form-header">
+                            <h2>Add/Remove Users</h2>
                         </div>
-                </div>
-            
-                
-              </div>
-              <div className="table-wrapper">
-                    <div className="formHeader">
-                        <h2>Projects</h2>
-                    </div>
-                    <div className="tableContainer">
-                        <ProjectsTable className="mui-table" />
-                  </div>
-                </div>
-              </div>
-        </main>
-    </>
-  ) : null
-}
 
-export default ManageProjects
+                        <div className="form-container">
+
+
+
+                            <h2>SELECT PROJECT</h2>
+                            <Select
+                                data={projects}
+                                label="Projects"
+                                onChange={(event, selectedValue) => setProject(selectedValue)}
+                            />
+
+                            <div className="user-actions">
+                                {project ? (
+                                    <>
+                                        <div className="add-users">
+                                            <h2>SELECT USERS TO ADD</h2>
+                                            <SelectMultiple
+                                                data={users.filter(user => !project.users.includes(user.id))}
+                                                label="Users"
+                                                value={selectedUsersToAdd}
+                                                onChange={(event, selectedValue) => setSelectedUsersToAdd(selectedValue)}
+                                            />
+                                            <Button
+                                                className="mui-button"
+                                                size="large"
+                                                sx={{ minWidth: "13rem", marginTop: '2rem' }}
+                                                variant="outlined"
+                                                onClick={handleAddUsers}
+                                                startIcon={<AddIcon /> }
+
+                                            >
+                                                Add Users
+                                            </Button>
+                                        </div>
+
+                                        <div className="remove-users">
+                                            <h2>SELECT USERS TO REMOVE</h2>
+                                            <SelectMultiple
+                                                data={project.users.map(userId => users.find(user => user.id === userId))}
+                                                label="Users"
+                                                value={selectedUsersToRemove}
+                                                onChange={(event, selectedValue) => setSelectedUsersToRemove(selectedValue)}
+                                            />
+                                            <Button
+                                                className="mui-button"
+                                                size="large"
+                                                sx={{ minWidth: "13rem", marginTop: '2rem'  }}
+                                                variant="outlined"
+                                                startIcon={<DeleteOutline />}
+                                                color="error"
+                                                onClick={handleRemoveUsers}
+                                            >
+                                                Remove Users
+                                            </Button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="placeholder">
+                                        <p>Please select a project to manage users.</p>
+                                    </div>
+                                )}
+                            </div>
+                        
+        
+
+                        </div>
+                    </div>*/}
+					<div className="table-wrapper">
+						<div className="form-header">
+							<h2>All Projects</h2>
+						</div>
+						<div className="mui-table-container">
+							<ProjectsTable projects={projects} />
+						</div>
+					</div>
+				</div>
+			</main>
+		</>
+	) : null;
+};
+
+export default ManageProjects;

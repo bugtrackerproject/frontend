@@ -6,10 +6,12 @@ import rolesReducer from './reducers/rolesReducer'
 import ticketsReducer from './reducers/ticketsReducer'
 import userReducer from './reducers/userReducer'
 import usersReducer from './reducers/usersReducer'
+import appReducer from './reducers/appReducer'
 
 
 const store = configureStore({
     reducer: {
+        app: appReducer,
         user: userReducer,
         users: usersReducer,
         projects: projectsReducer,

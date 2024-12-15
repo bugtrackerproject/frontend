@@ -1,28 +1,17 @@
-import React from 'react'
-import { useEffect } from 'react';
-import { setUser } from '../../reducers/userReducer';
-import { useDispatch } from 'react-redux';
-
-import LoginForm from '../../components/login/LoginForm';
+import React from "react";
+import { useEffect } from "react";
+import { setUser, logout } from "../../reducers/userReducer";
+import { useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const Logout = () => {
+	const dispatch = useDispatch();
 
-    const dispatch = useDispatch()
-    useEffect(() => {
+	window.localStorage.removeItem("loggedBugtrackerAppUser");
+	dispatch(logout());
+	window.location.reload();
 
-        const loggedUserJSON = window.localStorage.getItem("loggedBugtrackerAppUser");
-        if (loggedUserJSON) {
-            window.localStorage.removeItem("loggedBugtrackerAppUser")
+	return null;
+};
 
-            dispatch(setUser(null))
-        }
-    }, [dispatch]);
-
-    return (
-        <div className="loginPage">
-            <LoginForm />
-        </div>
-    )
-}
-
-export default Logout
+export default Logout;
