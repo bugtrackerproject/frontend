@@ -51,6 +51,20 @@ const ticketsSlice = createSlice({
 			.addCase(initialiseTickets.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
+			})
+			.addCase(updateTicket.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(updateTicket.fulfilled, (state, action) => {
+				const updatedTicket = action.payload;
+				state.data = state.data.map((ticket) =>
+					ticket.id === updatedTicket.id ? updatedTicket : ticket
+				);
+				state.loading = false;
+			})
+			.addCase(updateTicket.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
 			});
 	},
 });
@@ -66,18 +80,22 @@ export const initialiseTickets = createAsyncThunk(
 		}
 	}
 );
+export const updateTicket = createAsyncThunk(
+	"tickets/updateTicket",
+	async ({ id, ticket }, { rejectWithValue }) => {
+		try {
+			const updatedTicket = await ticketService.update(id, ticket);
+			return { id, updatedTicket };
+		} catch (error) {
+			return rejectWithValue(error.response?.data || error.message);
+		}
+	}
+);
 
 export const createTicket = (ticket) => {
 	return async (dispatch) => {
 		const newTicket = await ticketService.create(ticket);
 		dispatch(appendTicket(newTicket));
-	};
-};
-
-export const updateTicket = (id, ticket) => {
-	return async (dispatch) => {
-		const updatedTicket = await ticketService.update(id, ticket);
-		dispatch(update(updatedTicket));
 	};
 };
 

@@ -65,6 +65,7 @@ const Home = () => {
 
 						<div className="smaller-mui-table-container">
 							<TicketsTable
+								key={status}
 								tickets={
 									status === "All" ? allUserTickets : tickets
 								}

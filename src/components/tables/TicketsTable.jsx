@@ -3,6 +3,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { Stack, Box } from "@mui/material";
 import TicketCrudTable from "./TicketCrudTable";
+
 import { useState } from "react";
 
 function createData(
@@ -33,9 +34,9 @@ function createData(
 
 const TicketsTable = ({ tickets, projectId, deleteTicket }) => {
 	const projects = useSelector((state) => state.projects.data);
-	const users = useSelector((state) => state.users.data);
-	let rows = useState([]);
 
+	const users = useSelector((state) => state.users.data);
+	let rows = [];
 	if (tickets) {
 		rows = tickets.map((ticket) => {
 			const project = projects.find(

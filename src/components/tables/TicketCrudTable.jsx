@@ -26,6 +26,8 @@ import {
 	DialogActions,
 	Box,
 	Typography,
+	Snackbar,
+	Alert,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
@@ -40,6 +42,8 @@ import {
 	selectUserIdByUserName,
 	selectUserProjects,
 } from "../../reducers/appReducer";
+
+import { selectProjectIdByProjectName } from "../../reducers/appReducer";
 import { useNavigate } from "react-router-dom";
 
 const typographyStyle = {
@@ -307,10 +311,8 @@ export default function FullFeaturedCrudGrid({
 	const [rows, setRows] = React.useState(initialRows);
 	const [rowModesModel, setRowModesModel] = React.useState({});
 	const dispatch = useDispatch();
-	const [userId, setUserId] = useState(null);
 	const [deleteId, setDeleteId] = useState(null);
 	const [open, setOpen] = useState(false);
-
 	const navigate = useNavigate();
 
 	const columns = [
@@ -516,6 +518,7 @@ export default function FullFeaturedCrudGrid({
 		{
 			field: "updatedAt",
 			headerName: "Date Updated",
+
 			minWidth: 30,
 			flex: 1,
 			renderCell: (params) => (
@@ -651,29 +654,76 @@ export default function FullFeaturedCrudGrid({
 			setRows(rows.filter((row) => row.id !== id));
 		}
 	};
+	const [snackbar, setSnackbar] = React.useState(null);
 
-	const processRowUpdate = (newRow) => {
-		const updatedRow = { ...newRow, isNew: false };
-		setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-		const newTicket = {
-			Name: updatedRow.name,
-			Description: updatedRow.description,
-			Type: updatedRow.type,
-			Priority: updatedRow.priority,
-			Status: updatedRow.status,
-			AssigneeId: userId,
-			ProjectId: projectId,
-		};
-		dispatch(updateTicket(newRow.id, newTicket));
-		return updatedRow;
-	};
+	const handleCloseSnackbar = () => setSnackbar(null);
+
+	const processRowUpdate = React.useCallback(
+		async (newRow, oldRow) => {
+			try {
+				if (!newRow.id) {
+					throw new Error("Row must have a valid ID");
+				}
+
+				const updatedRow = {
+					...oldRow,
+					...newRow,
+					description: newRow.description || oldRow.description,
+					name: newRow.name || oldRow.name,
+				};
+
+				const newTicket = {
+					Id: updatedRow.id,
+					Name: updatedRow.name,
+					Description: updatedRow.description,
+					Type: updatedRow.type,
+					Priority: updatedRow.priority,
+					Status: updatedRow.status,
+					createdAt: updatedRow.createdAt,
+					updatedAt: new Date().toISOString(),
+					project: updatedRow.project,
+				};
+
+				await dispatch(
+					updateTicket({
+						id: updatedRow.id,
+						ticket: newTicket,
+					})
+				).unwrap();
+
+				setRows((prevRows) =>
+					prevRows.map((row) =>
+						row.id === updatedRow.id
+							? { ...row, ...updatedRow }
+							: row
+					)
+				);
+
+				setSnackbar({
+					children: "Ticket successfully updated!",
+					severity: "success",
+				});
+
+				return updatedRow;
+			} catch (error) {
+				console.error("Detailed Update Error:", error);
+
+				setSnackbar({
+					children: `Update failed: ${error.message}`,
+					severity: "error",
+				});
+
+				return oldRow;
+			}
+		},
+		[dispatch]
+	);
+	const handleProcessRowUpdateError = React.useCallback((error) => {
+		console.error("Process row update error:", error);
+	}, []);
 
 	const handleRowModesModelChange = (newRowModesModel) => {
 		setRowModesModel(newRowModesModel);
-	};
-
-	const handleProcessRowUpdateError = (error) => {
-		console.error("Row update error:", error.message);
 	};
 
 	const handleViewClick = (id) => {
@@ -703,6 +753,16 @@ export default function FullFeaturedCrudGrid({
 					toolbar: { setRows, setRowModesModel },
 				}}
 			/>
+			{!!snackbar && (
+				<Snackbar
+					open
+					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+					onClose={handleCloseSnackbar}
+					autoHideDuration={6000}
+				>
+					<Alert {...snackbar} onClose={handleCloseSnackbar} />
+				</Snackbar>
+			)}
 
 			<Dialog
 				open={open}
