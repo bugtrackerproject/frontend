@@ -10,9 +10,18 @@ const selectUserId = (state) => state.user?.id;
 export const selectUserProjects = createSelector(
 	[selectAllProjects, selectUserId],
 	(projects, userId) => {
-		return projects.filter((project) =>
-			project.users.some((id) => id === userId)
-		);
+		console.log(userId);
+		if (!userId) {
+			console.log("User ID is null or undefined");
+			return [];
+		}
+
+		return projects.filter((project) => {
+			if (!project.users) {
+				return false; // Skip projects with undefined or null users
+			}
+			return project.users.some((id) => id === userId);
+		});
 	}
 );
 

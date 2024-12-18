@@ -9,6 +9,7 @@ import { removeProject } from "../../reducers/projectsReducer";
 
 const ListProjects = () => {
 	const projects = useSelector(selectUserProjects);
+	console.log(projects);
 	const dispatch = useDispatch();
 
 	const handleDeleteProject = (projectId) => {

@@ -58,6 +58,31 @@ const LoginForm = () => {
 		}
 	};
 
+	const handleGuestLogin = async () => {
+		try {
+			const guestCredentials = {
+				email: "demo@bugtracker.com",
+				password: "demo",
+			};
+
+			const user = await login(guestCredentials);
+
+			window.localStorage.setItem(
+				"loggedBugtrackerAppUser",
+				JSON.stringify(user)
+			);
+
+			initialiseApp();
+
+			setEmail("");
+			setPassword("");
+			navigate("/");
+			setSuccess(true);
+		} catch (exception) {
+			console.log(exception);
+		}
+	};
+
 	useEffect(() => {
 		if (success) {
 			navigate("/");
@@ -117,10 +142,17 @@ const LoginForm = () => {
 									</div>
 									<button className="btn">Sign In</button>
 								</form>
-
 								<Link className="register-link" to="/register">
 									<span>Register</span>
 								</Link>
+								<div class="demo-sign-in">
+									<button
+										className="btn"
+										onClick={handleGuestLogin}
+									>
+										Guest
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>

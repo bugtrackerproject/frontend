@@ -77,6 +77,20 @@ const projectsSlice = createSlice({
 			.addCase(initialiseProjects.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
+			})
+			.addCase(updateProject.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(updateProject.fulfilled, (state, action) => {
+				const updatedProject = action.payload;
+				state.data = state.data.map((project) =>
+					project.id === updatedProject.id ? updatedProject : project
+				);
+				state.loading = false;
+			})
+			.addCase(updateProject.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
 			});
 	},
 });
@@ -105,17 +119,35 @@ export const createProject = createAsyncThunk(
 	}
 );
 
+export const updateProject = createAsyncThunk(
+	"projects/updateProject",
+	async ({ id, project }, { rejectWithValue }) => {
+		try {
+			console.log("Updating project with ID:", id);
+			console.log("Project data:", JSON.stringify(project, null, 2)); // Pretty-print the project object
+
+			const updatedProject = await projectService.update(id, project);
+
+			console.log(
+				"Updated project response:",
+				JSON.stringify(updatedProject, null, 2)
+			); // Pretty-print the response
+
+			return { id, updatedProject };
+		} catch (error) {
+			console.error(
+				"Error updating project:",
+				error.response?.data || error.message
+			);
+			return rejectWithValue(error.response?.data || error.message);
+		}
+	}
+);
+
 export const removeProject = (id) => {
 	return async (dispatch) => {
 		await projectService.remove(id);
 		dispatch(remove(id));
-	};
-};
-
-export const updateProject = (id, project) => {
-	return async (dispatch) => {
-		const newProject = await projectService.update(id, project);
-		dispatch(update(newProject));
 	};
 };
 

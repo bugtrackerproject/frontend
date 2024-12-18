@@ -321,6 +321,7 @@ export default function FullFeaturedCrudGrid({
 			headerName: "Name",
 			minWidth: 100,
 			flex: 1,
+			editable: true,
 			renderCell: (params) => (
 				<Typography sx={typographyStyle}>{params.value}</Typography>
 			),
@@ -330,6 +331,7 @@ export default function FullFeaturedCrudGrid({
 			headerName: "Description",
 			minWidth: 200,
 			flex: 1,
+			editable: true,
 			renderCell: (params) => (
 				<Typography sx={typographyStyle}>{params.value}</Typography>
 			),
@@ -506,7 +508,7 @@ export default function FullFeaturedCrudGrid({
 				return priorityOrder[v2] - priorityOrder[v1];
 			},
 		},
-		{
+		/* 		{
 			field: "createdAt",
 			headerName: "Date Created",
 			minWidth: 150,
@@ -514,7 +516,7 @@ export default function FullFeaturedCrudGrid({
 			renderCell: (params) => (
 				<Typography sx={typographyStyle}>{params.value}</Typography>
 			),
-		},
+		}, */
 		{
 			field: "updatedAt",
 			headerName: "Date Updated",
@@ -525,18 +527,13 @@ export default function FullFeaturedCrudGrid({
 				<Typography sx={typographyStyle}>{params.value}</Typography>
 			),
 		},
-		{
+		/* 		{
 			field: "id",
 			headerName: "ID",
 			sortable: false,
 			flex: 1,
 			minWidth: 30,
-			/*        renderCell: (params) => (
-                        <Link sx={typographyStyle} to={`/tickets/${params.value}`}>
-                            {params.value}
-                        </Link>
-                    ),*/
-		},
+		}, */
 
 		{
 			field: "actions",

@@ -80,7 +80,7 @@ const ProjectsTable = ({ projects, deleteProject }) => {
 						alignItems="center"
 						justifyContent="center"
 					>
-						User has no tickets
+						User has no projects
 					</Stack>
 				),
 			}}

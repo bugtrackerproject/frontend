@@ -66,6 +66,7 @@ const TicketsTable = ({ tickets, projectId, deleteTicket }) => {
 				"& .MuiDataGrid-cell:hover": {
 					color: "primary.main",
 				},
+
 				"& .MuiDataGrid-virtualScroller": {
 					overflow: "auto", // Enable overflow for scrolling
 				},

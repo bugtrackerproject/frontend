@@ -24,8 +24,19 @@ form {
 	--text-color: #fff;
 	max-width: 500px;
 	background-color: none;
+	gap: 2rem;
 }
 
+.demo-sign-in {
+	margin: auto;
+	padding-top: 2rem;
+	--text-color: #fff;
+	max-width: 500px;
+	background-color: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
 .field {
 	width: 90%;
 	position: relative;
@@ -110,6 +121,7 @@ form {
 	outline: 0;
 	border: 0;
 	width: 30%;
+
 	padding: 0.3rem;
 	margin-bottom: 1rem;
 	cursor: pointer;

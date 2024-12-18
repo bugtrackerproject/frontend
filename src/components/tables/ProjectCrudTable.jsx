@@ -22,15 +22,13 @@ import {
 	DialogActions,
 	Box,
 	Typography,
+	Snackbar,
+	Alert,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-	initializeProjects,
-	createProject,
-	updateProject,
-} from "../../reducers/projectsReducer";
+import { createProject, updateProject } from "../../reducers/projectsReducer";
 import { useSelector } from "react-redux";
 import SelectMultiple from "../checkbox/SelectMultiple";
 import Select from "../checkbox/Select";
@@ -531,29 +529,69 @@ export default function FullFeaturedCrudGrid({ sx, initialRows, onDelete }) {
 		}
 	};
 
-	const processRowUpdate = (newRow) => {
-		const updatedRow = { ...newRow, isNew: false };
-		setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+	const [snackbar, setSnackbar] = React.useState(null);
 
-		const newProject = {
-			name: updatedRow.name,
-			description: updatedRow.description,
-		};
+	const handleCloseSnackbar = () => setSnackbar(null);
 
-		/*      const project = projects.find(project => project.name === updatedRow.project);
-        const assignee = users.find(user => user.name === updatedRow.assignee)
-        
-        const newProject = {
-            project: updatedRow.id,
-            name: updatedRow.name,
-            description: updatedRow.description
-        }
+	const processRowUpdate = React.useCallback(
+		async (newRow, oldRow) => {
+			try {
+				if (!newRow.id) {
+					throw new Error("Row must have a valid ID");
+				}
 
-        console.log(newProject)*/
-		dispatch(updateProject(newRow.id, newProject));
+				const updatedRow = {
+					...oldRow,
+					...newRow,
+					description: newRow.description || oldRow.description,
+					name: newRow.name || oldRow.name,
+				};
 
-		return updatedRow;
-	};
+				const newProject = {
+					Id: updatedRow.id,
+					Name: updatedRow.name,
+					Description: updatedRow.description,
+					users: [],
+					createdAt: updatedRow.createdAt,
+					updatedAt: new Date().toISOString(),
+				};
+
+				console.log(newProject);
+
+				await dispatch(
+					updateProject({
+						id: updatedRow.id,
+						project: newProject,
+					})
+				).unwrap();
+
+				setRows((prevRows) =>
+					prevRows.map((row) =>
+						row.id === updatedRow.id
+							? { ...row, ...updatedRow }
+							: row
+					)
+				);
+
+				setSnackbar({
+					children: "Project successfully updated!",
+					severity: "success",
+				});
+
+				return updatedRow;
+			} catch (error) {
+				console.error("Detailed Update Error:", error);
+
+				setSnackbar({
+					children: `Update failed: ${error.message}`,
+					severity: "error",
+				});
+
+				return oldRow;
+			}
+		},
+		[dispatch]
+	);
 
 	const handleRowModesModelChange = (newRowModesModel) => {
 		setRowModesModel(newRowModesModel);
@@ -586,6 +624,17 @@ export default function FullFeaturedCrudGrid({ sx, initialRows, onDelete }) {
 					toolbar: { setRows, setRowModesModel },
 				}}
 			/>
+
+			{!!snackbar && (
+				<Snackbar
+					open
+					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+					onClose={handleCloseSnackbar}
+					autoHideDuration={6000}
+				>
+					<Alert {...snackbar} onClose={handleCloseSnackbar} />
+				</Snackbar>
+			)}
 
 			<Dialog
 				open={open}
