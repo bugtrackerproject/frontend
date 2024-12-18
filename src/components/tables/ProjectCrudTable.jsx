@@ -121,21 +121,72 @@ function EditToolbar(props) {
 		handleCloseProjectDialog();
 	};
 
-	const handleSelectProject = (field) => (e) => {
-		setNewProjectData({ ...newProjectData, [field]: e.target.value });
-	};
-
 	const handleProjectChange = (field) => (e) => {
 		setNewProjectData({ ...newProjectData, [field]: e.target.value });
 	};
 
-	const handleAddUsers = (field) => (e) => {
-		//
+	const [snackbar, setSnackbar] = React.useState(null);
+
+	const handleCloseSnackbar = () => setSnackbar(null);
+
+	const handleAssignUsers = async (e) => {
+		e.preventDefault();
+		try {
+			let obj = {
+				...project,
+				users: project.users,
+			};
+
+			selectedUsersToAdd.forEach((user) => {
+				obj = {
+					...project,
+					users: obj.users.concat(user.id),
+				};
+			});
+			console.log(obj);
+
+			await dispatch(
+				updateProject({
+					id: project.id,
+					project: obj,
+				})
+			).unwrap();
+
+			setSelectedUsersToAdd([]);
+			setProject(null);
+
+			setIsUsersDialogOpen(false);
+
+			setSnackbar({
+				children: "Project successfully updated!",
+				severity: "success",
+			});
+		} catch (error) {
+			console.error("Detailed Update Error:", error);
+
+			setSnackbar({
+				children: `Update failed: ${error.message}`,
+				severity: "error",
+			});
+		}
 	};
 
 	return (
 		<>
 			<GridToolbarContainer>
+				{!!snackbar && (
+					<Snackbar
+						open
+						anchorOrigin={{
+							vertical: "bottom",
+							horizontal: "center",
+						}}
+						onClose={handleCloseSnackbar}
+						autoHideDuration={6000}
+					>
+						<Alert {...snackbar} onClose={handleCloseSnackbar} />
+					</Snackbar>
+				)}
 				{user.role === "Admin" && (
 					<>
 						<Button
@@ -244,7 +295,8 @@ function EditToolbar(props) {
 									}}
 								>
 									<Select
-										data={projects}
+										data={projects ? projects : []}
+										value={project?.name || ""}
 										label="Project Name"
 										onChange={(event, selectedValue) =>
 											setProject(selectedValue)
@@ -273,6 +325,7 @@ function EditToolbar(props) {
 										onChange={(event, selectedValue) =>
 											setSelectedUsersToAdd(selectedValue)
 										}
+										isProjectSelected={!!project}
 									>
 										<option value="" disabled>
 											Add Users
@@ -295,8 +348,11 @@ function EditToolbar(props) {
 										label="Remove Users"
 										value={selectedUsersToRemove}
 										onChange={(event, selectedValue) =>
-											setSelectedUsersToAdd(selectedValue)
+											setSelectedUsersToRemove(
+												selectedValue
+											)
 										}
+										isProjectSelected={!!project}
 									>
 										<option value="" disabled>
 											Remove Users
@@ -314,7 +370,7 @@ function EditToolbar(props) {
 								</Button>
 								<Button
 									sx={{ margin: "0rem 1rem 1rem 0" }}
-									onClick={handleAddUsers}
+									onClick={handleAssignUsers}
 									color="primary"
 									variant="contained"
 								>
@@ -360,8 +416,6 @@ export default function FullFeaturedCrudGrid({ sx, initialRows, onDelete }) {
 	const [rows, setRows] = React.useState(initialRows);
 	const [rowModesModel, setRowModesModel] = React.useState({});
 	const dispatch = useDispatch();
-	const projects = useSelector((state) => state.projects.data);
-	const users = useSelector((state) => state.users.data);
 	const [deleteId, setDeleteId] = useState(null);
 	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
